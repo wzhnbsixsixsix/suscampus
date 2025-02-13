@@ -21,5 +21,7 @@ import sustainableCampus.views as views
 urlpatterns = [
     path("main/", include("main.urls")),
     path('admin/', admin.site.urls),
+    path('social/', include('social.urls')),  # Include the URLs for the social app
+
     path('', views.home, name='home')
 ]
