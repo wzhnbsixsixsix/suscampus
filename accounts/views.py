@@ -18,7 +18,7 @@ def signUpPage(request):
 
 def loginPage(request):
     form = loginForm()
-    
+
     if request.method == 'POST':
         form = loginForm(request.POST)
         if form.is_valid():
@@ -28,15 +28,17 @@ def loginPage(request):
             user = authenticate(request, username=username, password=password)
             
             if user is not None: 
+                print("User authenticated successfully")
                 login(request, user)
                 return redirect('home')
             
             else:
+                print("Authentication failed")
                 form.add_error(None, 'Invalid username or password')
             
         else:
             context = {'form':form}
-            return render(request, 'account/login.html', context)
+            return render(request, 'accounts/login.html', context)
 
     context = {'form':form}
     return render(request, 'accounts/login.html', context)
