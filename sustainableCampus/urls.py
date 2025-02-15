@@ -23,7 +23,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('social/', include('social.urls')),  # Include the URLs for the social app
 
-    path('', views.home, name='home'),
-    path('login/', include('login.urls')),
-
+    path('', views.home, name='home')
 ]
