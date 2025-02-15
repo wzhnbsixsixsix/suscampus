@@ -1,6 +1,9 @@
-from django.shortcuts import redirect, render
+from django.shortcuts import redirect, render, get_object_or_404
 from django.contrib.auth import authenticate, login
+from django.core.mail import send_mail
+from django.conf import settings
 from .forms import signUpForm, loginForm
+from .models import CustomUser
 
 # Create your views here.
 def signUpPage(request):
@@ -9,32 +12,50 @@ def signUpPage(request):
     if request.method == 'POST':
         form = signUpForm(request.POST)
         if form.is_valid():
-            form.save()
+            user = form.save()
+            send_email_verification(user)
             return redirect('login')
 
     context = {'form':form}
     return render(request, 'accounts/signup.html', context)
 
+def send_email_verification(user):
+    subject = "Email Verification for Sustainable Campus"
+    link = f"http://127.0.0.1:8000/accounts/email_verification/{user.verification_token}"
+    message =f"Hello {user.first_name}, \n\nPlease verify your email through the following link below:\n{link}\n\nThank You!"
+    sender=settings.EMAIL_HOST_USER
+    receiver = [user.email]
+
+    send_mail(subject, message, sender, receiver)
+
+def email_verification(request, token):
+    user = CustomUser.objects.get(verification_token=token)
+
+    if user.verified == False:
+        user.verified = True
+        user.save()
+    
+    return redirect('login')
 
 def loginPage(request):
     form = loginForm(request)
 
     if request.method == 'POST':
         form = loginForm(request, data=request.POST)
-        print("checkpoint 1")
         if form.is_valid():
             username = request.POST.get("username")
             password = request.POST.get("password")
-
             user = authenticate(request, username=username, password=password)
             
             if user is not None: 
-                print("checkpoint 2")
-                login(request, user)
-                return redirect('home')
-            
+                if user.verified == True:
+                    login(request, user)
+                    return redirect('home')
+                
+                else: 
+                    form.add_error(None, 'Email has not been verified')
+
             else:
-                print("checkpoint 3")
                 form.add_error(None, 'Invalid username or password')
             
         else:
