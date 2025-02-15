@@ -1,11 +1,21 @@
-<h2>Sign Up</h2>
-
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+    {% load static %}
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sign in | Exeter Sustainable Game</title>
+  <link rel="stylesheet" href="/static/css/styles.css">
+</head>
+<body>
+<div class="login-container">
+    <h2>Sign Up</h2>
 <form method="POST">
     {% csrf_token %}
-    
+
     <label for="id_username">Username:</label>
     <input type="text" name="username" id="id_username" required>
-    
+
     <label for="id_email">Email:</label>
     <input type="email" name="email" id="id_email" required>
 
@@ -23,3 +33,6 @@
 
     <button type="submit">Sign Up</button>
 </form>
+</div>
+</body>
+</html>
