@@ -17,10 +17,11 @@ def signUpPage(request):
 
 
 def loginPage(request):
-    form = loginForm()
+    form = loginForm(request)
 
     if request.method == 'POST':
-        form = loginForm(request.POST)
+        form = loginForm(request, data=request.POST)
+        print("checkpoint 1")
         if form.is_valid():
             username = request.POST.get("username")
             password = request.POST.get("password")
@@ -28,12 +29,12 @@ def loginPage(request):
             user = authenticate(request, username=username, password=password)
             
             if user is not None: 
-                print("User authenticated successfully")
+                print("checkpoint 2")
                 login(request, user)
                 return redirect('home')
             
             else:
-                print("Authentication failed")
+                print("checkpoint 3")
                 form.add_error(None, 'Invalid username or password')
             
         else:
