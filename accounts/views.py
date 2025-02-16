@@ -1,12 +1,13 @@
+from django.contrib import messages
 from django.shortcuts import redirect, render, get_object_or_404
 from django.contrib.auth import authenticate, login
 from django.core.mail import send_mail
 from django.conf import settings
-from .forms import signUpForm, loginForm
+from .forms import signUpForm, loginForm, PasswordResetForm
 from .models import CustomUser
 
 # Create your views here.
-def signUpPage(request):
+def signup_page(request):
     form = signUpForm()
 
     if request.method == 'POST':
@@ -19,6 +20,8 @@ def signUpPage(request):
     context = {'form':form}
     return render(request, 'accounts/signup.html', context)
 
+
+
 def send_email_verification(user):
     subject = "Email Verification for Sustainable Campus"
     link = f"http://127.0.0.1:8000/accounts/email_verification/{user.verification_token}"
@@ -28,16 +31,23 @@ def send_email_verification(user):
 
     send_mail(subject, message, sender, receiver)
 
+
+
 def email_verification(request, token):
     user = CustomUser.objects.get(verification_token=token)
 
     if user.verified == False:
         user.verified = True
         user.save()
+        messages.success(request, "The email you provided has now been verified, you can now log in.")
+        return redirect('login')
+    else:
+        messages.error(request, "The verification link you used is invalid or has expired")
+        return redirect('signup')
     
-    return redirect('login')
 
-def loginPage(request):
+
+def login_page(request):
     form = loginForm(request)
 
     if request.method == 'POST':
@@ -64,3 +74,6 @@ def loginPage(request):
 
     context = {'form':form}
     return render(request, 'accounts/login.html', context)
+
+
+

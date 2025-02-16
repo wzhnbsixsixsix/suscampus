@@ -121,8 +121,6 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
-
-
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 STATIC_URL = '/static/'
@@ -130,13 +128,11 @@ STATIC_URL = '/static/'
 # Emailing settings
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_FROM = 'rmrmugford@gmail.com'
-EMAIL_HOST_USER = 'rmrmugford@gmail.com'
-EMAIL_HOST_PASSWORD = 'zxqsaemlhfapijsv' # App password
+EMAIL_FROM = 'sustainablecampusteam@gmail.com'
+EMAIL_HOST_USER = 'sustainablecampusteam@gmail.com'
+EMAIL_HOST_PASSWORD = 'tcayrclskdythofv' # App password
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-
-
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
