@@ -1,17 +1,17 @@
 from django.contrib import messages
-from django.shortcuts import redirect, render, get_object_or_404
+from django.shortcuts import redirect, render
 from django.contrib.auth import authenticate, login
 from django.core.mail import send_mail
 from django.conf import settings
-from .forms import signUpForm, loginForm, PasswordResetForm
+from .forms import SignUpForm, LoginForm
 from .models import CustomUser
 
 # Create your views here.
 def signup_page(request):
-    form = signUpForm()
+    form = SignUpForm()
 
     if request.method == 'POST':
-        form = signUpForm(request.POST)
+        form = SignUpForm(request.POST)
         if form.is_valid():
             user = form.save()
             send_email_verification(user)
@@ -48,10 +48,10 @@ def email_verification(request, token):
 
 
 def login_page(request):
-    form = loginForm(request)
+    form = LoginForm(request)
 
     if request.method == 'POST':
-        form = loginForm(request, data=request.POST)
+        form = LoginForm(request, data=request.POST)
         if form.is_valid():
             username = request.POST.get("username")
             password = request.POST.get("password")
@@ -71,9 +71,9 @@ def login_page(request):
         else:
             context = {'form':form}
             return render(request, 'accounts/login.html', context)
-
-    context = {'form':form}
-    return render(request, 'accounts/login.html', context)
+    else: 
+        context = {'form':form}
+        return render(request, 'accounts/login.html', context)
 
 
 
