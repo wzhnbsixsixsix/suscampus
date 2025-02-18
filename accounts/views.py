@@ -6,58 +6,76 @@ from django.conf import settings
 from .forms import SignUpForm, LoginForm
 from .models import CustomUser
 
-# Create your views here.
+# Handles data submitted from signup page's form
 def signup_page(request):
     form = SignUpForm()
 
+    # If a form is submitted, the following happens
     if request.method == 'POST':
         form = SignUpForm(request.POST)
         if form.is_valid():
-            user = form.save()
-            send_email_verification(user)
-            return redirect('login')
+            # Checks if given email is unique before saving new user data
+            if CustomUser.objects.filter(email=form.cleaned_data["email"]).exists():
+                    form.add_error("email", "Email is already in use.")
+            # Saves new user data, and sends email verification
+            else:
+                user = form.save()
+                send_email_verification(user)
+                return redirect('login')
 
     context = {'form':form}
     return render(request, 'accounts/signup.html', context)
 
 
-
+# Sends an verification email with a link to the new user
 def send_email_verification(user):
     subject = "Email Verification for Sustainable Campus"
     link = f"http://127.0.0.1:8000/accounts/email_verification/{user.verification_token}"
     message =f"Hello {user.first_name}, \n\nPlease verify your email through the following link below:\n{link}\n\nThank You!"
-    sender=settings.EMAIL_HOST_USER
+    sender = settings.EMAIL_HOST_USER # Sender of email is stored in settings.py
     receiver = [user.email]
 
     send_mail(subject, message, sender, receiver)
 
 
-
+# Determines what happens when the verification link is clicked
 def email_verification(request, token):
-    user = CustomUser.objects.get(verification_token=token)
+    # Retrieves user data using given verification token, returns error if invalid
+    try:
+        user = CustomUser.objects.get(verification_token=token)
+    except CustomUser.DoesNotExist:
+        messages.error(request, "Invalid or expired verification token")
+        return redirect('signup')
 
+    # Verifies user if they are unverified
     if user.verified == False:
         user.verified = True
         user.save()
-        messages.success(request, "The email you provided has now been verified, you can now log in.")
-        return redirect('login')
+        messages.success(request, "User has now been verified, you can now log in.")
     else:
-        messages.error(request, "The verification link you used is invalid or has expired")
-        return redirect('signup')
+        messages.error(request, "User is already verified")
+
+    return redirect('login')
     
 
-
+# Handles data submitted by login page's form
 def login_page(request):
     form = LoginForm(request)
 
+    # If a form is submitted, the following happens
     if request.method == 'POST':
         form = LoginForm(request, data=request.POST)
         if form.is_valid():
+            # Retrieves username and password from submitted form
             username = request.POST.get("username")
             password = request.POST.get("password")
+
+            # Retrieves user data for matching username and password
             user = authenticate(request, username=username, password=password)
             
+            # Checks if user data has been retrieved
             if user is not None: 
+                # Checks if user is verified
                 if user.verified == True:
                     login(request, user)
                     return redirect('home')

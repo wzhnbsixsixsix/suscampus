@@ -9,3 +9,4 @@ class SignUpForm(UserCreationForm):
 
 class LoginForm(AuthenticationForm):
     pass
+
