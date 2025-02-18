@@ -19,7 +19,7 @@ from django.urls import include, path
 import sustainableCampus.views as views
 
 urlpatterns = [
-    path("main/", include("main.urls")),
+    path("", include("main.urls")),
     path('admin/', admin.site.urls),
     path("accounts/", include("accounts.urls")),
     path('announcements/', include('announcements.urls')),  # Include the URLs for the announcements app

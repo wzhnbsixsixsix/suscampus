@@ -5,5 +5,8 @@ from django.shortcuts import render
 from django.http import HttpResponse
 
 
-def index(request):
-    return HttpResponse("Hello, world. You're at the suggestions index.")
+def suggestions(request):
+    return render(request, 'suggestions.html')
+
+def view_suggestions(request):
+    return render(request, 'view_suggestions.html')
