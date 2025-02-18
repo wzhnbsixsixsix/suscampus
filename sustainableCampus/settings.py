@@ -38,7 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'sustainableCampus',
-    'social',  # Register the social app
+    'announcements',  # Register the social app
 
 ]
 
