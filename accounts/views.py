@@ -1,6 +1,8 @@
 from django.contrib import messages
 from django.shortcuts import redirect, render
 from django.contrib.auth import authenticate, login
+from .forms import signUpForm, loginForm
+from django.contrib.auth import logout
 from django.core.mail import send_mail
 from django.conf import settings
 from .forms import SignUpForm, LoginForm
@@ -44,7 +46,7 @@ def email_verification(request, token):
     else:
         messages.error(request, "The verification link you used is invalid or has expired")
         return redirect('signup')
-    
+
 
 
 def login_page(request):
@@ -55,25 +57,33 @@ def login_page(request):
         if form.is_valid():
             username = request.POST.get("username")
             password = request.POST.get("password")
+
             user = authenticate(request, username=username, password=password)
             
             if user is not None: 
                 if user.verified == True:
                     login(request, user)
                     return redirect('home')
-                
-                else: 
+
+                else:
                     form.add_error(None, 'Email has not been verified')
 
             else:
+                print("checkpoint 3")
                 form.add_error(None, 'Invalid username or password')
             
         else:
             context = {'form':form}
             return render(request, 'accounts/login.html', context)
-    else: 
+    else:
         context = {'form':form}
         return render(request, 'accounts/login.html', context)
+
+
+def logout_view(request):
+    logout(request)
+    messages.success(request, "Log out successfully")
+    return redirect("login")
 
 
 
