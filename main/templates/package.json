@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "",
   "main": "geolocSystem.js",
+  "type": "module",
   "dependencies": {
     "ol": "10.4.0"
   },

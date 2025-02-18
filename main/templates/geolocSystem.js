@@ -11,6 +11,7 @@ import CircleStyle from './node_modules/ol/style/Circle.js';
 import Fill from './node_modules/ol/style/Fill.js';
 import Stroke from './node_modules/ol/style/Stroke.js';
 import Style from './node_modules/ol/style/Style.js';
+import RegularShape from "./node_modules/ol/style/RegularShape.js";
 
 // currently this is almost all an example from the OpenLayers site to figure out how the location tracking should work
 // will be rewritten once the process is figured out so that it can be used for our purposes
@@ -125,5 +126,97 @@ function findLocOnMap()  {
     }
 }
 
-document.querySelector("#find-loc").addEventListener("click", findLocOnMap)
+function createMarker() {
+    // first need to get all the user's input from the input fields when the button is pressed:
+    // currently assumes all user input is valid
+    let xPos = el("xcoord").value;
+    let yPos = el("ycoord").value;
+    // below are dropdowns; have to convert their choice into appropriate format here.
+    let shape = el("shape").value;
+    let color = el("color").value;
+
+    let markerShape;
+    let markerColor;
+
+    // converts chosen color to hex value
+    switch (color) {
+        case "red":
+            markerColor = '#FF0000';
+            break;
+        case "green":
+            markerColor = '#00FF00';
+            break;
+        case "blue":
+            markerColor = '#0000FF';
+            break;
+        case "yellow":
+            markerColor = '#FFFF00';
+            break;
+    }
+
+    // creates the object for the marker's shape, using the shape and color specified by the user
+    switch (shape) {
+        case "circle":
+            markerShape = new CircleStyle({
+                radius: 6,
+                fill: new Fill({
+                    color: markerColor,
+                }),
+                stroke: new Stroke({
+                    color: '#fff',
+                    width: 2,
+                })
+            });
+            break;
+        case "square":
+            markerShape = new RegularShape({
+                fill: new Fill({
+                    color: markerColor,
+                }),
+                stroke: new Stroke({
+                    color: '#fff',
+                    width: 2,
+                }),
+                points: 4,
+                radius: 6,
+                angle: Math.PI / 4,
+            });
+            break;
+        case "triangle":
+            markerShape = new RegularShape({
+                fill: new Fill({
+                    color: markerColor,
+                }),
+                stroke: new Stroke({
+                    color: '#fff',
+                    width: 2,
+                }),
+                points: 3,
+                radius: 10,
+                rotation: Math.PI / 4,
+                angle: 0,
+            });
+            break;
+    }
+
+    // creates the marker
+    const marker = new Feature();
+    marker.setStyle(
+        new Style({image: markerShape,}),
+    );
+
+    // places the marker on the map
+    marker.setGeometry([xPos, yPos]);
+}
+
+document.querySelector("#find-loc").addEventListener("click", findLocOnMap);
+
+const addMarkerButton = document.querySelector("#create-marker");
+if (addMarkerButton) {
+    addMarkerButton.addEventListener("click", createMarker);
+    console.log("Marker Added."); // should probably add more detailed logging in the function itself.
+} else {
+    console.log("Add marker button not found.");
+}
+
 

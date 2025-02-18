@@ -27,9 +27,9 @@
             "color-parse": "./node_modules/color-parse/index.js",
             "color-space/hsl.js": "./node_modules/color-space/hsl.js",
             "color-name": "./node_modules/color-name/index.js"
-          }
+            }
         }
-    </script>
+   </script>
 
     <button id="find-loc">Find Location</button>
 
@@ -50,10 +50,28 @@
         speed : <code id="speed"></code>
     </p>
 
+    <!-- TODO: Need to add input validation to the below -->
     <div id="add-marker">
-
+        <label for="xcoord">X Coordinate:</label>
+        <input type="number" name="xcoord" id="xcoord" placeholder="X coordinate"/>
+        <label for="ycoord">Y Coordinate:</label>
+        <input type="number" name="ycoord" id="ycoord" placeholder="Y coordinate"/>
+        <label for="shape">Shape:</label>
+        <select name="shape" id="shape">
+            <option value="circle">Circle</option>
+            <option value="square">Square</option>
+            <option value="triangle">Triangle</option>
+        </select>
+        <label for="color">Colour:</label>
+        <select name="color" id="color">
+            <option value="red">Red</option>
+            <option value="green">Green</option>
+            <option value="blue">Blue</option>
+            <option value="yellow">Yellow</option>
+        </select>
+        <button type="button" id="create-marker">Create Marker</button>
     </div>
 
-    <script type="module" src="geolocSystem.js"></script>
+    <script type="module" src="geolocSystem.js" defer></script>
 </body>
 </html>
