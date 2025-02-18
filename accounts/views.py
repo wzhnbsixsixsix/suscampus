@@ -57,10 +57,6 @@ def email_verification(request, token):
         messages.error(request, "User is already verified")
 
     return redirect('login')
-    
-        messages.error(request, "The verification link you used is invalid or has expired")
-        return redirect('signup')
-
 
 # Handles data submitted by login page's form
 def login_page(request):
