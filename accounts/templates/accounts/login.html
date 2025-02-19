@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+    {% load static %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign in | Exeter Sustainable Game</title>
+    <link rel="stylesheet" href="/static/css/styles.css">
+</head>
+<body>
+    <div class="login-container">
+        <h2>Log In</h2>
+        <form method="POST">
+            {% csrf_token %}
+            <label for="username">Username</label>
+            <input type="text" id="id_username" name="username" required aria-label="Username">
+
+            <label for="password">Password</label>
+            <input type="password" id="id_password" name="password" required aria-label="Password">
+
+            <button type="submit">Log in</button>
+        </form>
+        <p>Don't have an account? <a href={% url 'signup' %}>Sign up</a></p>
+{#      <p><a href="{% url 'password_reset' %}">Forgot password?</a></p>#}
+    </div>
+</body>
+</html>

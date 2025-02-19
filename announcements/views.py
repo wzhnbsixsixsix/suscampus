@@ -1,3 +1,4 @@
+
 # views.py
 
 from django.shortcuts import render, redirect
@@ -19,3 +20,5 @@ def create_announcement(request):
     else:
         form = AnnouncementForm()
     return render(request, 'announcements/create_announcement.html', {'form': form})
+
+
