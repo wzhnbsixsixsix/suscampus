@@ -1,3 +1,4 @@
+
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 import uuid
@@ -18,3 +19,6 @@ class CustomUser(AbstractUser):
     verified = models.BooleanField(default=False)
     verification_token = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
     creationDateTime = models.DateTimeField(auto_now_add=True)
+
+
+

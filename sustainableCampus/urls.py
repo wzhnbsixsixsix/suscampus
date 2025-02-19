@@ -19,9 +19,11 @@ from django.urls import include, path
 import sustainableCampus.views as views
 
 urlpatterns = [
-    path("main/", include("main.urls")),
+    path("", include("main.urls")),
     path('admin/', admin.site.urls),
-    path('announcements/', include('announcements.urls')),  # Include the URLs for the social app
-    path('accounts/', include('accounts.urls')), # Include the URLs for the accounts app
-    path('', views.home, name='home'),
+    path("accounts/", include("accounts.urls")),
+    path('announcements/', include('announcements.urls')),  # Include the URLs for the announcements app
+    path("shop/", include("shop.urls")),
+    path("suggestions/", include("suggestions.urls")),
+    path('', views.home, name='home')
 ]

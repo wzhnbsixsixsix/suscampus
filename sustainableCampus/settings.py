@@ -38,9 +38,15 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'sustainableCampus',
-    'announcements',  # Register the social app
-    'accounts', # Register the accounts app
+
+
+    'accounts',
+    'announcements',
     'main',
+    'shop',
+    'suggestions'
+    'announcements',  # Register the social app
+
 ]
 
 AUTH_USER_MODEL = 'accounts.CustomUser'

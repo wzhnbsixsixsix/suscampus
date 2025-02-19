@@ -1,3 +1,4 @@
+
 from django.contrib import messages
 from django.shortcuts import redirect, render
 from django.contrib.auth import authenticate, login
@@ -99,6 +100,5 @@ def logout_view(request):
     logout(request)
     messages.success(request, "Log out successfully")
     return redirect("login")
-
 
 

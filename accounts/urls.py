@@ -6,3 +6,4 @@ urlpatterns = [
     path("login/", views.login_page, name="login"),
     path("email_verification/<uuid:token>", views.email_verification, name="email_verification"),
 ]
+

@@ -1,3 +1,4 @@
+
 # views.py
 
 from django.shortcuts import render, redirect
@@ -6,7 +7,7 @@ from .forms import AnnouncementForm
 
 def announcement_list(request):
     announcements = Announcement.objects.all().order_by('-created_at')
-    return render(request, 'social/announcement_list.html', {'announcements': announcements})
+    return render(request, 'announcements/announcement_list.html', {'announcements': announcements})
 
 def create_announcement(request):
     if request.method == 'POST':
@@ -18,4 +19,6 @@ def create_announcement(request):
             return redirect('announcement_list')
     else:
         form = AnnouncementForm()
-    return render(request, 'social/create_announcement.html', {'form': form})
+    return render(request, 'announcements/create_announcement.html', {'form': form})
+
+
