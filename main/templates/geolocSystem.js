@@ -126,20 +126,24 @@ function findLocOnMap()  {
     }
 }
 
-function createMarker() {
+function createMarker(event) {
+    console.log("Adding new marker...");
     // first need to get all the user's input from the input fields when the button is pressed:
     // currently assumes all user input is valid
-    let xPos = el("xcoord").value;
-    let yPos = el("ycoord").value;
-    // below are dropdowns; have to convert their choice into appropriate format here.
-    let shape = el("shape").value;
-    let color = el("color").value;
+    console.log("Getting marker specifications from the form...")
+    let markerInfo = event.formData;
+
+    // for debugging
+    for (const [key, value] of markerInfo) {
+        console.log(`${key}: ${value}`);
+    }
 
     let markerShape;
     let markerColor;
 
     // converts chosen color to hex value
-    switch (color) {
+    console.log("Setting color...");
+    switch (markerInfo["color"]) {
         case "red":
             markerColor = '#FF0000';
             break;
@@ -155,7 +159,8 @@ function createMarker() {
     }
 
     // creates the object for the marker's shape, using the shape and color specified by the user
-    switch (shape) {
+    console.log("Setting shape...");
+    switch (markerInfo["shape"]) {
         case "circle":
             markerShape = new CircleStyle({
                 radius: 6,
@@ -200,23 +205,25 @@ function createMarker() {
     }
 
     // creates the marker
+    console.log("Making marker object...");
     const marker = new Feature();
     marker.setStyle(
         new Style({image: markerShape,}),
     );
 
     // places the marker on the map
-    marker.setGeometry([xPos, yPos]);
+    console.log("Placing marker on map...");
+    marker.setGeometry([markerInfo["xcoord"], markerInfo["ycoord"]]);
 }
 
 document.querySelector("#find-loc").addEventListener("click", findLocOnMap);
 
-const addMarkerButton = document.querySelector("#create-marker");
-if (addMarkerButton) {
-    addMarkerButton.addEventListener("click", createMarker);
-    console.log("Marker Added."); // should probably add more detailed logging in the function itself.
-} else {
-    console.log("Add marker button not found.");
-}
+const markerData = document.querySelector("#add-marker-form");
+
+markerData.addEventListener("submit",(event) => {
+    event.preventDefault();
+    new FormData(markerData); // this causes the formdata event for the next eventListener
+});
+markerData.addEventListener("formdata", (event) => createMarker(event));
 
 

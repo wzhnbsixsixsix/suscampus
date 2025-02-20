@@ -52,24 +52,40 @@
 
     <!-- TODO: Need to add input validation to the below -->
     <div id="add-marker">
-        <label for="xcoord">X Coordinate:</label>
-        <input type="number" name="xcoord" id="xcoord" placeholder="X coordinate"/>
-        <label for="ycoord">Y Coordinate:</label>
-        <input type="number" name="ycoord" id="ycoord" placeholder="Y coordinate"/>
-        <label for="shape">Shape:</label>
-        <select name="shape" id="shape">
-            <option value="circle">Circle</option>
-            <option value="square">Square</option>
-            <option value="triangle">Triangle</option>
-        </select>
-        <label for="color">Colour:</label>
-        <select name="color" id="color">
-            <option value="red">Red</option>
-            <option value="green">Green</option>
-            <option value="blue">Blue</option>
-            <option value="yellow">Yellow</option>
-        </select>
-        <button type="button" id="create-marker">Create Marker</button>
+        <form name="marker-details" id="add-marker-form" action="" method="POST">
+            <label for="xcoord">X Coordinate:</label>
+            <input
+                    type="text"
+                    name="xcoord"
+                    id="xcoord"
+                    placeholder="X coordinate"
+                    required
+                    size="16"
+                    maxlength="16"/>
+            <label for="ycoord">Y Coordinate:</label>
+            <input
+                    type="text"
+                    name="ycoord"
+                    id="ycoord"
+                    placeholder="Y coordinate"
+                    required
+                    size="16"
+                    maxlength="16" />
+            <label for="shape">Shape:</label>
+            <select name="shape" id="shape">
+                <option value="circle">Circle</option>
+                <option value="square">Square</option>
+                <option value="triangle">Triangle</option>
+            </select>
+            <label for="color">Colour:</label>
+            <select name="color" id="color">
+                <option value="red">Red</option>
+                <option value="green">Green</option>
+                <option value="blue">Blue</option>
+                <option value="yellow">Yellow</option>
+            </select>
+            <button type="submit" id="create-marker">Create Marker</button>
+        </form>
     </div>
 
     <script type="module" src="geolocSystem.js" defer></script>
