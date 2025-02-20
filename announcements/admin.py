@@ -9,5 +9,4 @@ class AnnouncementAdmin(admin.ModelAdmin):
     list_display = ('title', 'author', 'created_at')  # Customize the fields to display
     search_fields = ('title', 'content')  # Make the title and content searchable
 
-admin.site.register(Announcement)
 

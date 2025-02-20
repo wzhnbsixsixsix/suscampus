@@ -44,9 +44,7 @@ INSTALLED_APPS = [
     'announcements',
     'main',
     'shop',
-    'suggestions'
-    'announcements',  # Register the social app
-
+    'suggestions',
 ]
 
 AUTH_USER_MODEL = 'accounts.CustomUser'
