@@ -100,12 +100,19 @@ geolocation.on('change:position', function () {
     mapView.setCenter(newPos);
 });
 
-new VectorLayer({
-    map: map,
-    source: new VectorSource({
-        features: [accuracyFeature, positionFeature],
-    }),
-});
+let userFeatures = [accuracyFeature, positionFeature];
+let markerSource = new VectorSource();
+
+map.addLayer( new VectorLayer({
+                source: new VectorSource({
+                    features: userFeatures,
+                }),
+            }));
+
+map.addLayer(new VectorLayer({
+                source: markerSource,
+            }));
+
 
 // gets the view property of the map, which we can use to set the center and zoom
 const mapView = map.getView();
@@ -152,25 +159,32 @@ function createMarker(event) {
 
     // converts chosen color to hex value
     console.log("Setting color...");
-    switch (markerInfo["color"]) {
+    console.log("color from form: " + markerInfo.get('color'));
+    switch (markerInfo.get('color')) {
         case "red":
+            console.log("case: red");
             markerColor = '#FF0000';
             break;
         case "green":
+            console.log("case: green");
             markerColor = '#00FF00';
             break;
         case "blue":
+            console.log("case: blue");
             markerColor = '#0000FF';
             break;
         case "yellow":
+            console.log("case: yellow");
             markerColor = '#FFFF00';
             break;
     }
 
     // creates the object for the marker's shape, using the shape and color specified by the user
     console.log("Setting shape...");
-    switch (markerInfo["shape"]) {
+    console.log("shape from form: " + markerInfo.get('shape'));
+    switch (markerInfo.get('shape')) {
         case "circle":
+            console.log("case: circle");
             markerShape = new CircleStyle({
                 radius: 6,
                 fill: new Fill({
@@ -183,6 +197,7 @@ function createMarker(event) {
             });
             break;
         case "square":
+            console.log("case: square");
             markerShape = new RegularShape({
                 fill: new Fill({
                     color: markerColor,
@@ -197,6 +212,7 @@ function createMarker(event) {
             });
             break;
         case "triangle":
+            console.log("case: triangle");
             markerShape = new RegularShape({
                 fill: new Fill({
                     color: markerColor,
@@ -215,32 +231,31 @@ function createMarker(event) {
 
     // creates the marker
     console.log("Making marker object...");
+    console.log("Shape and color:");
+    console.log(markerShape);
+    console.log(markerColor);
     const marker = new Feature();
     marker.setStyle(
         new Style({image: markerShape,}),
     );
+    console.log(marker);
 
-    console.log("Creating vector layer...");
-    new VectorLayer({
-        map: map,
-        source: new VectorSource({
-            features: [marker],
-        }),
-    });
+    console.log("Adding marker to vector layer...");
+    markerSource.addFeature(marker);
 
     // places the marker on the map
     console.log("Placing marker on map...");
-    marker.setGeometry([markerInfo["xcoord"], markerInfo["ycoord"]]);
+    marker.setGeometry(new Point([markerInfo["xcoord"], markerInfo["ycoord"]]));
+    console.log("Re-rendering map to show marker...");
+    map.render(); // re-renders the map to show the marker
 }
 
 document.querySelector("#find-loc").addEventListener("click", findLocOnMap);
 
-const markerData = document.querySelector("#add-marker-form");
+const markerData = document.getElementById("add-marker-form");
 
 markerData.addEventListener("submit",(event) => {
     event.preventDefault();
     new FormData(markerData); // this causes the formdata event for the next eventListener
 });
 markerData.addEventListener("formdata", (event) => createMarker(event));
-
-
