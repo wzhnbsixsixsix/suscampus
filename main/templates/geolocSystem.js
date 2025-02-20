@@ -13,12 +13,13 @@ import Stroke from './node_modules/ol/style/Stroke.js';
 import Style from './node_modules/ol/style/Style.js';
 import RegularShape from "./node_modules/ol/style/RegularShape.js";
 
-// currently this is almost all an example from the OpenLayers site to figure out how the location tracking should work
-// will be rewritten once the process is figured out so that it can be used for our purposes
+// currently much the geolocation handling is an example from the OpenLayers site to figure out how the location tracking should work
+// will be rewritten when implementing to the main webpage
 
+// the center and zoom will be changed when location tracking is enabled to focus on the user's position
 const view = new View({
     center: [0, 0],
-    zoom: 2,
+    zoom: 12,
 });
 
 const map = new Map({
@@ -65,6 +66,7 @@ geolocation.on('error', function (error) {
 });
 
 // no idea what exactly this does, might have to look at Feature in the ol library
+// it might make the circle around the user's marker, showing the possible inaccuracy of their position?
 const accuracyFeature = new Feature();
 geolocation.on('change:accuracyGeometry', function () {
     accuracyFeature.setGeometry(geolocation.getAccuracyGeometry());
@@ -92,6 +94,10 @@ positionFeature.setStyle(
 geolocation.on('change:position', function () {
     const coordinates = geolocation.getPosition();
     positionFeature.setGeometry(coordinates ? new Point(coordinates) : null);
+    // updates the view's centre to the user's new position:
+    const newPos = positionFeature.getGeometry().getCoordinates();
+    console.log("centering view on: " + newPos);
+    mapView.setCenter(newPos);
 });
 
 new VectorLayer({
@@ -100,6 +106,9 @@ new VectorLayer({
         features: [accuracyFeature, positionFeature],
     }),
 });
+
+// gets the view property of the map, which we can use to set the center and zoom
+const mapView = map.getView();
 
 function findLocOnMap()  {
     const status = document.querySelector("#status");
@@ -210,6 +219,14 @@ function createMarker(event) {
     marker.setStyle(
         new Style({image: markerShape,}),
     );
+
+    console.log("Creating vector layer...");
+    new VectorLayer({
+        map: map,
+        source: new VectorSource({
+            features: [marker],
+        }),
+    });
 
     // places the marker on the map
     console.log("Placing marker on map...");
