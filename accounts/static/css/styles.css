@@ -1,6 +1,50 @@
+body, html {
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+}
+
+.left-panel {
+    background-color: #c5f1c5;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+.right-panel {
+    min-height: 100vh;
+    background-image: url('../image/tree.png');
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+    overflow: hidden;
+    padding: 0 !important;
+}
+
+.container-fluid {
+    position: relative;
+}
+
+.container-fluid::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 3;
+
+    clip-path: polygon(58.3% 0, 70% 0, 58.3% 100%, 50% 100%);
+    background: #c5f1c5;
+    pointer-events: none;
+}
+
 body {
     font-family: Arial, sans-serif;
-    background-color: #f2f2f2;
+    background-color: #c5f1c5;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -8,55 +52,3 @@ body {
     margin: 0;
 }
 
-.login-container {
-    background-color: #fff;
-    padding: 20px 30px;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    width: 300px;
-}
-
-.login-container h2 {
-    text-align: center;
-    margin-bottom: 20px;
-}
-
-.login-container label {
-    display: block;
-    margin-top: 15px;
-    margin-bottom: 5px;
-}
-
-.login-container input {
-    width: 100%;
-    padding: 8px;
-    box-sizing: border-box;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-}
-
-.login-container button {
-    width: 100%;
-    padding: 10px;
-    margin-top: 20px;
-    border: none;
-    background-color: black;
-    color: #fff;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 16px;
-}
-
-.login-container button:hover {
-    background-color: black;
-}
-
-.login-container p {
-    text-align: center;
-    margin-top: 20px;
-}
-
-.login-container a {
-    text-decoration: none;
-    color: #007BFF;
-}
