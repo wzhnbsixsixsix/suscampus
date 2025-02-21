@@ -1,11 +1,29 @@
 <!DOCTYPE html>
 <html>
-<head>
-    <title>Sustainable Campus</title>
-  <!--<link rel="stylesheet" type="text/css" href="index-style.css">-->
+  <head>
+  {% load static %}
+  <title>Sustainable Campus</title>
+  <link rel="stylesheet" href="/static/css/forest.css">
+  <link rel="stylesheet" href="{% static 'css/navbar.css' %}">
 </head>
 <body>
-  <h1>My Forest</h1>
-  <p>Placeholder test</p>
-</body>
-</html>
+  <div class="navbar">
+    <!-- Logo of university -->
+    <div>
+      <a href="https://www.exeter.ac.uk/"><img src="" alt="University of Exeter"></a>
+      <p>University of Exeter</p>
+    </div>
+    <!-- Navigation bar -->
+    <ul class="navbar-links">
+      <li><a href="../">Home</a></li>
+      <li><a href="">My forest</a></li>
+      <li><a href="../shop/">Shop</a></li>
+      <li><a href="../announcements/">Announcements</a></li>
+      <li><a href="../suggestions/">Suggestion box</a></li>
+    </ul>
+    <!-- profile -->
+    <div>
+      <a href=""><img src="/" alt="Profile"></a>
+      <p>Profile</p>
+    </div>
+  </div>
