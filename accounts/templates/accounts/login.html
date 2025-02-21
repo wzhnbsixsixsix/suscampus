@@ -14,15 +14,14 @@
         <div class="col-md-7 left-panel">
             <h1 class="display-5 fw-bold font-monospace text-black mb-0">Sustainable Campus</h1>
             <div class=" mt-0">
-                {% csrf_token %}
-                <form>
+                <form method="POST">
+                    {% csrf_token %}
                     <div class="mb-3">
-
-                        <input type="text" class="form-control w-75" id="username" placeholder="Username">
+                        <input type="text" class="form-control w-75" id="id_username" name="username" placeholder="Username">
                     </div>
 
                     <div class="mb-3">
-                        <input type="password" class="form-control w-75" id="password" placeholder="Password">
+                        <input type="password" class="form-control w-75" id="id_password" name="password" placeholder="Password">
                     </div>
                     <div class="mb-3">
                         <a href="#" class="text-decoration-none">Forgot password?</a>
