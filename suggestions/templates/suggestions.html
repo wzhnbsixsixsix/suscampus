@@ -6,86 +6,153 @@
     <title>Sustainable Campus</title>
     <link rel="stylesheet" href="/static/css/suggestions.css">
     <link rel="stylesheet" type="text/css" href="{% static 'css/navbar.css' %}">
+    <!-- bootsrap css -->
+    <link rel="stylesheet" href="{% static '/bootstrap/css/bootstrap.min.css' %}">
 </head>
 <body>
-  <div class="navbar">
-    <!-- Logo of university -->
-    <div>
-      <a href="https://www.exeter.ac.uk/"><img src="" alt="University of Exeter"></a>
-      <p>University of Exeter</p>
+  <nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom p-3">
+    <div class="container-fluid">
+      <!-- Logo on the left -->
+      <a href="/" class="navbar-brand">
+          <img src="{% static 'images/exeter-logo.png' %}" alt="University of Exeter" width="150" height="auto">
+      </a>
+
+      <!-- Hamburger menu button for collapsing -->
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <!-- Collapsible content -->
+      <div class="collapse navbar-collapse" id="navbarNav">
+          <!-- Navigation links in the center -->
+          <ul class="navbar-nav mx-auto mb-2 mb-lg-0">
+              <li class="nav-item">
+                  <a href="../" class="nav-link px-2 link-dark">Home</a>
+              </li>
+              <li class="nav-item">
+                  <a href="../forest" class="nav-link px-2 link-dark">My forest</a>
+              </li>
+              <li class="nav-item">
+                  <a href="../shop/" class="nav-link px-2 link-dark">Shop</a>
+              </li>
+              <li class="nav-item">
+                  <a href="../announcements/" class="nav-link px-2 link-dark">Announcements</a>
+              </li>
+              <li class="nav-item">
+                  <a href="" class="nav-link px-2 link-dark">Suggestion box</a>
+              </li>
+          </ul>
+
+          <!-- Profile dropdown on the right -->
+          <div class="dropdown text-end ms-lg-3">
+              <a href="#" class="d-block link-dark text-decoration-none dropdown-toggle" id="dropdownUser" data-bs-toggle="dropdown" aria-expanded="false">
+                  <img src="" alt="mdo" width="32" height="32" class="rounded-circle">
+              </a>
+              <ul class="dropdown-menu text-small dropdown-menu-end" aria-labelledby="dropdownUser">
+                  <li><a class="dropdown-item" href="#">Profile</a></li>
+                  <li><a class="dropdown-item" href="#">Settings</a></li>
+                  <li><hr class="dropdown-divider"></li>
+                  <li><a class="dropdown-item" href="#">Sign out</a></li>
+              </ul>
+          </div>
+      </div>
     </div>
-    <!-- Navigation bar -->
-    <ul class="navbar-links">
-      <li><a href="../">Home</a></li>
-      <li><a href="../forest">My forest</a></li>
-      <li><a href="../shop/">Shop</a></li>
-      <li><a href="../announcements/">Announcements</a></li>
-      <li><a href="">Suggestion box</a></li>
-    </ul>
-    <!-- profile -->
-    <div>
-      <a href=""><img src="" alt="Profile"></a>
-      <p>Profile</p>
+  </nav> 
+
+  <div class="container mt-4">
+    <!-- Warning message -->
+    <div class="alert alert-warning w-100" role="alert">
+        Before you want to send a suggestion, please check the FAQs.
     </div>
-  </div>
-    <!-- Suggestion form is too far down -->
-  <div>
-    <form class="suggestion-form">
-      <p class="warning">Before you want to send a suggestion, please check the FAQs</p>
-      <h2>Suggestion: </h2>
-      <textarea class="suggestion-input" id="suggestion-input" placeholder="Type your suggestion..." name="suggestion" oninput='this.style.height = "";this.style.height = this.scrollHeight + "px"'></textarea>
-      
-      <div class="suggestion-form-buttons">
-        <label for="category">Category:</label>
-        <select id="category" name="category">
-          <option disabled selected hidden> Suggestion category</option>
-          <option value="location">Add a location</option>
-          <option value="bug">Bug report</option>
-          <option value="other">Other</option>
-        </select>
-        <input type="submit" value="Submit">
-      </div> 
+
+    <!-- Suggestion form -->
+    <form class="suggestion-form w-100">
+        <h2 class="mb-4">Suggestion:</h2>
+
+        <!-- Textarea for suggestion input -->
+        <div class="mb-3">
+            <textarea class="form-control suggestion-input" id="suggestion-input" placeholder="Type your suggestion..." name="suggestion" rows="3" oninput='this.style.height = ""; this.style.height = this.scrollHeight + "px"'></textarea>
+        </div>
+
+        <!-- Category dropdown and submit button -->
+        <div class="suggestion-form-buttons d-flex flex-wrap align-items-center gap-3">
+            <div class="form-group row">
+              <label for="category" class="col-sm col-form-label">Category:</label>
+              <div class="col-sm">
+                <select class="form-select" id="category" name="category">
+                    <option disabled selected hidden>Suggestion category</option>
+                    <option value="location">Add a location</option>
+                    <option value="bug">Bug report</option>
+                    <option value="other">Other</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="mb-3">
+                <input type="submit" class="btn btn-primary" value="Submit">
+            </div>
+        </div>
     </form>
+  </div> 
+
+  <!-- FAQ Section -->
+  <div class="faq-section container mt-4">
+    <h2 class="mb-4">FAQs</h2>
+
+    <!-- Bootstrap Accordion -->
+    <div class="accordion" id="faqAccordion">
+        <!-- FAQ Item 1 -->
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="headingOne">
+                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
+                    How do I get items?
+                </button>
+            </h2>
+            <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#faqAccordion">
+                <div class="accordion-body">
+                    Visiting different markers on the map will let you collect different recyclables which, when enough are collected, can be used to make items to help grow your forest.
+                </div>
+            </div>
+        </div>
+
+        <!-- FAQ Item 2 -->
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="headingTwo">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                    Question 2
+                </button>
+            </h2>
+            <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#faqAccordion">
+                <div class="accordion-body">
+                    Answer 2
+                </div>
+            </div>
+        </div>
+
+        <!-- FAQ Item 3 -->
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="headingThree">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                    Question 3
+                </button>
+            </h2>
+            <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#faqAccordion">
+                <div class="accordion-body">
+                    Answer 3
+                </div>
+            </div>
+        </div>
+    </div>
   </div>
 
-  <!-- Only questions are visible, answers will be shown on click-->
-  <div class="faq-section">
-    <h2>FAQs</h2>
-
-    <div class="faq-item">
-      <button class="faq-question">
-        How do I get items?
-        <span class="faq-icon">+</span>
-      </button>
-      <div class="faq-answer">
-        <p>Visiting different markers on the map will let you collect different recyclables which, when enough are collected, can be used to make items to help grow your forest.</p>
-      </div>
-    </div>
-
-    <div class="faq-item">
-      <button class="faq-question">
-        Question 2
-        <span class="faq-icon">+</span>
-      </button>
-      <div class="faq-answer">
-        <p>Answer 2</p>
-      </div>
-    </div>
-
-    <div class="faq-item">
-      <button class="faq-question">
-        Question 3
-        <span class="faq-icon">+</span>
-      </button>
-      <div class="faq-answer">
-        <p>Answer 3</p>
-      </div>
-    </div>
+  <!-- Contact Section -->
+  <div class="contact container mt-4 text-center">
+      <p>Need to contact us?</p>
+      <p>Email: sustainablecampusteam@gmail.com</p>
   </div>
+  
+  <!-- Bootstrap JS -->
+  <script src="{% static '/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
 </body>
 </html>
 
-<div class="contact">
-  <p>Need to contact us?</p>
-  <p>Email: sustainablecampusteam@gmail.com</p>
-</div>
