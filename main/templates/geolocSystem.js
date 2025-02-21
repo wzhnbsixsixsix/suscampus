@@ -12,6 +12,9 @@ import Fill from './node_modules/ol/style/Fill.js';
 import Stroke from './node_modules/ol/style/Stroke.js';
 import Style from './node_modules/ol/style/Style.js';
 import RegularShape from "./node_modules/ol/style/RegularShape.js";
+import Overlay from "./node_modules/ol/Overlay.js";
+import Select from './node_modules/ol/interaction/Select.js';
+import {click} from "./node_modules/ol/events/condition.js";
 
 // currently much the geolocation handling is an example from the OpenLayers site to figure out how the location tracking should work
 // will be rewritten when implementing to the main webpage
@@ -32,6 +35,26 @@ const drawMarkers = new VectorLayer({
     })
 })
 
+// Creates the overlay used when the user wants to interact with a map marker.
+const popContainer = document.getElementById('marker-popup');
+const popContent = document.getElementById('marker-popup-content');
+const popCloser = document.getElementById('marker-popup-closer');
+const markerPopups = new Overlay({
+    element: popContainer,
+    autoPan: {
+        animation: {
+            duration: 250,
+        },
+    },
+});
+
+// handles closing the markerPopups
+popCloser.onclick = function () {
+    markerPopups.setPosition(undefined); // removes popup
+    popCloser.blur(); // does a blur transition
+    return false; // otherwise returns a href?
+};
+
 const map = new Map({
     layers: [
         rasterLayer,
@@ -39,6 +62,7 @@ const map = new Map({
     ],
     target: 'map',
     view: view,
+    overlays: [markerPopups],
 });
 
 const geolocation = new Geolocation({
@@ -74,8 +98,7 @@ geolocation.on('error', function (error) {
     info.style.display = '';
 });
 
-// no idea what exactly this does, might have to look at Feature in the ol library
-// it might make the circle around the user's marker, showing the possible inaccuracy of their position?
+// make the circle around the user's marker, showing the possible inaccuracy of their position
 const accuracyFeature = new Feature();
 geolocation.on('change:accuracyGeometry', function () {
     accuracyFeature.setGeometry(geolocation.getAccuracyGeometry());
@@ -115,7 +138,7 @@ map.addLayer( new VectorLayer({
                 source: new VectorSource({
                     features: userFeatures,
                 }),
-            }));
+}));
 
 
 // gets the view property of the map, which we can use to set the center and zoom
@@ -147,7 +170,6 @@ function findLocOnMap()  {
 }
 
 function createMarkerFromForm(event) {
-    console.log("Adding new marker...");
     // first need to get all the user's input from the input fields when the button is pressed:
     // currently assumes all user input is valid
     console.log("Getting marker specifications from the form...")
@@ -158,13 +180,20 @@ function createMarkerFromForm(event) {
         console.log(`${key}: ${value}`);
     }
 
+    createMarker(markerInfo);
+}
+
+function createMarker(data) {
+    console.log("Adding new marker...");
+
+
     let markerShape;
     let markerColor;
 
     // converts chosen color to hex value
     console.log("Setting color...");
-    console.log("color from form: " + markerInfo.get('color'));
-    switch (markerInfo.get('color')) {
+    console.log("color from form: " + data.get('color'));
+    switch (data.get('color')) {
         case "red":
             console.log("case: red");
             markerColor = '#FF0000';
@@ -185,8 +214,8 @@ function createMarkerFromForm(event) {
 
     // creates the object for the marker's shape, using the shape and color specified by the user
     console.log("Setting shape...");
-    console.log("shape from form: " + markerInfo.get('shape'));
-    switch (markerInfo.get('shape')) {
+    console.log("shape from form: " + data.get('shape'));
+    switch (data.get('shape')) {
         case "circle":
             console.log("case: circle");
             markerShape = new CircleStyle({
@@ -195,7 +224,7 @@ function createMarkerFromForm(event) {
                     color: markerColor,
                 }),
                 stroke: new Stroke({
-                    color: '#fff',
+                    color: '#000',
                     width: 2,
                 })
             });
@@ -207,7 +236,7 @@ function createMarkerFromForm(event) {
                     color: markerColor,
                 }),
                 stroke: new Stroke({
-                    color: '#fff',
+                    color: '#000',
                     width: 2,
                 }),
                 points: 4,
@@ -222,7 +251,7 @@ function createMarkerFromForm(event) {
                     color: markerColor,
                 }),
                 stroke: new Stroke({
-                    color: '#fff',
+                    color: '#000',
                     width: 2,
                 }),
                 points: 3,
@@ -251,7 +280,7 @@ function createMarkerFromForm(event) {
 
     // places the marker on the map
     console.log("Placing marker on map...");
-    marker.setGeometry(new Point([markerInfo.get("xcoord"), markerInfo.get("ycoord")]));
+    marker.setGeometry(new Point([data.get("xcoord"), data.get("ycoord")]));
 }
 
 document.querySelector("#find-loc").addEventListener("click", findLocOnMap);
@@ -263,3 +292,41 @@ markerData.addEventListener("submit",(event) => {
     new FormData(markerData); // this causes the formdata event for the next eventListener
 });
 markerData.addEventListener("formdata", (event) => createMarkerFromForm(event));
+
+// adding interactions to the map
+
+// allowing selection of features (for markers)
+
+// defines how a selected mark is styled
+const selectedMarkerStyle = new Style({
+    image: new CircleStyle({
+        radius: 6,
+        fill: new Fill({
+            color: '#FFFFFF',
+        }),
+        stroke: new Stroke({
+            color: '#FF00FF',
+            width: 3,
+        }),
+    })
+
+});
+
+// features on the drawMarkers layer can be selected, which will restyle them (while selected) according to the
+// selectedMarkerStyle
+const clickSelection = new Select({
+    condition: click,
+    layers: [drawMarkers],
+    style: selectedMarkerStyle,
+});
+map.addInteraction(clickSelection);
+// when a marker is clicked:
+clickSelection.on('select', function (e) {
+    // add popup on marker
+    console.log(e);
+
+    const markerPos = e.mapBrowserEvent.coordinate;
+    console.log("popup position: " + markerPos);
+    popContent.innerHTML = '<p>Selected Marker at: </p><code>' + markerPos + '</code>';
+    markerPopups.setPosition(markerPos);
+});
