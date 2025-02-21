@@ -7,8 +7,11 @@
     <link rel="stylesheet" href="node_modules/ol/ol.css">
     <style>
         .map {
-            width: 100%;
-            height: 400px;
+            position: relative;
+            top: 0;
+            bottom: 0;
+            width: 600px;
+            height: 600px;
         }
     </style>
 </head>
@@ -27,9 +30,9 @@
             "color-parse": "./node_modules/color-parse/index.js",
             "color-space/hsl.js": "./node_modules/color-space/hsl.js",
             "color-name": "./node_modules/color-name/index.js"
-          }
+            }
         }
-    </script>
+   </script>
 
     <button id="find-loc">Find Location</button>
 
@@ -50,6 +53,44 @@
         speed : <code id="speed"></code>
     </p>
 
-    <script type="module" src="geolocSystem.js"></script>
+    <!-- TODO: Need to add input validation to the below -->
+    <div id="add-marker">
+        <form name="marker-details" id="add-marker-form" action="" method="POST">
+            <label for="xcoord">X Coordinate:</label>
+            <input
+                    type="text"
+                    name="xcoord"
+                    id="xcoord"
+                    placeholder="X coordinate"
+                    required
+                    size="16"
+                    maxlength="16"/>
+            <label for="ycoord">Y Coordinate:</label>
+            <input
+                    type="text"
+                    name="ycoord"
+                    id="ycoord"
+                    placeholder="Y coordinate"
+                    required
+                    size="16"
+                    maxlength="16" />
+            <label for="shape">Shape:</label>
+            <select name="shape" id="shape">
+                <option value="circle">Circle</option>
+                <option value="square">Square</option>
+                <option value="triangle">Triangle</option>
+            </select>
+            <label for="color">Colour:</label>
+            <select name="color" id="color">
+                <option value="red">Red</option>
+                <option value="green">Green</option>
+                <option value="blue">Blue</option>
+                <option value="yellow">Yellow</option>
+            </select>
+            <button type="submit" id="create-marker">Create Marker</button>
+        </form>
+    </div>
+
+    <script type="module" src="geolocSystem.js" defer></script>
 </body>
 </html>

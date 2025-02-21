@@ -11,20 +11,31 @@ import CircleStyle from './node_modules/ol/style/Circle.js';
 import Fill from './node_modules/ol/style/Fill.js';
 import Stroke from './node_modules/ol/style/Stroke.js';
 import Style from './node_modules/ol/style/Style.js';
+import RegularShape from "./node_modules/ol/style/RegularShape.js";
 
-// currently this is almost all an example from the OpenLayers site to figure out how the location tracking should work
-// will be rewritten once the process is figured out so that it can be used for our purposes
+// currently much the geolocation handling is an example from the OpenLayers site to figure out how the location tracking should work
+// will be rewritten when implementing to the main webpage
 
+// the center and zoom will be changed when location tracking is enabled to focus on the user's position
 const view = new View({
     center: [0, 0],
-    zoom: 2,
+    zoom: 12,
 });
+
+const rasterLayer = new TileLayer({
+    source: new OSM(),
+});
+
+const drawMarkers = new VectorLayer({
+    source: new VectorSource({
+        features: [],
+    })
+})
 
 const map = new Map({
     layers: [
-        new TileLayer({
-            source: new OSM(),
-        }),
+        rasterLayer,
+        drawMarkers,
     ],
     target: 'map',
     view: view,
@@ -64,6 +75,7 @@ geolocation.on('error', function (error) {
 });
 
 // no idea what exactly this does, might have to look at Feature in the ol library
+// it might make the circle around the user's marker, showing the possible inaccuracy of their position?
 const accuracyFeature = new Feature();
 geolocation.on('change:accuracyGeometry', function () {
     accuracyFeature.setGeometry(geolocation.getAccuracyGeometry());
@@ -91,14 +103,23 @@ positionFeature.setStyle(
 geolocation.on('change:position', function () {
     const coordinates = geolocation.getPosition();
     positionFeature.setGeometry(coordinates ? new Point(coordinates) : null);
+    // updates the view's centre to the user's new position:
+    const newPos = positionFeature.getGeometry().getCoordinates();
+    console.log("centering view on: " + newPos);
+    mapView.setCenter(newPos);
 });
 
-new VectorLayer({
-    map: map,
-    source: new VectorSource({
-        features: [accuracyFeature, positionFeature],
-    }),
-});
+let userFeatures = [accuracyFeature, positionFeature];
+
+map.addLayer( new VectorLayer({
+                source: new VectorSource({
+                    features: userFeatures,
+                }),
+            }));
+
+
+// gets the view property of the map, which we can use to set the center and zoom
+const mapView = map.getView();
 
 function findLocOnMap()  {
     const status = document.querySelector("#status");
@@ -125,5 +146,120 @@ function findLocOnMap()  {
     }
 }
 
-document.querySelector("#find-loc").addEventListener("click", findLocOnMap)
+function createMarkerFromForm(event) {
+    console.log("Adding new marker...");
+    // first need to get all the user's input from the input fields when the button is pressed:
+    // currently assumes all user input is valid
+    console.log("Getting marker specifications from the form...")
+    let markerInfo = event.formData;
 
+    // for debugging
+    for (const [key, value] of markerInfo) {
+        console.log(`${key}: ${value}`);
+    }
+
+    let markerShape;
+    let markerColor;
+
+    // converts chosen color to hex value
+    console.log("Setting color...");
+    console.log("color from form: " + markerInfo.get('color'));
+    switch (markerInfo.get('color')) {
+        case "red":
+            console.log("case: red");
+            markerColor = '#FF0000';
+            break;
+        case "green":
+            console.log("case: green");
+            markerColor = '#00FF00';
+            break;
+        case "blue":
+            console.log("case: blue");
+            markerColor = '#0000FF';
+            break;
+        case "yellow":
+            console.log("case: yellow");
+            markerColor = '#FFFF00';
+            break;
+    }
+
+    // creates the object for the marker's shape, using the shape and color specified by the user
+    console.log("Setting shape...");
+    console.log("shape from form: " + markerInfo.get('shape'));
+    switch (markerInfo.get('shape')) {
+        case "circle":
+            console.log("case: circle");
+            markerShape = new CircleStyle({
+                radius: 6,
+                fill: new Fill({
+                    color: markerColor,
+                }),
+                stroke: new Stroke({
+                    color: '#fff',
+                    width: 2,
+                })
+            });
+            break;
+        case "square":
+            console.log("case: square");
+            markerShape = new RegularShape({
+                fill: new Fill({
+                    color: markerColor,
+                }),
+                stroke: new Stroke({
+                    color: '#fff',
+                    width: 2,
+                }),
+                points: 4,
+                radius: 6,
+                angle: Math.PI / 4,
+            });
+            break;
+        case "triangle":
+            console.log("case: triangle");
+            markerShape = new RegularShape({
+                fill: new Fill({
+                    color: markerColor,
+                }),
+                stroke: new Stroke({
+                    color: '#fff',
+                    width: 2,
+                }),
+                points: 3,
+                radius: 10,
+                rotation: Math.PI / 4,
+                angle: 0,
+            });
+            break;
+    }
+
+    // creates the marker
+    console.log("Making marker object...");
+    console.log("Shape and color:");
+    console.log(markerShape);
+    console.log(markerColor);
+    const marker = new Feature({
+        type: "marker",
+    });
+    marker.setStyle(new Style({
+        image: markerShape,
+    }));
+    console.log(marker);
+
+    console.log("Adding marker to vector layer...");
+    drawMarkers.getSource().addFeature(marker);
+
+    // places the marker on the map
+    console.log("Placing marker on map...");
+    marker.setGeometry(new Point([markerInfo.get("xcoord"), markerInfo.get("ycoord")]));
+}
+
+document.querySelector("#find-loc").addEventListener("click", findLocOnMap);
+
+const markerData = document.getElementById("add-marker-form");
+
+markerData.addEventListener("submit",(event) => {
+    event.preventDefault();
+    new FormData(markerData); // this causes the formdata event for the next eventListener
+});
+markerData.addEventListener("formdata", (event) => createMarkerFromForm(event));
