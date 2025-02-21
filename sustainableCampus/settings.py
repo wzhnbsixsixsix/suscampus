@@ -128,6 +128,7 @@ USE_TZ = True
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 STATIC_URL = '/static/'
+STATIC_FILES_DIRS = ((BASE_DIR / 'static'))
 
 # Emailing settings
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
