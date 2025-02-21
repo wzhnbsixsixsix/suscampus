@@ -22,11 +22,20 @@ const view = new View({
     zoom: 12,
 });
 
+const rasterLayer = new TileLayer({
+    source: new OSM(),
+});
+
+const drawMarkers = new VectorLayer({
+    source: new VectorSource({
+        features: [],
+    })
+})
+
 const map = new Map({
     layers: [
-        new TileLayer({
-            source: new OSM(),
-        }),
+        rasterLayer,
+        drawMarkers,
     ],
     target: 'map',
     view: view,
@@ -101,16 +110,11 @@ geolocation.on('change:position', function () {
 });
 
 let userFeatures = [accuracyFeature, positionFeature];
-let markerSource = new VectorSource();
 
 map.addLayer( new VectorLayer({
                 source: new VectorSource({
                     features: userFeatures,
                 }),
-            }));
-
-map.addLayer(new VectorLayer({
-                source: markerSource,
             }));
 
 
@@ -142,7 +146,7 @@ function findLocOnMap()  {
     }
 }
 
-function createMarker(event) {
+function createMarkerFromForm(event) {
     console.log("Adding new marker...");
     // first need to get all the user's input from the input fields when the button is pressed:
     // currently assumes all user input is valid
@@ -234,20 +238,20 @@ function createMarker(event) {
     console.log("Shape and color:");
     console.log(markerShape);
     console.log(markerColor);
-    const marker = new Feature();
-    marker.setStyle(
-        new Style({image: markerShape,}),
-    );
+    const marker = new Feature({
+        type: "marker",
+    });
+    marker.setStyle(new Style({
+        image: markerShape,
+    }));
     console.log(marker);
 
     console.log("Adding marker to vector layer...");
-    markerSource.addFeature(marker);
+    drawMarkers.getSource().addFeature(marker);
 
     // places the marker on the map
     console.log("Placing marker on map...");
-    marker.setGeometry(new Point([markerInfo["xcoord"], markerInfo["ycoord"]]));
-    console.log("Re-rendering map to show marker...");
-    map.render(); // re-renders the map to show the marker
+    marker.setGeometry(new Point([markerInfo.get("xcoord"), markerInfo.get("ycoord")]));
 }
 
 document.querySelector("#find-loc").addEventListener("click", findLocOnMap);
@@ -258,4 +262,4 @@ markerData.addEventListener("submit",(event) => {
     event.preventDefault();
     new FormData(markerData); // this causes the formdata event for the next eventListener
 });
-markerData.addEventListener("formdata", (event) => createMarker(event));
+markerData.addEventListener("formdata", (event) => createMarkerFromForm(event));
