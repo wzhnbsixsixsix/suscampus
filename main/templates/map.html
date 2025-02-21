@@ -1,11 +1,36 @@
 <!DOCTYPE html>
 <html>
-<head>
+  <head>
+  {% load static %}
   <title>Sustainable Campus</title>
-  <!--<link rel="stylesheet" type="text/css" href="index-style.css">-->
+  <link rel="stylesheet" href="/static/css/map.css">
+  <link rel="stylesheet" href="{% static 'css/navbar.css' %}">
 </head>
 <body>
+  <div class="navbar">
+    <!-- Logo of university -->
+    <div>
+      <a href=""><img src="" alt="University of Exeter"></a>
+      <p>University of Exeter</p>
+    </div>
+    <!-- Navigation bar -->
+    <ul class="navbar-links">
+      <li><a href="">Home</a></li>
+      <li><a href="">About</a></li>
+      <li><a href="">Suggestions</a></li>
+      <li><a href="">Contact</a></li>
+    </ul>
+    <!-- profile -->
+    <div>
+      <a href=""><img src="" alt="Profile"></a>
+      <p>Profile</p>
+    </div>
+  </div>
+
   <h1>Map</h1>
-  <p>Placeholder test</p>
+  <!-- map -->
+  <div id="map" class="map">
+    <p>MAP HERE</p>
+  </div>
 </body>
 </html>
