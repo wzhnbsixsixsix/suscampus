@@ -97,7 +97,7 @@ def redeem_page(request):
     if request.user.is_staff == False:
         return redirect('shop:unauthorised')
     
-    # Retrieves given redeem code, and checks if it is attached to a purchase. If so, sends user to redeem_item.html page
+    # Retrieves given redeem code, and checks if it matches a purchase. If so, sends user to redeem_item.html page
     if request.method == 'POST':
         redeem_code = request.POST.get('redeem_code')
 
