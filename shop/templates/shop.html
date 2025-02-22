@@ -4,6 +4,7 @@
     {% load static %}
     <title>Sustainable Campus</title>
     <link rel="stylesheet" href="{% static 'css/navbar.css' %}">
+    <link href="https://cdn.lineicons.com/5.0/lineicons.css" rel="stylesheet" />
     <link rel="stylesheet" href="{% static '/bootstrap/css/bootstrap.min.css' %}">
   </head>
   <body>
@@ -68,29 +69,29 @@
     </div>
     <div class="offcanvas-body p-0">
 
-        <li class="sidebar-item">
-            <a href="/" class="nav-link px-2 link-dark">Home</a>
+        <li class="sidebar-item display-6 m-2">
+            <a href="/" class="nav-link px-2 link-dark"><i class="lni lni-map-marker-1"></i>  Home</a>
         </li>
-        <li class="sidebar-item">
-             <a href="/forest" class="nav-link px-2 link-dark">My forest</a>
+        <li class="sidebar-item display-6 m-2">
+             <a href="/forest" class="nav-link px-2 link-dark"><i class="lni lni-trees-3"></i>  My forest</a>
         </li>
-        <li class="sidebar-item">
-             <a href="/shop/" class="nav-link px-2 link-dark">Shop</a>
+        <li class="sidebar-item display-6 m-2">
+             <a href="/shop/" class="nav-link px-2 link-dark"><i class="lni lni-cart-1"></i>  Shop</a>
         </li>
-        <li class="sidebar-item">
-             <a href="/announcements/" class="nav-link px-2 link-dark">Announcements</a>
+        <li class="sidebar-item display-6 m-2">
+             <a href="/announcements/" class="nav-link px-2 link-dark"><i class="lni lni-comment-1"></i>  Announcements</a>
         </li>
-        <li class="sidebar-item">
-            <a href="/suggestions/" class="nav-link px-2 link-dark">Suggestion box</a>
+        <li class="sidebar-item display-6 m-2">
+            <a href="/suggestions/" class="nav-link px-2 link-dark"><i class="lni lni-box-archive-1"></i>  Suggestion box</a>
         </li>
-        <li class="/sidebar-item">
+        <li class="/sidebar-item display-6 m-2">
             <a href="#" class="nav-link px-2 collapsed has-dropdown link-dark" data-bs-toggle="collapse" data-bs-target="#userOptions" aria-expanded="true" aria-controls="userOptions">
-                <span>User options</span>
+                <span><i class="lni lni-gear-1"></i>  User options</span>
             </a>
             <ul id="userOptions" class="sidebar-dropdown px-4 list-unstyled collapse" data-bs-parent="#sidebar">
-                <li class="sidebar-item"><a class="nav-link link-dark" href="#">Profile</a></li>
-                <li class="sidebar-item"><a class="nav-link link-dark" href="#">Settings</a></li>
-                <li class="sidebar-item"><a class="nav-link link-dark" href="#">Sign out</a></li>
+                <li class="sidebar-item"><a class="nav-link link-dark" href="#"><i class="lni lni-user-4"></i>  Profile</a></li>
+                <li class="sidebar-item"><a class="nav-link link-dark" href="#"><i class="lni lni-gears-3"></i>  Settings</a></li>
+                <li class="sidebar-item"><a class="nav-link link-dark" href="#"><i class="lni lni-exit"></i>  Sign out</a></li>
             </ul>
         </li>
     </div>
