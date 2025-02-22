@@ -14,58 +14,61 @@
 <body>
 <nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom p-3">
     <div class="container-fluid">
-      <!-- Logo on the left -->
-      <a href="/" class="navbar-brand">
-          <img src="{% static 'images/exeter-logo.png' %}" alt="University of Exeter" width="150" height="auto">
-      </a>
+        <!-- Logo on the left -->
+        <a href="/" class="navbar-brand">
+            <img src="{% static 'images/exeter-logo.png' %}" alt="University of Exeter" width="150" height="auto">
+        </a>
 
-      <!-- Hamburger menu button for collapsing -->
-      <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#sidebar" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-          <span class="navbar-toggler-icon"></span>
-      </button>
+        <!-- Hamburger menu button for collapsing -->
+        <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#sidebar"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
 
-      <!-- Collapsible content -->
-      <div class="collapse navbar-collapse" id="navbarNav">
-          <!-- Navigation links in the center -->
-          <ul class="navbar-nav mx-auto mb-2 mb-lg-0">
-              <li class="nav-item">
-                  <a href="" class="nav-link px-2 link-dark">Home</a>
-              </li>
-              <li class="nav-item">
-                  <a href="forest" class="nav-link px-2 link-dark">My forest</a>
-              </li>
-              <li class="nav-item">
-                  <a href="shop/" class="nav-link px-2 link-dark">Shop</a>
-              </li>
-              <li class="nav-item">
-                  <a href="announcements/" class="nav-link px-2 link-dark">Announcements</a>
-              </li>
-              <li class="nav-item">
-                  <a href="suggestions/" class="nav-link px-2 link-dark">Suggestion box</a>
-              </li>
-          </ul>
+        <!-- Collapsible content -->
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <!-- Navigation links in the center -->
+            <ul class="navbar-nav mx-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <a href="" class="nav-link px-2 link-dark">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a href="forest" class="nav-link px-2 link-dark">My forest</a>
+                </li>
+                <li class="nav-item">
+                    <a href="shop/" class="nav-link px-2 link-dark">Shop</a>
+                </li>
+                <li class="nav-item">
+                    <a href="announcements/" class="nav-link px-2 link-dark">Announcements</a>
+                </li>
+                <li class="nav-item">
+                    <a href="suggestions/" class="nav-link px-2 link-dark">Suggestion box</a>
+                </li>
+            </ul>
 
-          <!-- Profile dropdown on the right -->
-          <div class="d-flex align-items-center">
-              <!-- Log in button if not logged in -->
-              <a href="{% url 'accounts:login' %}" class="btn btn-outline-primary mx-2">Log in</a>
-              <!-- User profile dropdown (when logged in) -->
-              <div class="dropdown text-end ms-lg-3">
-                  <a href="#" class="d-block link-dark text-decoration-none dropdown-toggle" id="dropdownUser" data-bs-toggle="dropdown" aria-expanded="false">
-                      <img src="" alt="mdo" width="32" height="32" class="rounded-circle">
-                  </a>
-                  <ul class="dropdown-menu text-small dropdown-menu-end" aria-labelledby="dropdownUser">
-                      <li><a class="dropdown-item" href="{% url 'accounts:profile' %}">Profile</a></li>
-                      <li><a class="dropdown-item" href="#">Settings</a></li>
-                      <li><hr class="dropdown-divider"></li>
-                      <li><a class="dropdown-item" href="#">Sign out</a></li>
-                  </ul>
-              </div>
-          </div>
-      </div>
+            <!-- Profile dropdown on the right -->
+            <div class="d-flex align-items-center">
+                <!-- Log in button if not logged in -->
+                <a href="{% url 'accounts:login' %}" class="btn btn-outline-primary mx-2">Log in</a>
+                <!-- User profile dropdown (when logged in) -->
+                <div class="dropdown text-end ms-lg-3">
+                    <a href="#" class="d-block link-dark text-decoration-none dropdown-toggle" id="dropdownUser"
+                       data-bs-toggle="dropdown" aria-expanded="false">
+                        <img src="" alt="mdo" width="32" height="32" class="rounded-circle">
+                    </a>
+                    <ul class="dropdown-menu text-small dropdown-menu-end" aria-labelledby="dropdownUser">
+                        <li><a class="dropdown-item" href="{% url 'accounts:profile' %}">Profile</a></li>
+                        <li><a class="dropdown-item" href="#">Settings</a></li>
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
+                        <li><a class="dropdown-item" href="#">Sign out</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
     </div>
 </nav>
-
 
 <!-- sidebar for use when screen is slim-->
 <div class="offcanvas offcanvas-start" id="sidebar">
@@ -108,12 +111,9 @@
         </li>
     </div>
 </div>
-
-
 <main class="container my-4">
     <div class="profile-container p-4 bg-light rounded shadow">
-        <h1 class="mb-3">John Doe</h1>
-        <!-- 通过模态框实现用户名修改 -->
+        <h1 class="mb-3">{{ username }}</h1>
         <button class="btn btn-success mb-3" type="button" data-bs-toggle="modal" data-bs-target="#changeUsernameModal">
             Change username
         </button>
@@ -123,83 +123,117 @@
              aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
-{#                    <form action="{% url 'change_username' %}" method="post">#}
-                        <form action="#" method="post">
-                            {% csrf_token %}
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="changeUsernameModalLabel">Change Username</h5>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                        aria-label="Close"></button>
+                    <form id="change-username-form" action="{% url 'accounts:change_username' %}" method="post">
+                        {% csrf_token %}
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="changeUsernameModalLabel">Change Username</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="mb-3">
+                                <label for="new-username" class="form-label">New Username</label>
+                                <input type="text" class="form-control" id="new-username" name="username"
+                                       placeholder="Enter new username" required>
+                                <div id="username-error"></div>
+                                {% if form.username.errors %}
+                                    <div class="alert alert-danger mt-2" role="alert">
+                                        {% for error in form.username.errors %}
+                                            <p class="mb-0">{{ error }}</p>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
                             </div>
-                            <div class="modal-body">
-                                <div class="mb-3">
-                                    <label for="new-username" class="form-label">New Username</label>
-                                    <input type="text" class="form-control" id="new-username" name="new_username"
-                                           placeholder="Enter new username" required>
-                                </div>
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                                <button type="submit" class="btn btn-success">Save changes</button>
-                            </div>
-                        </form>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                            <button type="submit" class="btn btn-success">Save changes</button>
+                        </div>
+                    </form>
+
                 </div>
             </div>
         </div>
 
         <section class="mb-4">
             <h2 class="mb-2">Email and Password</h2>
-            <p><strong>Account email:</strong> jd127@exeter.ac.uk</p>
+            <p><strong>Account email:</strong>{{ email }}</p>
 
-{#            <form class="row g-3" action="{% url 'change_password' %}" method="post">#}
-                <form class="row g-3" action="#" method="post">
-                    {% csrf_token %}
-                    <div class="col-12">
-                        <label for="old-password" class="form-label">Old password</label>
-                        <input type="password" class="form-control" id="old-password" name="old_password"
-                               placeholder="Old password" required>
-                    </div>
-                    <div class="col-12">
-                        <label for="new-password" class="form-label">New password</label>
-                        <input type="password" class="form-control" id="new-password" name="new_password"
-                               placeholder="New password" required>
-                    </div>
-                    <div class="col-12">
-                        <button type="submit" class="btn btn-success">Change password</button>
-                    </div>
-                </form>
+            <form class="row g-3" action="{% url 'accounts:change_password' %}" method="post">
+
+                {% csrf_token %}
+                <div class="col-12">
+                    <label for="old-password" class="form-label">Old password</label>
+                    <input type="password" class="form-control" id="old-password" name="old_password"
+                           placeholder="Old password" required>
+                </div>
+                <div class="col-12">
+                    <label for="new-password" class="form-label">New password</label>
+                    <input type="password" class="form-control" id="new-password" name="new_password"
+                           placeholder="New password" required>
+                </div>
+                <div class="col-12">
+                    <button type="submit" class="btn btn-success">Change password</button>
+                </div>
+            </form>
         </section>
 
         <div class="d-flex align-items-center gap-3 mb-4">
             <img src="https://via.placeholder.com/100" alt="Profile Image" class="rounded-circle border border-success"
                  style="width: 100px; height: 100px;">
-{#            <form action="{% url 'change_profile_image' %}" method="post" enctype="multipart/form-data">#}
-                <form action="#" method="post" enctype="multipart/form-data">
-                    {% csrf_token %}
-                    <input type="file" class="form-control mb-2" id="profile-image" name="profile_image"
-                           accept="image/*" required>
-                    <button type="submit" class="btn btn-success">Change profile image</button>
-                </form>
+            {#            <form action="{% url 'change_profile_image' %}" method="post" enctype="multipart/form-data">#}
+            <form action="#" method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <input type="file" class="form-control mb-2" id="profile-image" name="profile_image"
+                       accept="image/*" required>
+                <button type="submit" class="btn btn-success">Change profile image</button>
+            </form>
         </div>
 
         <section class="mb-4">
             <h2 class="mb-2">Terms of Use</h2>
-{#            <p>This is a placeholder for terms of use content. Please review our <a href="{% url 'terms' %}"#}
-{#                                                                                    class="text-success">Terms of#}
-{#                Use</a> for more details.</p>#}
+            {#            <p>This is a placeholder for terms of use content. Please review our <a href="{% url 'terms' %}"#}
+            {#                                                                                    class="text-success">Terms of#}
+            {#                Use</a> for more details.</p>#}
             <p>This is a placeholder for terms of use content. Please review our <a href="#" class="text-success">Terms
                 of Use</a> for more details.</p>
 
         </section>
 
-{#        <form action="{% url 'logout' %}" method="post">#}
-            <form action="#" method="post">
-                {% csrf_token %}
-                <button type="submit" class="btn btn-success">Log out</button>
-            </form>
+        {#        <form action="{% url 'logout' %}" method="post">#}
+        <form action="#" method="post">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-success">Log out</button>
+        </form>
 
     </div>
 </main>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        // 后端传递 show_modal=True 时，自动打开模态框
+        {% if show_modal %}
+            var modal = new bootstrap.Modal(document.getElementById('changeUsernameModal'));
+            modal.show();
+        {% endif %}
+
+        // 前端拦截提交，防止提交错误的用户名
+        document.getElementById("change-username-form").addEventListener("submit", function (event) {
+            var usernameInput = document.getElementById("new-username");
+            var username = usernameInput.value.trim();
+            var errorContainer = document.getElementById("username-error");
+
+            // 清空之前的错误信息
+            errorContainer.innerHTML = "";
+
+            // 前端校验：检查用户名是否合法
+            if (username === "" || username.length < 3 || username.length > 20 || !/^[a-zA-Z0-9_]+$/.test(username)) {
+                event.preventDefault();  // 阻止表单提交
+                errorContainer.innerHTML = "<div class='alert alert-danger mt-2'>Invalid username! Username must be 3-20 characters and only contain letters, numbers, and underscores.</div>";
+                return;
+            }
+        });
+    });
+</script>
+
 
 <!-- Bootstrap JS and Popper.js -->
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
