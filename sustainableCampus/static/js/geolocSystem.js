@@ -1,3 +1,5 @@
+// not sure how to fix this, but when nodeJS in installed the default import statements do not work
+// they have to be changed to relative paths
 import Feature from './node_modules/ol/Feature.js';
 import Geolocation from './node_modules/ol/Geolocation.js';
 import Map from './node_modules/ol/Map.js';
