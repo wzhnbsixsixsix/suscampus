@@ -2,7 +2,6 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.urls import reverse
 from .models import ShopItem, UserBalance, ItemPurchase, CurrencyTransaction
-from accounts.models import CustomUser
 import string, random, qrcode
 from django.conf import settings
 import os
