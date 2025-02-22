@@ -17,7 +17,9 @@ def shop_items(request):
 
     # Retrieves all items stored in the ShopItem table
     items = ShopItem.objects.filter()
-    context = {'items':items}
+
+    user_balance = UserBalance.objects.get(user_id=request.user)
+    context = {'items':items, 'user_balance':user_balance}
 
     return render(request, 'shop/shop.html', context)
 
@@ -25,7 +27,7 @@ def shop_items(request):
 def buy_shop_item(request, item_id):
     # retrieves item, and buyer's balance
     item = ShopItem.objects.get(item_id=item_id)
-    user_balance = UserBalance.objects.get(user=request.user)
+    user_balance = UserBalance.objects.get(user_id=request.user)
 
     # Checks if user has enough currency to buy the item
     if user_balance.currency >= item.currency_cost:
@@ -48,6 +50,8 @@ def buy_shop_item(request, item_id):
 
     else:
         messages.error(request, "You do not have enough currency.")
+
+    return redirect('/shop/')
 
 # Function used for generating 6 figure redeem code. 
 def redeem_code_generator(size=6, chars=string.ascii_uppercase + string.digits):
