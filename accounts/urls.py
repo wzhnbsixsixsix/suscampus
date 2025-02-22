@@ -7,6 +7,6 @@ urlpatterns = [
     path("signup/", views.signup_page, name="signup"),
     path("login/", views.login_page, name="login"),
     path("email_verification/<uuid:token>", views.email_verification, name="email_verification"),
-    path("setting/",views.setting_page,name="setting"),
+    path("profile/",views.setting_page,name="profile"),
 ]
 
