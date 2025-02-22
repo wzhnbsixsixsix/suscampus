@@ -1,4 +1,3 @@
-
 from django.contrib import messages
 from django.shortcuts import redirect, render
 from django.contrib.auth import authenticate, login
@@ -79,13 +78,12 @@ def login_page(request):
                 # Checks if user is verified
                 if user.verified == True:
                     login(request, user)
-                    return redirect('shop:shop')
+                    return redirect('main:map')
 
                 else:
                     form.add_error(None, 'Email has not been verified')
 
             else:
-                print("checkpoint 3")
                 form.add_error(None, 'Invalid username or password')
             
         else:
