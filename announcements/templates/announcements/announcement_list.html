@@ -60,6 +60,19 @@
         </div>
       </div>
     </nav> 
+
+<h1>Community Announcements</h1>
+    <a href="{% url 'create_announcement' %}">Create New Announcement</a>
+    <ul>
+        {% for announcement in announcements %}
+        <li>
+            <h2>{{ announcement.title }}</h2>
+            <p>{{ announcement.content }}</p>
+            <small>Posted by {{ announcement.author }} on {{ announcement.created_at }}</small>
+        </li>
+        {% endfor %}
+    </ul>
+    
   </body>
 
   <!-- sidebar for use when screen is slim-->
