@@ -100,4 +100,4 @@ def logout_view(request):
     return redirect("accounts:login")
 
 def setting_page(request):
-    return render(request, 'accounts/setting.html')
+    return render(request, 'accounts/profile.html')
