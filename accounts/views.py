@@ -79,7 +79,7 @@ def login_page(request):
                 # Checks if user is verified
                 if user.verified == True:
                     login(request, user)
-                    return redirect('home')
+                    return redirect('shop:shop')
 
                 else:
                     form.add_error(None, 'Email has not been verified')
