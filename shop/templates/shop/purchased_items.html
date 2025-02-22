@@ -1,4 +1,4 @@
-<h2>Your Redeemable Items</h2>
+<h2>Your Purchased Items</h2>
 
 {% if purchases %}
     <ul>
@@ -7,7 +7,9 @@
                 <h3>{{ purchase.item.name }}</h3>
                 <p>{{ purchase.item.description }}</p>
                 <p>Purchased on: {{ purchase.purchase_date_time }}</p>
-                {% if purchase.is_redeemed %}
+                {% if purchase.is_digital %}
+                    <button disabled>Not Redeemable</button>
+                {% elif purchase.is_redeemed %}
                     <button disabled>Already Redeemed</button>
                 {% else %}
                     <a href="{% url 'shop:display_redeem_code' redeem_code=purchase.redeem_code %}">

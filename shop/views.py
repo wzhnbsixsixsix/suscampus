@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.urls import reverse
 from .models import ShopItem, UserBalance, ItemPurchase, CurrencyTransaction
+from accounts.models import CustomUser
 import string, random, qrcode
 from django.conf import settings
 import os
@@ -56,15 +57,19 @@ def redeem_code_generator(size=6, chars=string.ascii_uppercase + string.digits):
         if ItemPurchase.objects.filter(redeem_code=redeem_code).exists() == False:
             return redeem_code
 
-# View for redeemable_items.html. Retrieves all purchases made by user, and sends it to html
-def redeemable_items(request):
+# View for purchased_items.html. Retrieves all purchases made by user, and sends it to html
+def purchased_items(request):
     purchases = ItemPurchase.objects.filter(user=request.user)
     context = {'purchases':purchases}
-    return render(request, 'shop/redeemable_items.html', context)
+    return render(request, 'shop/purchased_items.html', context)
 
 # View for display_redeem_code.html. Used to generate QR code for redeeming items by game keepers. 
 def display_redeem_qr_code(request, redeem_code):
     purchase = get_object_or_404(ItemPurchase, redeem_code=redeem_code)
+
+    # Ensures the qr code is only displayed to the buyer of item
+    if request.user != purchase.user:
+        return redirect('shop:unauthorised')
 
     # If item is already redeemed, redirects user to a different page to inform them
     if purchase.is_redeemed == True:
@@ -90,7 +95,7 @@ def display_redeem_qr_code(request, redeem_code):
 def redeem_page(request):
     # Ensures user has permissions
     if request.user.is_staff == False:
-        return render(request, 'shop/unauthorised.html')
+        return redirect('shop:unauthorised')
     
     # Retrieves given redeem code, and checks if it is attached to a purchase. If so, sends user to redeem_item.html page
     if request.method == 'POST':
