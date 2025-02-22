@@ -6,6 +6,7 @@ from django.contrib.auth import logout
 from django.core.mail import send_mail
 from django.conf import settings
 from .models import CustomUser
+from shop.models import UserBalance
 
 # Handles data submitted from signup page's form
 def signup_page(request):
@@ -48,10 +49,13 @@ def email_verification(request, token):
         messages.error(request, "Invalid or expired verification token")
         return redirect('accounts:signup')
 
-    # Verifies user if they are unverified
+    # Verifies user if they are unverified, and creates user balance for account
     if user.verified == False:
         user.verified = True
         user.save()
+
+        UserBalance.objects.create(user_id=user)
+
         messages.success(request, "User has now been verified, you can now log in.")
     else:
         messages.error(request, "User is already verified")
