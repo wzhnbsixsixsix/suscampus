@@ -13,6 +13,24 @@
             width: 600px;
             height: 600px;
         }
+        .ol-popup {
+            position: absolute;
+            background-color: #caffaa;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+            padding: 15px;
+            border-radius: 10px;
+            border: 1px solid #cccccc;
+            min-width: 200px;
+        }
+        .ol-popup-closer {
+            text-decoration: none;
+            position: absolute;
+            top: 2px;
+            right: 8px;
+        }
+        .ol-popup-closer:after {
+            content: "✖";
+        }
     </style>
 </head>
 <body>
@@ -40,6 +58,10 @@
     <a id="map-view" target="_blank"></a>
 
     <div id="map" class="map"></div>
+    <div id="marker-popup" class="ol-popup">
+        <a href="#" id="marker-popup-closer" class="ol-popup-closer"></a>
+        <div id="marker-popup-content"></div>
+    </div>
     <div id="info" style="display: none;"></div>
     <label for="track">
         Tick to enable location tracking
