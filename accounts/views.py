@@ -23,7 +23,7 @@ def signup_page(request):
             else:
                 user = form.save()
                 send_email_verification(user)
-                return redirect('login')
+                return redirect('accounts:login')
 
     context = {'form':form}
     return render(request, 'accounts/signup.html', context)
@@ -47,7 +47,7 @@ def email_verification(request, token):
         user = CustomUser.objects.get(verification_token=token)
     except CustomUser.DoesNotExist:
         messages.error(request, "Invalid or expired verification token")
-        return redirect('signup')
+        return redirect('accounts:signup')
 
     # Verifies user if they are unverified
     if user.verified == False:
@@ -57,7 +57,7 @@ def email_verification(request, token):
     else:
         messages.error(request, "User is already verified")
 
-    return redirect('login')
+    return redirect('accounts:login')
 
 # Handles data submitted by login page's form
 def login_page(request):
@@ -79,7 +79,7 @@ def login_page(request):
                 # Checks if user is verified
                 if user.verified == True:
                     login(request, user)
-                    return redirect('home')
+                    return redirect('shop:shop')
 
                 else:
                     form.add_error(None, 'Email has not been verified')
@@ -99,6 +99,6 @@ def login_page(request):
 def logout_view(request):
     logout(request)
     messages.success(request, "Log out successfully")
-    return redirect("login")
+    return redirect("accounts:login")
 
 

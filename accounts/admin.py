@@ -7,7 +7,7 @@ class CustomUserAdmin(UserAdmin):
     model = CustomUser
     list_display = ['username', 'email', 'first_name', 'last_name', 'password', 'role', 'verified']
     fieldsets = UserAdmin.fieldsets + (
-        ('Additional Info', {'fields': ('role', 'verified', 'verification_token')}),
+        ('Additional Info', {'fields': ('role', 'verified')}),
     )
     add_fieldsets = UserAdmin.add_fieldsets + (
         ('Additional Info', {'fields': ('role', 'verified')}),
