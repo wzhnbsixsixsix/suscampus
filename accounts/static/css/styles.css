@@ -50,5 +50,34 @@ body {
     justify-content: center;
     height: 100vh;
     margin: 0;
+    color: #004d00; /* Dark green text */
+}
+
+.bg-success {
+    background-color: #006600 !important; /* Dark green header */
+}
+
+.profile-icon {
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.profile-container {
+    background-color: #e6ffe6; /* Light green for the profile container */
+    border: 1px solid #004d00; /* Dark green border */
+}
+
+.btn-success {
+    background-color: #006600; /* Dark green buttons */
+    border-color: #004d00;
+}
+
+.btn-success:hover {
+    background-color: #004d00; /* Darker green on hover */
+    border-color: #003300;
+}
+
+h1, h2 {
+    color: #004d00; /* Dark green for headings */
 }
 

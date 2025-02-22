@@ -101,4 +101,5 @@ def logout_view(request):
     messages.success(request, "Log out successfully")
     return redirect("accounts:login")
 
-
+def setting_page(request):
+    return render(request, 'accounts/setting.html')
