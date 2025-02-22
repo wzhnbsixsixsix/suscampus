@@ -10,6 +10,13 @@
       rel="stylesheet"
       href="{% static '/bootstrap/css/bootstrap.min.css' %}"
     />
+    <style>
+      body {
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+      }
+    </style>
   </head>
   <body>
     <nav
@@ -170,14 +177,22 @@
       </div>
     </div>
 
-    <div class="container mt-4 vh-100 d-flex flex-column">
-        <div class="row content-area">
-            <h1>Forest</h1>
-        </div>
-        <div class="row content-area flex-grow-1 border">
-            Forest goes here
-        </div>   
-    </div>
+    <div class="container-fluid flex-grow-1 d-flex flex-column mb-2">
+      <!-- Header -->
+      <div class="py-3">
+          <h1>Forest</h1>
+      </div>
+
+      <div class="flex-grow-1 bg-light border mb-2">
+          <!-- Map content goes here -->
+      </div>
+    
+      <!-- Buttons -->
+      <div class="w-100 d-flex gap-2">
+        <button type="button" class="btn btn-primary btn-lg flex-fill">Plant a tree</button>
+        <button type="button" class="btn btn-primary btn-lg flex-fill">Customise</button>
+        <button type="button" class="btn btn-primary btn-lg flex-fill">...</button>
+      </div>
 
     <!-- Bootstrap JS -->
     <script src="{% static '/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
