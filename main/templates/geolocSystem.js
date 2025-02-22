@@ -325,8 +325,12 @@ clickSelection.on('select', function (e) {
     // add popup on marker
     console.log(e);
 
-    const markerPos = e.mapBrowserEvent.coordinate;
-    console.log("popup position: " + markerPos);
-    popContent.innerHTML = '<p>Selected Marker at: </p><code>' + markerPos + '</code>';
-    markerPopups.setPosition(markerPos);
+    const marker = e.selected[0];
+    // avoids a popup appearing when a marker is deselcted by clicking on the map, instead of a marker
+    if (marker !== undefined) {
+        const markerPos = marker.getGeometry().getCoordinates();
+        console.log("popup position: " + markerPos);
+        popContent.innerHTML = '<p>Selected Marker at: </p><code>' + markerPos + '</code>';
+        markerPopups.setPosition(markerPos);
+    }
 });
