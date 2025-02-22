@@ -68,7 +68,7 @@
         <li>
             <h2>{{ announcement.title }}</h2>
             <p>{{ announcement.content }}</p>
-            <small>Posted by {{ announcement.author }} on {{ announcement.created_at }}</small>
+            <small>Posted by {{ announcement.author }} | Role: {{ announcement.author.role }} on {{ announcement.created_at }}</small>
         </li>
         {% endfor %}
     </ul>
