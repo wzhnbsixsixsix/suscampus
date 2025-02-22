@@ -15,7 +15,7 @@
         </a>
   
         <!-- Hamburger menu button for collapsing -->
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#sidebar" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
   
@@ -24,19 +24,19 @@
             <!-- Navigation links in the center -->
             <ul class="navbar-nav mx-auto mb-2 mb-lg-0">
                 <li class="nav-item">
-                    <a href="../" class="nav-link px-2 link-dark">Home</a>
+                    <a href="/" class="nav-link px-2 link-dark">Home</a>
                 </li>
                 <li class="nav-item">
-                    <a href="../forest" class="nav-link px-2 link-dark">My forest</a>
+                    <a href="/forest/" class="nav-link px-2 link-dark">My forest</a>
                 </li>
                 <li class="nav-item">
-                    <a href="" class="nav-link px-2 link-dark">Shop</a>
+                    <a href="/shop/" class="nav-link px-2 link-dark">Shop</a>
                 </li>
                 <li class="nav-item">
-                    <a href="../announcements/" class="nav-link px-2 link-dark">Announcements</a>
+                    <a href="/announcements/" class="nav-link px-2 link-dark">Announcements</a>
                 </li>
                 <li class="nav-item">
-                    <a href="../suggestions/" class="nav-link px-2 link-dark">Suggestion box</a>
+                    <a href="/suggestions/" class="nav-link px-2 link-dark">Suggestion box</a>
                 </li>
             </ul>
   
@@ -59,6 +59,42 @@
     <h1>Shop</h1>
     <p>Placeholder test</p>
 
+
+    <!-- sidebar for use when screen is slim-->
+  <div class="offcanvas offcanvas-start" id="sidebar">
+    <div class="offcanvas-header">
+        <h5>Sustainable Campus</h5>
+        <button type="button" class="btn-close text-reset" data-bs-toggle="offcanvas" data-bs-target="#sidebar" aria-controls="offcanvasWithBackdrop" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body p-0">
+
+        <li class="sidebar-item">
+            <a href="/" class="nav-link px-2 link-dark">Home</a>
+        </li>
+        <li class="sidebar-item">
+             <a href="/forest" class="nav-link px-2 link-dark">My forest</a>
+        </li>
+        <li class="sidebar-item">
+             <a href="/shop/" class="nav-link px-2 link-dark">Shop</a>
+        </li>
+        <li class="sidebar-item">
+             <a href="/announcements/" class="nav-link px-2 link-dark">Announcements</a>
+        </li>
+        <li class="sidebar-item">
+            <a href="/suggestions/" class="nav-link px-2 link-dark">Suggestion box</a>
+        </li>
+        <li class="/sidebar-item">
+            <a href="#" class="nav-link px-2 collapsed has-dropdown link-dark" data-bs-toggle="collapse" data-bs-target="#userOptions" aria-expanded="true" aria-controls="userOptions">
+                <span>User options</span>
+            </a>
+            <ul id="userOptions" class="sidebar-dropdown px-4 list-unstyled collapse" data-bs-parent="#sidebar">
+                <li class="sidebar-item"><a class="nav-link link-dark" href="#">Profile</a></li>
+                <li class="sidebar-item"><a class="nav-link link-dark" href="#">Settings</a></li>
+                <li class="sidebar-item"><a class="nav-link link-dark" href="#">Sign out</a></li>
+            </ul>
+        </li>
+    </div>
+</div>
     <!-- Bootstrap JS -->
     <script src="{% static '/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
   </body>
