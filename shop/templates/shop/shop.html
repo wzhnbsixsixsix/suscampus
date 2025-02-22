@@ -8,6 +8,13 @@
 </head>
 <body>
     <a href="{% url 'shop:purchased_items'%}">Your Purchased Items</a>
+    {% if messages %}
+        <ul class="messages">
+            {% for message in messages %}
+                <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
     <div class="shop-container">
         {% for item in items %}
         <div class="shop-item">
