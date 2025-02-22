@@ -12,6 +12,7 @@ from .models import CustomUser
 from shop.models import UserBalance
 
 
+
 # Handles data submitted from signup page's form
 def signup_page(request):
     form = SignUpForm()
