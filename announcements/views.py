@@ -13,7 +13,7 @@ def announcement_list(request):
 def create_announcement(request):
 
 
-     if not request.user.is_authenticated:
+    if not request.user.is_authenticated:
         return redirect('/accounts/login/')  
     if request.user.role == 'player':  
         messages.error(request, "You must be a Game Keeper to access this page.")    
