@@ -50,8 +50,8 @@
                 <div class="list-group list-group-flush">
                   <div class="list-group-item d-flex align-items-center">
                     <div class="row w-100">
-                      <div class="col-6 fw-bold text-muted">Redeem Code:</div>
-                      <div class="col-6 text-success fw-bold">
+                      <div class="col fw-bold text-muted">Redeem Code:</div>
+                      <div class="col text-success fw-bold">
                         {{ purchase.redeem_code }}
                       </div>
                     </div>
@@ -59,15 +59,15 @@
 
                   <div class="list-group-item d-flex align-items-center">
                     <div class="row w-100">
-                      <div class="col-6 fw-bold text-muted">Item:</div>
-                      <div class="col-6">{{ purchase.item.name }}</div>
+                      <div class="col fw-bold text-muted">Item:</div>
+                      <div class="col">{{ purchase.item.name }}</div>
                     </div>
                   </div>
 
                   <div class="list-group-item d-flex align-items-center">
                     <div class="row w-100">
-                      <div class="col-6 fw-bold text-muted">Recipient:</div>
-                      <div class="col-6">
+                      <div class="col fw-bold text-muted">Recipient:</div>
+                      <div class="col">
                         {{ purchase.user.first_name }} {{ purchase.user.last_name }}
                       </div>
                     </div>
