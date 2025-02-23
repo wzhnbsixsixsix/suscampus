@@ -246,6 +246,13 @@
 
             }
         });
+        var modalElement = document.getElementById('changeUsernameModal');
+    if (modalElement) {
+        modalElement.addEventListener('hidden.bs.modal', function () {
+            document.getElementById("new-username").value = "";
+            document.getElementById("username-error").innerHTML = "";
+        });
+    }
     });
 </script>
 
