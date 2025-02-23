@@ -1,8 +1,90 @@
-{% load static %}
-<h2>Scan the QR Code to Redeem Your Item</h2>
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    {% load static %}
+    <title>Sustainable Campus - Redeem Item</title>
+    <link rel="stylesheet" href="/static/css/map.css" />
+    <link rel="stylesheet" href="{% static 'css/navbar.css' %}" />
+    <link href="https://cdn.lineicons.com/5.0/lineicons.css" rel="stylesheet" />
+    <link
+      href="{% static '/bootstrap/css/bootstrap.min.css' %}"
+      rel="stylesheet"
+    />
+    <style>
+      .qr-container {
+        max-width: 800px;
+        margin: 2rem auto;
+        padding: 2rem;
+      }
+      .qr-card {
+        border-radius: 15px;
+        box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+      }
+    </style>
+  </head>
+  <body>
+    {% include 'navbar.html' %}
 
-<!-- Display the QR Code image -->
-<img src="{{ qr_code }}" alt="QR Code for redeeming your item">
-<p>Redeem Code: {{ purchase.redeem_code }}</p>
-<p>Item Name: {{ purchase.item.name }}</p>
-<p>Buyer: {{ purchase.user.first_name }} {{ purchase.user.last_name }}</p>
+    <div class="container qr-container">
+      <div class="card qr-card">
+        <div class="card-header bg-primary text-white">
+          <h2 class="card-title mb-0">
+            <i class="lni lni-qrcode"></i> Redeem Your Sustainable Item
+          </h2>
+        </div>
+
+        <div class="card-body">
+          <div class="row align-items-center">
+            <div class="col-md-6 text-center mb-4 mb-md-0">
+              <img
+                src="{{ qr_code }}"
+                alt="QR Code"
+                class="img-fluid rounded"
+                style="max-width: 300px"
+              />
+            </div>
+
+            <div class="col-md-6">
+              <div class="mb-4">
+                <h3 class="h5 text-muted mb-3">Redemption Details</h3>
+                <div class="list-group list-group-flush">
+                  <div class="list-group-item d-flex align-items-center">
+                    <div class="row w-100">
+                      <div class="col-6 fw-bold text-muted">Redeem Code:</div>
+                      <div class="col-6 text-success fw-bold">
+                        {{ purchase.redeem_code }}
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="list-group-item d-flex align-items-center">
+                    <div class="row w-100">
+                      <div class="col-6 fw-bold text-muted">Item:</div>
+                      <div class="col-6">{{ purchase.item.name }}</div>
+                    </div>
+                  </div>
+
+                  <div class="list-group-item d-flex align-items-center">
+                    <div class="row w-100">
+                      <div class="col-6 fw-bold text-muted">Recipient:</div>
+                      <div class="col-6">
+                        {{ purchase.user.first_name }} {{ purchase.user.last_name }}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="alert alert-info mt-4">
+                Scan this QR code at any Sustainable Campus kiosk to redeem your
+                item.
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="{% static '/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+  </body>
+</html>
