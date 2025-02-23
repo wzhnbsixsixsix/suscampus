@@ -209,24 +209,20 @@
 </main>
 <script>
     document.addEventListener("DOMContentLoaded", function () {
-
         {% if show_modal %}
             var modal = new bootstrap.Modal(document.getElementById('changeUsernameModal'));
             modal.show();
         {% endif %}
-
 
         document.getElementById("change-username-form").addEventListener("submit", function (event) {
             var usernameInput = document.getElementById("new-username");
             var username = usernameInput.value.trim();
             var errorContainer = document.getElementById("username-error");
 
-
             errorContainer.innerHTML = "";
 
 
             if (username === "" || username.length < 3 || username.length > 20 || !/^[a-zA-Z0-9_]+$/.test(username)) {
-                event.preventDefault();
                 errorContainer.innerHTML = "<div class='alert alert-danger mt-2'>Invalid username! Username must be 3-20 characters and only contain letters, numbers, and underscores.</div>";
                 return;
             }
