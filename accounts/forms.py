@@ -35,7 +35,7 @@ from django.shortcuts import render, redirect
 from .models import CustomUser  # 确保 CustomUser 是你的用户模型
 import re
 
-
+#  Use ModelForm to simplify input
 class ChangeUsernameForm(forms.ModelForm):
     class Meta:
         model = CustomUser
@@ -56,22 +56,3 @@ class ChangeUsernameForm(forms.ModelForm):
         return username
 
 
-def change_username(request):
-    if request.method == 'POST':
-        form = ChangeUsernameForm(request.POST, instance=request.user)
-        if form.is_valid():
-            form.save()
-            messages.success(request, "Username modification was successful!")
-            return redirect('accounts:profile')
-        else:
-            return render(request, 'accounts/profile.html', {
-                'form': form,
-                'show_modal': True
-            })
-    else:
-        form = ChangeUsernameForm(instance=request.user)
-
-    return render(request, 'accounts/profile.html', {
-        'form': form,
-        'show_modal': False
-    })

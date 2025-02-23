@@ -123,18 +123,23 @@
              aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
+                    <!-- Change Username Form -->
                     <form id="change-username-form" action="{% url 'accounts:change_username' %}" method="post">
                         {% csrf_token %}
+                        <!-- Change Username Button -->
                         <div class="modal-header">
                             <h5 class="modal-title" id="changeUsernameModalLabel">Change Username</h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
+                        <!-- Modal Body -->
                         <div class="modal-body">
                             <div class="mb-3">
                                 <label for="new-username" class="form-label">New Username</label>
                                 <input type="text" class="form-control" id="new-username" name="username"
                                        placeholder="Enter new username" required>
                                 <div id="username-error"></div>
+
+                                <!-- Display Username Change Errors -->
                                 {% if form.username.errors %}
                                     <div class="alert alert-danger mt-2" role="alert">
                                         {% for error in form.username.errors %}
@@ -144,6 +149,8 @@
                                 {% endif %}
                             </div>
                         </div>
+
+                        <!-- Modal Footer -->
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
                             <button type="submit" class="btn btn-success">Save changes</button>
@@ -208,27 +215,39 @@
     </div>
 </main>
 <script>
+    // Execute the function after the document content is fully loaded
     document.addEventListener("DOMContentLoaded", function () {
+       // If the show_modal variable is true, the modal box will be automatically displayed
         {% if show_modal %}
             var modal = new bootstrap.Modal(document.getElementById('changeUsernameModal'));
             modal.show();
         {% endif %}
 
+       // Add a submission event listener to a form that changes username
         document.getElementById("change-username-form").addEventListener("submit", function (event) {
+           // Add a submission event listener to a form that changes username
             var usernameInput = document.getElementById("new-username");
             var username = usernameInput.value.trim();
             var errorContainer = document.getElementById("username-error");
 
+           // Clear the error message container
             errorContainer.innerHTML = "";
 
-
+           /*
+             * Verify that the username is valid:
+             * Invalid conditions include the user name is empty and the length does not meet the requirements (3-20 characters).
+             * or characters containing non-letters, numbers, and underscores
+             */
             if (username === "" || username.length < 3 || username.length > 20 || !/^[a-zA-Z0-9_]+$/.test(username)) {
+               // If the username is invalid, the error message will be displayed
                 errorContainer.innerHTML = "<div class='alert alert-danger mt-2'>Invalid username! Username must be 3-20 characters and only contain letters, numbers, and underscores.</div>";
+                event.preventDefault();//prevent submission
                 return;
             }
         });
     });
 </script>
+
 
 
 <!-- Bootstrap JS and Popper.js -->

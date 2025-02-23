@@ -121,25 +121,34 @@ def profile_page(request):
 
 
 def change_username(request):
+    """
+    This function processes POST requests when the user submits a new username through the form. If the request method is POST and the form data is valid,
+    it updates the user's username and redirects to the profile page. If the data is invalid, it reloads the profile page with the current form errors.
+    If the request method is not POST, it loads the username change form with the current user information.
+    """
     if request.method == 'POST':
+        # Create a form instance with the submitted data and the current user instance
         form = ChangeUsernameForm(request.POST, instance=request.user)
         if form.is_valid():
-            user = form.save(commit=False)
-            user.save()
+            form.save()
             messages.success(request, "Username modification was successful!")
-            return redirect('accounts:profile')# Redirect when successful
-        # When verification fails, do not jump and directly render the current page
-        return render(request, 'accounts/profile.html', {
-            'form': form,  #Form containing error message
+            return redirect('accounts:profile')
+        else:
+            return render(request, 'accounts/profile.html', {
+            'form': form,  # Form containing error message
             'show_modal': True
         })
     else:
+        # If not a POST request, create a blank form instance with the current user information
         form = ChangeUsernameForm(instance=request.user)
 
+    # Render the profile page with the username change form
     return render(request, 'accounts/profile.html', {
         'form': form,
-        'show_modal': True
+        'show_modal': False
     })
+
+
 def change_password(request):
     if request.method == 'POST':
         form = PasswordChangeForm(request.user, request.POST)
