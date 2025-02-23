@@ -1,7 +1,17 @@
 # ecm2434sustainable-campus
 Group software engineering project for ecm2434
 
-Third Party Libraries and Liccenses:
+## Setup:
+
+### Dependencies/Requirements:
+from https://nodejs.org/en/download/ :
+Node.js==22.14.0
+npm==10.9.2
+
+in the sustainableCampus/static/js directory, run: "npm install"
+this will set up all of the Node.js modules needed
+
+## Third Party Libraries and Licenses:
 
 OpenLayers
 
