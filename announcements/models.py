@@ -13,3 +13,7 @@ class Announcement(models.Model):
     def __str__(self):
         return self.title
 
+    def get_author_role(self):
+        return self.author.role  
+
+

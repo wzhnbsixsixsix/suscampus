@@ -1,9 +1,0 @@
-Need to do:
-
-pip install Pillow
-
-required for the imagefield for model ShopItem attribute image
-
-pip install qrcode
-
-required to make and display qrcode

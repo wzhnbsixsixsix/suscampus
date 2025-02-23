@@ -9,7 +9,12 @@ def announcement_list(request):
     announcements = Announcement.objects.all().order_by('-created_at')
     return render(request, 'announcements/announcement_list.html', {'announcements': announcements})
 
+
 def create_announcement(request):
+
+
+    if not request.user.is_authenticated:
+        return redirect('/accounts/login/')  
     if request.method == 'POST':
         form = AnnouncementForm(request.POST)
         if form.is_valid():
