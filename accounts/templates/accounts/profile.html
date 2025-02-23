@@ -209,24 +209,24 @@
 </main>
 <script>
     document.addEventListener("DOMContentLoaded", function () {
-        // 后端传递 show_modal=True 时，自动打开模态框
+
         {% if show_modal %}
             var modal = new bootstrap.Modal(document.getElementById('changeUsernameModal'));
             modal.show();
         {% endif %}
 
-        // 前端拦截提交，防止提交错误的用户名
+
         document.getElementById("change-username-form").addEventListener("submit", function (event) {
             var usernameInput = document.getElementById("new-username");
             var username = usernameInput.value.trim();
             var errorContainer = document.getElementById("username-error");
 
-            // 清空之前的错误信息
+
             errorContainer.innerHTML = "";
 
-            // 前端校验：检查用户名是否合法
+
             if (username === "" || username.length < 3 || username.length > 20 || !/^[a-zA-Z0-9_]+$/.test(username)) {
-                event.preventDefault();  // 阻止表单提交
+                event.preventDefault();
                 errorContainer.innerHTML = "<div class='alert alert-danger mt-2'>Invalid username! Username must be 3-20 characters and only contain letters, numbers, and underscores.</div>";
                 return;
             }

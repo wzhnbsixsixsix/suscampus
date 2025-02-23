@@ -12,7 +12,6 @@ from .models import CustomUser
 from shop.models import UserBalance
 
 
-
 # Handles data submitted from signup page's form
 def signup_page(request):
     form = SignUpForm()
@@ -30,7 +29,7 @@ def signup_page(request):
                 send_email_verification(user)
                 return redirect('accounts:login')
 
-    context = {'form': form}
+    context = {'form':form}
     return render(request, 'accounts/signup.html', context)
 
 
@@ -38,8 +37,8 @@ def signup_page(request):
 def send_email_verification(user):
     subject = "Email Verification for Sustainable Campus"
     link = f"http://127.0.0.1:8000/accounts/email_verification/{user.verification_token}"
-    message = f"Hello {user.first_name}, \n\nPlease verify your email through the following link below:\n{link}\n\nThank You!"
-    sender = settings.EMAIL_HOST_USER  # Sender of email is stored in settings.py
+    message =f"Hello {user.first_name}, \n\nPlease verify your email through the following link below:\n{link}\n\nThank You!"
+    sender = settings.EMAIL_HOST_USER # Sender of email is stored in settings.py
     receiver = [user.email]
 
     send_mail(subject, message, sender, receiver)
@@ -54,7 +53,7 @@ def email_verification(request, token):
         messages.error(request, "Invalid or expired verification token")
         return redirect('accounts:signup')
 
-    # Verifies user if they are unverified, and creates user balance for account
+    # Verifies user if they are unverified
     if user.verified == False:
         user.verified = True
         user.save()
