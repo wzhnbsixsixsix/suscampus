@@ -4,6 +4,7 @@
 from django.shortcuts import render, redirect
 from .models import Announcement
 from .forms import AnnouncementForm
+from django.contrib import messages
 
 def announcement_list(request):
     announcements = Announcement.objects.all().order_by('-created_at')
@@ -15,6 +16,9 @@ def create_announcement(request):
 
     if not request.user.is_authenticated:
         return redirect('/accounts/login/')  
+    if request.user.role == 'player':  
+        messages.error(request, "You must be a Game Keeper to access this page.")    
+        return redirect('/announcements/')
     if request.method == 'POST':
         form = AnnouncementForm(request.POST)
         if form.is_valid():
