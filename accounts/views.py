@@ -71,36 +71,23 @@ def email_verification(request, token):
 def login_page(request):
     form = LoginForm(request)
 
-    # If a form is submitted, the following happens
     if request.method == 'POST':
         form = LoginForm(request, data=request.POST)
         if form.is_valid():
-            # Retrieves username and password from submitted form
-            username = request.POST.get("username")
-            password = request.POST.get("password")
+            username = form.cleaned_data.get("username")
+            password = form.cleaned_data.get("password")
 
-            # Retrieves user data for matching username and password
             user = authenticate(request, username=username, password=password)
 
-            # Checks if user data has been retrieved
             if user is not None:
-                # Checks if user is verified
-                if user.verified == True:
+                if user.verified:
                     login(request, user)
-                    return redirect('main:map')
-
+                    return redirect('/')
                 else:
-                    form.add_error(None, 'Email has not been verified')
-
+                    form.add_error(None, 'Invalid username or password')
             else:
                 form.add_error(None, 'Invalid username or password')
-
-        else:
-            context = {'form': form}
-            return render(request, 'accounts/login.html', context)
-    else:
-        context = {'form': form}
-        return render(request, 'accounts/login.html', context)
+    return render(request, 'accounts/login.html', {'form': form})
 
 
 def logout_view(request):
