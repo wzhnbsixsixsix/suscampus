@@ -12,6 +12,8 @@
     />
 </head>
 <body>
+    {% include 'navbar.html' %}
+
     <a href="{% url 'shop:purchased_items'%}">Your Purchased Items</a>
 
     <p>Your Balance: {{user_balance.currency }} currency</p>
