@@ -243,8 +243,16 @@
                 errorContainer.innerHTML = "<div class='alert alert-danger mt-2'>Invalid username! Username must be 3-20 characters and only contain letters, numbers, and underscores.</div>";
                 event.preventDefault();//prevent submission
                 return;
+
             }
         });
+        var modalElement = document.getElementById('changeUsernameModal');
+    if (modalElement) {
+        modalElement.addEventListener('hidden.bs.modal', function () {
+            document.getElementById("new-username").value = "";
+            document.getElementById("username-error").innerHTML = "";
+        });
+    }
     });
 </script>
 
