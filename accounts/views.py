@@ -109,7 +109,7 @@ def logout_view(request):
     return redirect("accounts:login")
 
 
-@login_required  # Make sure the user is logged in
+ # Make sure the user is logged in
 def profile_page(request):
     username = request.user.username
     email = request.user.email
