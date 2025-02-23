@@ -11,7 +11,7 @@ npm==10.9.2
 in the sustainableCampus/static/js directory, run: "npm install"
 this will set up all of the Node.js modules needed
 
-Third Party Libraries and Licenses:
+## Third Party Libraries and Licenses:
 
 OpenLayers
 
