@@ -193,7 +193,7 @@
             {% endif %}
 
             <!-- change password form -->
-            <form method="post" action="{% url 'accounts:change_password' %}">
+            <form id="change-password-form" method="post" action="{% url 'accounts:change_password' %}">
                 {% csrf_token %}
                 <div class="col-12">
                     <label for="old-password" class="form-label">Current password</label>
@@ -286,9 +286,10 @@
                 document.getElementById("username-error").innerHTML = "";
             });
         }
+            event.stopPropagation();
     });
-    document.querySelector('form').addEventListener('submit', function (e) {
-        const new1 = document.getElementById('new-password1').value;
+document.getElementById('change-password-form').addEventListener('submit', function(e) {
+    const new1 = document.getElementById('new-password1').value;
         const new2 = document.getElementById('new-password2').value;
 
         if (new1 !== new2) {
