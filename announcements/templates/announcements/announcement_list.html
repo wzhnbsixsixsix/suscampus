@@ -34,11 +34,15 @@
     {% include 'navbar.html' %}  
 
     <div class="container py-5">
-      <h1 class="text-center mb-5">Announcements</h1>
 
-      {% for announcement in announcements %}
-        <div class="row g-4">
-          <div class="col-12 col-lg-4">
+      <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="h3 mb-0">Announcements</h1> 
+        <a href="{% url 'create_announcement' %}" class="btn btn-outline-success p-2 lh-1 d-flex align-items-center">Create New Announcement</a>
+      </div>
+
+      <div class="row g-4">
+        {% for announcement in announcements %}
+          <div class="col-12 col-md-6 col-lg-4">
             <div class="card h-100 shadow">
               <img
                 src="{{ announcement.image.url }}"
@@ -59,9 +63,9 @@
                 </div>
               </div>
             </div>
-        </div> 
-      {% endfor %} 
-    </div>
+          </div>
+        {% endfor %}
+      </div> 
 
     <!-- Announcement Modal -->
     <div class="modal fade" id="announcementModal" tabindex="-1">
