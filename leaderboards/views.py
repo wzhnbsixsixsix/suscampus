@@ -1,6 +1,8 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render
+from django.contrib.auth.decorators import login_required
 from .models import TreeScore
 
+@login_required
 def leaderboard(request):
     # Retrieves the top 10 players with the highest number of trees grown
     all_player_scores = TreeScore.objects.order_by('-score')

@@ -82,7 +82,7 @@ def login_page(request):
             if user is not None:
                 if user.verified:
                     login(request, user)
-                    return redirect('/')
+                    return redirect('main:map')
                 else:
                     form.add_error(None, 'Invalid username or password')
             else:
@@ -96,12 +96,13 @@ def logout_view(request):
     return redirect("accounts:login")
 
 
-# Make sure the user is logged in
+
+@login_required
 def profile_page(request):
     context = {
         'username': request.user.username,
         'email': request.user.email,
-        'form': PasswordChangeForm(request.user)  # 添加默认表单
+        'form': PasswordChangeForm(request.user)  
     }
     return render(request, 'accounts/profile.html', context)
 
