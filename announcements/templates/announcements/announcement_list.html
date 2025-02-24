@@ -67,6 +67,8 @@
         {% for announcement in announcements %}
         <li>
             <h2>{{ announcement.title }}</h2>
+            <h3>{{ announcement.summary}}</h3>
+
             <p>{{ announcement.content }}</p>
             <small>Posted by {{ announcement.author }} | Role: {{ announcement.author.role }} on {{ announcement.created_at }}</small>
         </li>
