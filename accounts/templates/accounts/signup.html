@@ -58,28 +58,5 @@
         <p>Already have an account? <a href="{% url 'accounts:login' %}">Log in</a></p>
     </div>
 </div>
-
-<script>
-document.getElementById("signupForm").addEventListener("submit", function(event) {
-    let password1 = document.getElementById("id_password1").value;
-    let password2 = document.getElementById("id_password2").value;
-
-    // The password requires a minimum of 8 characters
-    if (password1.length < 8) {
-        event.preventDefault();
-        alert("Password requires at least 8 characters");
-        return false;
-    }
-
-    // Check if the passwords are consistent twice
-    if (password1 !== password2) {
-        event.preventDefault();
-        alert("The passwords entered twice are inconsistent");
-        return false;
-    }
-
-
-});
-</script>
 </body>
 </html>
