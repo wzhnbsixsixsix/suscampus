@@ -96,7 +96,7 @@ def logout_view(request):
     return redirect("accounts:login")
 
 
- # Make sure the user is logged in
+# Make sure the user is logged in
 def profile_page(request):
     username = request.user.username
     email = request.user.email
@@ -107,6 +107,7 @@ def profile_page(request):
     return render(request, 'accounts/profile.html', context)
 
 
+@login_required
 def change_username(request):
     """
     This function processes POST requests when the user submits a new username through the form. If the request method is POST and the form data is valid,
@@ -122,9 +123,9 @@ def change_username(request):
             return redirect('accounts:profile')
         else:
             return render(request, 'accounts/profile.html', {
-            'form': form,  # Form containing error message
-            'show_modal': True
-        })
+                'form': form,  # Form containing error message
+                'show_modal': True
+            })
     else:
         # If not a POST request, create a blank form instance with the current user information
         form = ChangeUsernameForm(instance=request.user)
@@ -136,17 +137,33 @@ def change_username(request):
     })
 
 
+@login_required
 def change_password(request):
+    """
+    Handles password change requests for authenticated users. Uses Django's form validation
+    to ensure new password meets security requirements. Maintains user session after password
+    change by updating auth hash.
+    """
     if request.method == 'POST':
+        # Initialize password change form with user and POST data
         form = PasswordChangeForm(request.user, request.POST)
+        # Validate form data
         if form.is_valid():
+            # Save new password
             user = form.save()
+            # Maintain session continuity after password change
             update_session_auth_hash(request, user)
+            # Set success notification
             messages.success(request, 'Your password has been updated successfully!')
+            # Redirect to profile page
             return redirect('accounts:profile')
         else:
+            # Set error notification for invalid form
             messages.error(request, 'Please correct the errors below.')
-    else:
-        form = PasswordChangeForm(request.user)
+            return render(request, 'accounts/profile.html', {'form': form})
 
-    return render(request, 'accounts/change_password.html', {'form': form})
+    else:
+        # Initialize empty form for GET requests
+        form = PasswordChangeForm(request.user)
+    # Render password change template with form context
+    return render(request, 'accounts/profile.html', {'form': form})

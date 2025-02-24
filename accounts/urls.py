@@ -10,5 +10,6 @@ urlpatterns = [
     path("email_verification/<uuid:token>", views.email_verification, name="email_verification"),
     path("profile/", views.profile_page, name="profile"),
     path('change_username/', views.change_username, name='change_username'),
-    path('change-password/', change_password, name='change_password'),
+    path('change-password/', views.change_password, name='change_password'),
+    path('logout/', views.logout_view, name='logout'),
 ]
