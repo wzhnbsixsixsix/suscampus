@@ -44,22 +44,31 @@
               </li>
           </ul>
 
-           <div class="d-flex align-items-center">
-              <!-- Log in button if not logged in -->
-              <a href="{% url 'accounts:login' %}" class="btn btn-outline-primary mx-2">Log in</a>
-              <!-- User profile dropdown (when logged in) -->
-              <div class="dropdown text-end ms-lg-3">
-                  <a href="#" class="d-block link-dark text-decoration-none dropdown-toggle" id="dropdownUser" data-bs-toggle="dropdown" aria-expanded="false">
-                      <img src="" alt="mdo" width="32" height="32" class="rounded-circle">
-                  </a>
-                  <ul class="dropdown-menu text-small dropdown-menu-end" aria-labelledby="dropdownUser">
-                      <li><a class="dropdown-item" href="{% url 'accounts:profile' %}">Profile</a></li>
-                      <li><a class="dropdown-item" href="#">Settings</a></li>
-                      <li><hr class="dropdown-divider"></li>
-                      <li><a class="dropdown-item" href="#">Sign out</a></li>
-                  </ul>
-              </div>
-          </div>
+          <!-- Profile dropdown on the right -->
+            <div class="d-flex align-items-center">
+                {% if user.is_authenticated %}
+                    <!-- User profile dropdown (when logged in) -->
+                    <div class="dropdown text-end ms-lg-3">
+                        <a href="{% url 'accounts:profile' %}" class="d-block link-dark text-decoration-none dropdown-toggle" id="dropdownUser"
+                           data-bs-toggle="dropdown" aria-expanded="false">
+                            <img src="" alt="mdo" width="32" height="32" class="rounded-circle">
+                        </a>
+                        <ul class="dropdown-menu text-small dropdown-menu-end" aria-labelledby="dropdownUser">
+                            <li><a class="dropdown-item" href="{% url 'accounts:profile' %}">Profile</a></li>
+                            <li><a class="dropdown-item" href="#">Settings</a></li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+                            <li><a class="dropdown-item" href="{% url 'accounts:logout' %}">Sign out</a></li>
+                        </ul>
+                    </div>
+                {% else %}
+                    <!-- Login button (when not logged in) -->
+                    <a href="{% url 'accounts:login' %}" class="btn btn-outline-success me-2">Log in</a>
+                    <!-- Sign up button (when not logged in) -->
+                    <a href="{% url 'accounts:signup' %}" class="btn btn-outline-success">Sign up</a>
+                {% endif %}
+            </div>
 
       </div>
     </div>

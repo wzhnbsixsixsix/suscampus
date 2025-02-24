@@ -30,7 +30,7 @@
             <!-- Navigation links in the center -->
             <ul class="navbar-nav mx-auto mb-2 mb-lg-0">
                 <li class="nav-item">
-                    <a href="" class="nav-link px-2 link-dark">Home</a>
+                    <a href="/" class="nav-link px-2 link-dark">Home</a>
                 </li>
                 <li class="nav-item">
                     <a href="forest" class="nav-link px-2 link-dark">My forest</a>
@@ -50,7 +50,7 @@
                 {% if user.is_authenticated %}
                     <!-- User profile dropdown (when logged in) -->
                     <div class="dropdown text-end ms-lg-3">
-                        <a href="#" class="d-block link-dark text-decoration-none dropdown-toggle" id="dropdownUser"
+                        <a href="{% url 'accounts:profile' %}" class="d-block link-dark text-decoration-none dropdown-toggle" id="dropdownUser"
                            data-bs-toggle="dropdown" aria-expanded="false">
                             <img src="" alt="mdo" width="32" height="32" class="rounded-circle">
                         </a>
