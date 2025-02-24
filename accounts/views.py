@@ -71,36 +71,23 @@ def email_verification(request, token):
 def login_page(request):
     form = LoginForm(request)
 
-    # If a form is submitted, the following happens
     if request.method == 'POST':
         form = LoginForm(request, data=request.POST)
         if form.is_valid():
-            # Retrieves username and password from submitted form
-            username = request.POST.get("username")
-            password = request.POST.get("password")
+            username = form.cleaned_data.get("username")
+            password = form.cleaned_data.get("password")
 
-            # Retrieves user data for matching username and password
             user = authenticate(request, username=username, password=password)
 
-            # Checks if user data has been retrieved
             if user is not None:
-                # Checks if user is verified
-                if user.verified == True:
+                if user.verified:
                     login(request, user)
-                    return redirect('main:map')
-
+                    return redirect('/')
                 else:
-                    form.add_error(None, 'Email has not been verified')
-
+                    form.add_error(None, 'Invalid username or password')
             else:
                 form.add_error(None, 'Invalid username or password')
-
-        else:
-            context = {'form': form}
-            return render(request, 'accounts/login.html', context)
-    else:
-        context = {'form': form}
-        return render(request, 'accounts/login.html', context)
+    return render(request, 'accounts/login.html', {'form': form})
 
 
 def logout_view(request):
@@ -109,17 +96,17 @@ def logout_view(request):
     return redirect("accounts:login")
 
 
-@login_required  # Make sure the user is logged in
+# Make sure the user is logged in
 def profile_page(request):
-    username = request.user.username
-    email = request.user.email
     context = {
-        'username': username,
-        'email': email,
+        'username': request.user.username,
+        'email': request.user.email,
+        'form': PasswordChangeForm(request.user)  # 添加默认表单
     }
     return render(request, 'accounts/profile.html', context)
 
 
+@login_required
 def change_username(request):
     """
     This function processes POST requests when the user submits a new username through the form. If the request method is POST and the form data is valid,
@@ -135,9 +122,9 @@ def change_username(request):
             return redirect('accounts:profile')
         else:
             return render(request, 'accounts/profile.html', {
-            'form': form,  # Form containing error message
-            'show_modal': True
-        })
+                'form': form,  # Form containing error message
+                'show_modal': True
+            })
     else:
         # If not a POST request, create a blank form instance with the current user information
         form = ChangeUsernameForm(instance=request.user)
@@ -149,17 +136,44 @@ def change_username(request):
     })
 
 
+@login_required
 def change_password(request):
+    """
+    Handles password change requests for authenticated users. Uses Django's form validation
+    to ensure new password meets security requirements. Maintains user session after password
+    change by updating auth hash.
+    """
+    base_context = {
+        'username': request.user.username,
+        'email': request.user.email,
+        'form': PasswordChangeForm(request.user)
+    }
+
     if request.method == 'POST':
+        # Initialize password change form with user and POST data
         form = PasswordChangeForm(request.user, request.POST)
+        # Validate form data
         if form.is_valid():
+            # Save new password
             user = form.save()
+            # Maintain session continuity after password change
             update_session_auth_hash(request, user)
+            # Set success notification
             messages.success(request, 'Your password has been updated successfully!')
+            # Redirect to profile page
             return redirect('accounts:profile')
         else:
+            base_context.update({
+                'form': form,
+                'username': request.user.username,  # 显式保留用户名
+                'email': request.user.email  # 显式保留邮箱
+            })
+            # Set error notification for invalid form
             messages.error(request, 'Please correct the errors below.')
-    else:
-        form = PasswordChangeForm(request.user)
+            return render(request, 'accounts/profile.html', base_context)
 
-    return render(request, 'accounts/change_password.html', {'form': form})
+    else:
+        # Initialize empty form for GET requests
+        form = PasswordChangeForm(request.user)
+    # Render password change template with form context
+    return render(request, 'accounts/profile.html', base_context)

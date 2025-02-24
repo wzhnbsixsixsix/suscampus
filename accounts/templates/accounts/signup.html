@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sign Up | Exeter Sustainable Game</title>
-    <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
+    <link href="{% static '/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
     <link rel="stylesheet" href="{% static 'css/styles.css' %}">
 </head>
 <body>
@@ -58,28 +58,5 @@
         <p>Already have an account? <a href="{% url 'accounts:login' %}">Log in</a></p>
     </div>
 </div>
-
-<script>
-document.getElementById("signupForm").addEventListener("submit", function(event) {
-    let password1 = document.getElementById("id_password1").value;
-    let password2 = document.getElementById("id_password2").value;
-
-    // The password requires a minimum of 8 characters
-    if (password1.length < 8) {
-        event.preventDefault();
-        alert("Password requires at least 8 characters");
-        return false;
-    }
-
-    // Check if the passwords are consistent twice
-    if (password1 !== password2) {
-        event.preventDefault();
-        alert("The passwords entered twice are inconsistent");
-        return false;
-    }
-
-
-});
-</script>
 </body>
 </html>

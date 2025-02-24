@@ -38,8 +38,6 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'sustainableCampus',
-
-
     'accounts',
     'announcements',
     'main',
@@ -48,6 +46,7 @@ INSTALLED_APPS = [
 ]
 
 AUTH_USER_MODEL = 'accounts.CustomUser'
+LOGIN_URL = '/accounts/login/'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -58,6 +57,9 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+SESSION_COOKIE_AGE = 1209600  # 2周（秒）
+SESSION_SAVE_EVERY_REQUEST = True  # 每次请求保存会话
+SESSION_COOKIE_SECURE = True  # 生产环境启用HTTPS
 
 ROOT_URLCONF = 'sustainableCampus.urls'
 

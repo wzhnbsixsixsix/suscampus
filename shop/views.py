@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.urls import reverse
+from django.contrib.auth.decorators import login_required
 from .models import ShopItem, UserBalance, ItemPurchase, CurrencyTransaction
 import string, random, qrcode
 from django.conf import settings
@@ -8,7 +9,9 @@ import os
 
 # Create your views here.
 
+
 # View for shop_items.html page. Displays buyable items, and sends buy requests to buy_shop_item view
+@login_required 
 def shop_items(request):
     # When user presses buy on an item, this handles the purchase.
     if request.method == 'POST':
@@ -24,6 +27,7 @@ def shop_items(request):
     return render(request, 'shop/shop.html', context)
 
 # View used for handling purchase of an item
+@login_required 
 def buy_shop_item(request, item_id):
     # retrieves item, and buyer's balance
     item = ShopItem.objects.get(item_id=item_id)
@@ -53,7 +57,7 @@ def buy_shop_item(request, item_id):
 
     return redirect('/shop/')
 
-# Function used for generating 6 figure redeem code. 
+# Function used for generating 6 figure redeem code.
 def redeem_code_generator(size=6, chars=string.ascii_uppercase + string.digits):
     while True:
         redeem_code = ''.join(random.choice(chars) for _ in range(size))
@@ -61,12 +65,14 @@ def redeem_code_generator(size=6, chars=string.ascii_uppercase + string.digits):
             return redeem_code
 
 # View for purchased_items.html. Retrieves all purchases made by user, and sends it to html
+@login_required 
 def purchased_items(request):
     purchases = ItemPurchase.objects.filter(user=request.user)
     context = {'purchases':purchases}
     return render(request, 'shop/purchased_items.html', context)
 
 # View for display_redeem_code.html. Used to generate QR code for redeeming items by game keepers. 
+@login_required 
 def display_redeem_qr_code(request, redeem_code):
     purchase = get_object_or_404(ItemPurchase, redeem_code=redeem_code)
 
@@ -95,6 +101,7 @@ def display_redeem_qr_code(request, redeem_code):
     return render(request, 'shop/display_redeem_code.html', context)
 
 # View for redeem_page.html. Used by game keepers to input redeem codes.
+@login_required 
 def redeem_page(request):
     # Ensures user has permissions
     if request.user.is_staff == False:
@@ -115,10 +122,11 @@ def redeem_page(request):
 
 
 # View for redeem_item.html. Used for redeeming items. 
+@login_required 
 def redeem_item(request, redeem_code):
     # Ensures user has permissions
     if request.user.is_staff == False:
-        return render(request, 'shop/unauthorised.html')
+        return redirect('shop:unauthorised')
 
     # Retrieves purchase if it exists
     purchase = get_object_or_404(ItemPurchase, redeem_code=redeem_code)
@@ -133,18 +141,21 @@ def redeem_item(request, redeem_code):
     return render(request, 'shop/redeem_item.html', context)
 
 # View for redeem.html. Used for showing success in redeeming an item by a game keeper
+@login_required 
 def redeemed(request): 
     return render(request, 'shop/redeemed.html')
 
 # View for already_redeem.html. Used for informing user that item already been redeemed
+@login_required 
 def already_redeemed(request): 
     return render(request, 'shop/already_redeemed.html')
 
 # View for unauthorised.html. Used for informing user that they are unauthorised
+@login_required 
 def unauthorised(request):
     return render(request, 'shop/unauthorised.html')
 
-
+@login_required 
 def transactions(request):
     return render(request, 'transactions.html')
 
