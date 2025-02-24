@@ -16,6 +16,11 @@
         flex-direction: column;
         min-height: 100vh;
       }
+      .map {
+        position: relative;
+        width: 600px;
+        height: 600px;
+      }
       .ol-popup {
           position: absolute;
           background-color: #caffaa;
@@ -62,11 +67,9 @@
           <h1>Map</h1>
       </div>
 
-      <div class="position-relative flex-grow-1 border">
+      <div id = "map" class = "map">
           <!-- Map content goes here -->
-          <div id="map" class="position-absolute h-100 w-100"></div>
       </div>
-
       <div id="marker-popup" class="ol-popup">
         <a href="#" id="marker-popup-closer" class="ol-popup-closer"></a>
         <div id="marker-popup-content"></div>

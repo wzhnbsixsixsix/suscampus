@@ -12,7 +12,7 @@
     <link rel="stylesheet" href="{% static 'css/styles.css' %}">
 </head>
 <body>
-{% include 'navbar.html' %}  
+{% include 'navbar.html' %}
 <main class="container my-4">
     <div class="profile-container p-4 bg-light rounded shadow">
         <h1 class="mb-3">{{ username }}</h1>
@@ -89,7 +89,7 @@
             {% endif %}
 
             <!-- change password form -->
-            <form method="post" action="{% url 'accounts:change_password' %}">
+            <form id="change-password-form" method="post" action="{% url 'accounts:change_password' %}">
                 {% csrf_token %}
                 <div class="col-12">
                     <label for="old-password" class="form-label">Current password</label>
@@ -106,7 +106,7 @@
                     <input type="password" class="form-control" id="new-password2" name="new_password2"
                            placeholder="Confirm new password" required>
                 </div>
-                <div class="col-12">
+                <div class="col-12 mt-3">
                     <button type="submit" class="btn btn-success">Change password</button>
                 </div>
             </form>
@@ -182,9 +182,10 @@
                 document.getElementById("username-error").innerHTML = "";
             });
         }
+            event.stopPropagation();
     });
-    document.querySelector('form').addEventListener('submit', function (e) {
-        const new1 = document.getElementById('new-password1').value;
+document.getElementById('change-password-form').addEventListener('submit', function(e) {
+    const new1 = document.getElementById('new-password1').value;
         const new2 = document.getElementById('new-password2').value;
 
         if (new1 !== new2) {

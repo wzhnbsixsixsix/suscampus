@@ -178,3 +178,22 @@ def change_password(request):
         form = PasswordChangeForm(request.user)
     # Render password change template with form context
     return render(request, 'accounts/profile.html', base_context)
+
+def password_reset(request):
+    form = SignUpForm()
+
+    # If a form is submitted, the following happens
+    if request.method == 'POST':
+        form = SignUpForm(request.POST)
+        if form.is_valid():
+            # Checks if given email is unique before saving new user data
+            if CustomUser.objects.filter(email=form.cleaned_data["email"]).exists():
+                form.add_error("email", "Email is already in use.")
+            # Saves new user data, and sends email verification
+            else:
+                user = form.save()
+                send_email_verification(user)
+                return redirect('accounts:login')
+
+    context = {'form': form}
+    return render(request, 'accounts/signup.html', context)

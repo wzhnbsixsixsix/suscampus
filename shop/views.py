@@ -29,7 +29,7 @@ def shop_items(request):
 # View used for handling purchase of an item
 @login_required 
 def buy_shop_item(request, item_id):
-    # Retrieves item, and buyer's balance
+    # retrieves item, and buyer's balance
     item = ShopItem.objects.get(item_id=item_id)
     user_balance = UserBalance.objects.get(user_id=request.user)
 
@@ -103,8 +103,8 @@ def display_redeem_qr_code(request, redeem_code):
 # View for redeem_page.html. Used by game keepers to input redeem codes.
 @login_required 
 def redeem_page(request):
-    # Ensures only a game keeper or developer can access this page
-    if request.user.role == 'player':
+    # Ensures user has permissions
+    if request.user.is_staff == False:
         return redirect('shop:unauthorised')
     
     # Retrieves given redeem code, and checks if it matches a purchase. If so, sends user to redeem_item.html page
@@ -124,13 +124,13 @@ def redeem_page(request):
 # View for redeem_item.html. Used for redeeming items. 
 @login_required 
 def redeem_item(request, redeem_code):
-    # Ensures only a game keeper or developer can access this page
-    if request.user.role == 'player':
+    # Ensures user has permissions
+    if request.user.is_staff == False:
         return redirect('shop:unauthorised')
 
     # Retrieves purchase if it exists
     purchase = get_object_or_404(ItemPurchase, redeem_code=redeem_code)
-
+    
     # Redeems item if button on html is pressed. Sends user to redeem.html page after
     if request.method == 'POST':
         purchase.is_redeemed = True

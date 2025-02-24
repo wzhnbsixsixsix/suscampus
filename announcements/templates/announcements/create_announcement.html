@@ -1,97 +1,19 @@
-{% load static %}
+<!-- templates/social/create_announcement.html -->
+
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link
-      href="{% static 'bootstrap/css/bootstrap.min.css' %}"
-      rel="stylesheet"
-    />
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Create Announcement</title>
-  </head>
-  <body>
-    {% include 'navbar.html' %}
-
-    <div class="container mt-4">
-      <div class="row justify-content-center">
-        <div class="col-md-8">
-          <h1 class="mb-4">Create a New Announcement</h1>
-          <form method="POST" enctype="multipart/form-data" class="border p-4 rounded-3 bg-light">
+</head>
+<body>
+    <h1>Create a New Announcement</h1>
+     <form method="POST" enctype="multipart/form-data">
             {% csrf_token %}
-            
-            <!-- Title Field -->
-            <div class="mb-3">
-              <label for="id_title" class="form-label">Title</label>
-              <input type="text" 
-                     class="form-control {% if form.title.errors %}is-invalid{% endif %}" 
-                     id="id_title" 
-                     name="title" 
-                     value="{{ form.title.value|default:'' }}">
-              {% for error in form.title.errors %}
-                <div class="invalid-feedback">
-                  {{ error }}
-                </div>
-              {% endfor %}
-            </div>
-
-            <!-- Summary Field -->
-            <div class="mb-3">
-              <label for="id_summary" class="form-label">Summary</label>
-              <input type="text" 
-                     class="form-control {% if form.summary.errors %}is-invalid{% endif %}" 
-                     id="id_summary" 
-                     name="summary" 
-                     value="{{ form.summary.value|default:'' }}">
-              {% for error in form.summary.errors %}
-                <div class="invalid-feedback">
-                  {{ error }}
-                </div>
-              {% endfor %}
-            </div>
-
-            <!-- Content Field -->
-            <div class="mb-3">
-              <label for="id_content" class="form-label">Content</label>
-              <textarea class="form-control {% if form.content.errors %}is-invalid{% endif %}" 
-                        id="id_content" 
-                        name="content" 
-                        rows="5">{{ form.content.value|default:'' }}</textarea>
-              {% for error in form.content.errors %}
-                <div class="invalid-feedback">
-                  {{ error }}
-                </div>
-              {% endfor %}
-            </div>
-
-            <!-- Image Upload -->
-            <div class="mb-4">
-              <label for="id_image" class="form-label">Upload Image</label>
-              <input type="file" 
-                     class="form-control {% if form.image.errors %}is-invalid{% endif %}" 
-                     id="id_image" 
-                     name="image" 
-                     accept="image/*">
-              {% for error in form.image.errors %}
-                <div class="invalid-feedback">
-                  {{ error }}
-                </div>
-              {% endfor %}
-            </div>
-
-            <!-- Buttons -->
-            <div class="d-flex gap-3">
-              <button type="submit" class="btn btn-primary px-4">Submit</button>
-              <a href="{% url 'announcement_list' %}" class="btn btn-outline-secondary">
-                Back to Announcements
-              </a>
-            </div>
-          </form>
-        </div>
-      </div>
-    </div>
-
-    <!-- Bootstrap JS -->
-    <script src="{% static 'bootstrap/js/bootstrap.bundle.min.js' %}"></script>
-  </body>
+            {{ form.as_p }}
+            <button type="submit">Submit</button>
+        </form>
+    <a href="{% url 'announcement_list' %}">Back to Announcements</a>
+</body>
 </html>
