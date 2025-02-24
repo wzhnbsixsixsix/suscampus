@@ -1,7 +1,6 @@
 from django.shortcuts import render, get_object_or_404
 from .models import TreeScore
 
-# Create your views here.
 def leaderboard(request):
     # Retrieves the top 10 players with the highest number of trees grown
     all_player_scores = TreeScore.objects.order_by('-score')
@@ -18,3 +17,4 @@ def leaderboard(request):
 
     context = {'top_players':all_player_scores[:10], 'user_score':user_score, 'user_rank': user_rank}
     return render(request, 'leaderboards/leaderboards.html', context)
+
