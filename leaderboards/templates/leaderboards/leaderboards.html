@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+    {% load static %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up | Exeter Sustainable Game</title>
+    <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/leaderboard.css' %}">
+</head>
+<body>
+
+    <h2>Leaderboard for Tree Game</h2>
+
+    <table> 
+        <tr>
+            <th>Rank</th>
+            <th>Username</th>
+            <th>Trees Grown</th>
+        </tr>
+        {% for player in top_players %}
+            {% if player.user_id == user_score.user_id %}
+                <tr class='user_score'>
+                    <th>{{ forloop.counter }}</th>
+                    <th>{{ player.user.username }}</th>
+                    <th>{{ player.score }}</th>
+                </tr>
+            {% else %}
+                <tr>
+                    <th>{{ forloop.counter }}</th>
+                    <th>{{ player.user.username }}</th>
+                    <th>{{ player.score }}</th>
+                </tr>
+            {% endif %}
+        {% endfor %}
+        {% if user_score.score < top_players.9.score %}
+            <tr class='user_score'>
+                <th>{{ user_rank }}</th>
+                <th>{{ user_score.user.username }}</th>
+                <th>{{ user_score.score }}</th>
+            </tr>
+        {% endif %}
+    </table> 
+</body>
+
+
