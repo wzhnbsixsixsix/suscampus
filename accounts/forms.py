@@ -13,16 +13,14 @@ class SignUpForm(UserCreationForm):
     def clean_email(self):
         email = self.cleaned_data.get('email')
         if CustomUser.objects.filter(email=email).exists():
-            raise forms.ValidationError("This email address has been used, please use another email address.")
+            raise forms.ValidationError("This email address is already in use, please use another email address.")
         return email
-
-    def clean(self):
-        cleaned_data = super().clean()
-        password1 = cleaned_data.get("password1")
-        password2 = cleaned_data.get("password2")
-        if password1 and password2 and password1 != password2:
-            self.add_error("password2", "The passwords entered twice are inconsistent.")
-        return cleaned_data
+    
+    def clean_username(self):
+        username = self.cleaned_data.get('username')
+        if CustomUser.objects.filter(username=username).exists():
+            raise forms.ValidationError("This username is already in use, please use another username.")
+        return username
 
 
 class LoginForm(AuthenticationForm):
