@@ -1,5 +1,3 @@
-// not sure how to fix this, but when nodeJS in installed the default import statements do not work
-// they have to be changed to relative paths
 import Feature from './node_modules/ol/Feature.js';
 import Geolocation from './node_modules/ol/Geolocation.js';
 import Map from './node_modules/ol/Map.js';
@@ -18,9 +16,6 @@ import Overlay from "./node_modules/ol/Overlay.js";
 import Select from './node_modules/ol/interaction/Select.js';
 import {click} from "./node_modules/ol/events/condition.js";
 
-// currently much the geolocation handling is an example from the OpenLayers site to figure out how the location tracking should work
-// will be rewritten when implementing to the main webpage
-
 // the center and zoom will be changed when location tracking is enabled to focus on the user's position
 const view = new View({
     center: [0, 0],
@@ -35,7 +30,7 @@ const drawMarkers = new VectorLayer({
     source: new VectorSource({
         features: [],
     })
-})
+});
 
 // Creates the overlay used when the user wants to interact with a map marker.
 const popContainer = document.getElementById('marker-popup');
@@ -53,7 +48,7 @@ const markerPopups = new Overlay({
 // handles closing the markerPopups
 popCloser.onclick = function () {
     markerPopups.setPosition(undefined); // removes popup
-    popCloser.blur(); // does a blur transition
+    popCloser.blur();
     return false; // otherwise returns a href?
 };
 
@@ -79,11 +74,6 @@ function el(id) {
     return document.getElementById(id);
 }
 
-// sets the geolocation object's Tracking to be in the same state as the 'track' checkbox (automatically updates)
-el('track').addEventListener('change', function () {
-    geolocation.setTracking(this.checked);
-});
-
 // update the HTML page when the position changes.
 geolocation.on('change', function () {
     el('accuracy').innerText = geolocation.getAccuracy() + ' [m]';
@@ -91,13 +81,6 @@ geolocation.on('change', function () {
     el('altitudeAccuracy').innerText = geolocation.getAltitudeAccuracy() + ' [m]';
     el('heading').innerText = geolocation.getHeading() + ' [rad]';
     el('speed').innerText = geolocation.getSpeed() + ' [m/s]';
-});
-
-// handle geolocation error.
-geolocation.on('error', function (error) {
-    const info = document.getElementById('info');
-    info.innerHTML = error.message;
-    info.style.display = '';
 });
 
 // make the circle around the user's marker, showing the possible inaccuracy of their position
@@ -124,7 +107,7 @@ positionFeature.setStyle(
 );
 
 // changes the position of the position indicator on the map (above) to match when the user's position updates
-// ternary operator catches the possibility that the coordinates are invalid/empty, I think
+// ternary operator used to create a new Point at the coordinates of the geolocator, if defined, null otherwise
 geolocation.on('change:position', function () {
     const coordinates = geolocation.getPosition();
     positionFeature.setGeometry(coordinates ? new Point(coordinates) : null);
@@ -146,35 +129,22 @@ map.addLayer( new VectorLayer({
 // gets the view property of the map, which we can use to set the center and zoom
 const mapView = map.getView();
 
-function findLocOnMap()  {
-    const status = document.querySelector("#status");
-    const mapView = document.querySelector("#map-view");
-
-    function success(position) {
-        const latitude = position.coords.latitude;
-        const longitude = position.coords.longitude;
-
-        status.textContent = "Location Found:";
-        mapView.href = `https://www.openstreetmap.org/#map=18/${latitude}/${longitude}`;
-        mapView.textContent = `Latitude: ${latitude} °, Longitude: ${longitude} °`;
+function enableGeolocation() {
+    if ("geolocation" in navigator) {
+        geolocation.setTracking(true); // will automatically prompt user
+    } else {
+        alert("Geolocation is not supported by your browser.");
     }
 
     function error() {
-        status.textContent = "Unable to find location."
-    }
-
-    if ("geolocation" in navigator) {
-        status.textContent = "Finding location..."
-        navigator.geolocation.getCurrentPosition(success, error)
-    } else {
-        status.textContent = "Geolocation not supported by your browser."
+        alert("Unable to find location.");
     }
 }
 
 function createMarkerFromForm(event) {
     // first need to get all the user's input from the input fields when the button is pressed:
     // currently assumes all user input is valid
-    console.log("Getting marker specifications from the form...")
+    console.log("Getting marker specifications from the form...");
     let markerInfo = event.formData;
 
     // for debugging
@@ -285,8 +255,6 @@ function createMarker(data) {
     marker.setGeometry(new Point([data.get("xcoord"), data.get("ycoord")]));
 }
 
-document.querySelector("#find-loc").addEventListener("click", findLocOnMap);
-
 const markerData = document.getElementById("add-marker-form");
 
 markerData.addEventListener("submit",(event) => {
@@ -294,6 +262,9 @@ markerData.addEventListener("submit",(event) => {
     new FormData(markerData); // this causes the formdata event for the next eventListener
 });
 markerData.addEventListener("formdata", (event) => createMarkerFromForm(event));
+
+// prompt user to enable geolocation
+enableGeolocation();
 
 // adding interactions to the map
 
