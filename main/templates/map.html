@@ -10,16 +10,59 @@
       href="{% static '/bootstrap/css/bootstrap.min.css' %}"
       rel="stylesheet"
     />
+    <link rel="stylesheet" href="{% static '/js/node_modules/ol/ol.css' %}" />
     <style>
       body {
         display: flex;
         flex-direction: column;
         min-height: 100vh;
       }
+      .map {
+            position: relative;
+            top: 0;
+            bottom: 0;
+            width: 600px;
+            height: 600px;
+        }
+        .ol-popup {
+            position: absolute;
+            background-color: #caffaa;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+            padding: 15px;
+            border-radius: 10px;
+            border: 1px solid #cccccc;
+            min-width: 200px;
+        }
+        .ol-popup-closer {
+            text-decoration: none;
+            position: absolute;
+            top: 2px;
+            right: 8px;
+        }
+        .ol-popup-closer:after {
+            content: "✖";
+        }
     </style>
   </head>
   <body> 
     {% include 'navbar.html' %}  
+
+    <script type="importmap">
+      {
+        "imports": {
+          "rbush": "../../sustainableCampus/static/js/node_modules/rbush/index.js",
+          "quickselect": "../../sustainableCampus/static/js/node_modules/quickselect/index.js",
+          "color-rgba": "../../sustainableCampus/static/js/node_modules/color-rgba/index.js",
+          "color-space/lchuv.js": "../../sustainableCampus/static/js/node_modules/color-space/lchuv.js",
+          "color-space/rgb.js": "../../sustainableCampus/static/js/node_modules/color-space/rgb.js",
+          "color-space/rgba.js": "../../sustainableCampus/static/js/node_modules/color-space/rgba.js",
+          "color-space/xyz.js": "../../sustainableCampus/static/js/node_modules/color-space/xyz.js",
+          "color-parse": "../../sustainableCampus/static/js/node_modules/color-parse/index.js",
+          "color-space/hsl.js": "../../sustainableCampus/static/js/node_modules/color-space/hsl.js",
+          "color-name": "../../sustainableCampus/static/js/node_modules/color-name/index.js"
+          }
+      }
+    </script>
 
     <div class="container-fluid flex-grow-1 d-flex flex-column mb-2">
       <!-- Header -->
@@ -27,11 +70,62 @@
           <h1>Map</h1>
       </div>
 
-      <div class="flex-grow-1 bg-light border">
+      <div id = "map" class="flex-grow-1 bg-light border">
           <!-- Map content goes here -->
       </div>
+      <div id="marker-popup" class="ol-popup">
+        <a href="#" id="marker-popup-closer" class="ol-popup-closer"></a>
+        <div id="marker-popup-content"></div>
+      </div>
+      <div id="info" style="display: none;"></div>
+      <p>
+        position accuracy : <code id="accuracy"></code>&nbsp;&nbsp;
+        altitude : <code id="altitude"></code>&nbsp;&nbsp;
+        altitude accuracy : <code id="altitudeAccuracy"></code>&nbsp;&nbsp;
+        heading : <code id="heading"></code>&nbsp;&nbsp;
+        speed : <code id="speed"></code>
+      </p>
     </div>  
 
+    <!-- TODO: Need to add input validation to the below -->
+    <div id="add-marker">
+      <form name="marker-details" id="add-marker-form" action="" method="POST">
+          <label for="xcoord">X Coordinate:</label>
+          <input
+                  type="text"
+                  name="xcoord"
+                  id="xcoord"
+                  placeholder="X coordinate"
+                  required
+                  size="16"
+                  maxlength="16"/>
+          <label for="ycoord">Y Coordinate:</label>
+          <input
+                  type="text"
+                  name="ycoord"
+                  id="ycoord"
+                  placeholder="Y coordinate"
+                  required
+                  size="16"
+                  maxlength="16" />
+          <label for="shape">Shape:</label>
+          <select name="shape" id="shape">
+              <option value="circle">Circle</option>
+              <option value="square">Square</option>
+              <option value="triangle">Triangle</option>
+          </select>
+          <label for="color">Colour:</label>
+          <select name="color" id="color">
+              <option value="red">Red</option>
+              <option value="green">Green</option>
+              <option value="blue">Blue</option>
+              <option value="yellow">Yellow</option>
+          </select>
+          <button type="submit" id="create-marker">Create Marker</button>
+      </form>
+    </div>
+    <!-- Geolocation System -->>
+    <script type="module" src="{% static '/js/geolocSystem.js' %}"></script>
     <!-- Bootstrap JS -->
     <script src="{% static '/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
   </body>
