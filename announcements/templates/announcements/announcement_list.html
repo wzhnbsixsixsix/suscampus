@@ -36,73 +36,31 @@
     <div class="container py-5">
       <h1 class="text-center mb-5">Announcements</h1>
 
-      <div class="row g-4">
-        <div class="col-12 col-lg-4">
-          <div class="card h-100 shadow">
-            <img
-              src=""
-              class="card-img-top"
-              alt="announcement 1"
-            />
-            <div class="card-body">
-              <h5 class="card-title">Announcement 1</h5>
-              <p class="card-text">
-                Summary text 1
-              </p>
-              <small class="text-muted post-date"
-                >Posted on 22/02/2025</small
-              >
-              <div class="full-content">
-                Full description of the announcement 1
+      {% for announcement in announcements %}
+        <div class="row g-4">
+          <div class="col-12 col-lg-4">
+            <div class="card h-100 shadow">
+              <img
+                src="{{ announcement.image.url }}"
+                class="card-img-top"
+                style="height: 200px; object-fit: cover;"
+                alt="{{ announcement.title }}"
+              />
+              <div class="card-body">
+                <h5 class="card-title">{{ announcement.title }}</h5>
+                <p class="card-text">
+                  {{ announcement.summary }} 
+                </p> 
+                <small class="text-muted meta-data">
+                  Author: {{ announcement.author }} | Role: {{ announcement.author.role }} | Date: {{ announcement.created_at }}
+                </small>
+                <div class="full-content">
+                  {{ announcement.content }}
+                </div>
               </div>
             </div>
-          </div>
-        </div>
-
-        <div class="col-12 col-lg-4">
-          <div class="card h-100 shadow">
-            <img
-              src=""
-              class="card-img-top"
-              alt="annonucement 2"
-            />
-            <div class="card-body">
-              <h5 class="card-title">Announcement 2</h5>
-              <p class="card-text">
-                Summary of announcement 2
-              </p>
-              <small class="text-muted post-date"
-                >Posted on 21/02/2025</small
-              >
-              <div class="full-content">
-                Full description of announcement 2
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="col-12 col-lg-4">
-          <div class="card h-100 shadow">
-            <img
-              src=""
-              class="card-img-top"
-              alt="announcement 3"
-            />
-            <div class="card-body">
-              <h5 class="card-title">Announcement 3</h5>
-              <p class="card-text">
-                Summary of announcement 3
-              </p>
-              <small class="text-muted post-date"
-                >Posted on 20/02/2025</small
-              >
-              <div class="full-content">
-                Full description of announcement 3
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+        </div> 
+      {% endfor %} 
     </div>
 
     <!-- Announcement Modal -->
@@ -126,7 +84,7 @@
             <p id="modalContent"></p>
         </div>
         <div class="modal-footer justify-content-between">
-            <small class="text-muted" id="modalDate"></small>
+            <small class="text-muted" id="modalMetaData"></small>
             <button
               type="button"
               class="btn btn-secondary"
@@ -153,13 +111,13 @@
             // Extract data from card elements
             const title = card.querySelector(".card-title").textContent;
             const content = card.querySelector(".full-content").textContent;
-            const date = card.querySelector(".post-date").textContent;
+            const meta_data = card.querySelector(".meta-data").textContent;
             const image = card.querySelector("img").src;
 
             // Update modal content
             document.getElementById("modalTitle").textContent = title;
             document.getElementById("modalContent").textContent = content;
-            document.getElementById("modalDate").textContent = date;
+            document.getElementById("modalMetaData").textContent = meta_data;
             document.getElementById("modalImage").src = image;
 
             // Show modal
