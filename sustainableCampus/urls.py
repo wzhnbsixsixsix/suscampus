@@ -26,7 +26,7 @@ urlpatterns = [
     path('announcements/', include('announcements.urls')), 
     path("shop/", include("shop.urls")),
     path("suggestions/", include("suggestions.urls")),
-    #path('', views.home, name='home')
+    path('leaderboards/', include('leaderboards.urls')),
 ]
 
 

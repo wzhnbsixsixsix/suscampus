@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'main',
     'shop',
     'suggestions',
+    'leaderboards',
 ]
 
 AUTH_USER_MODEL = 'accounts.CustomUser'
