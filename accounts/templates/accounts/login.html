@@ -14,23 +14,14 @@
         <div class="col-md-7 left-panel">
             <h1 class="display-5 fw-bold font-monospace text-black mb-0">Sustainable Campus</h1>
             <div class=" mt-0">
-                <form method="POST">
+                <form method="POST" class="d-flex flex-column align-items-center gap-1">
                     {% csrf_token %}
-                    <div class="mb-3">
-                        <input type="text" class="form-control w-75" id="id_username" name="username" placeholder="Username">
-                    </div>
-
-                    <div class="mb-3">
-                        <input type="password" class="form-control w-75" id="id_password" name="password" placeholder="Password">
-                    </div>
-                    <div class="mb-3">
-                        <a href="#" class="text-decoration-none">Forgot password?</a>
-                    </div>
-                    <div class="mb-3">
-                        <button type="submit" class="btn btn-success  w-75" >Log in</button>
-                    </div>
-                    <div class="d-grid">
-                        <a href="{% url 'accounts:signup' %}" class="btn btn-outline-success w-75">Sign up</a>
+                    <input type="text" class="form-control" id="id_username" name="username" placeholder="Username">
+                    <input type="password" class="form-control" id="id_password" name="password" placeholder="Password">
+                    <a href="#" class="text-decoration-none mb-3">Forgot password?</a>
+                    <div class="d-grid gap-1">
+                        <button type="submit" class="btn btn-success" >Log in</button>
+                        <a href="{% url 'accounts:signup' %}" class="btn btn-outline-success">Sign up</a>
                     </div>
                 </form>
             </div>
