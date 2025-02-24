@@ -1,142 +1,72 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    {% load static %}
-    <title>Sustainable Campus</title>
-    <link rel="stylesheet" href="/static/css/announcement_list.css" />
-    <link rel="stylesheet" href="{% static 'css/navbar.css' %}" />
-    <link href="https://cdn.lineicons.com/5.0/lineicons.css" rel="stylesheet" />
-    <link
-      rel="stylesheet"
-      href="{% static '/bootstrap/css/bootstrap.min.css' %}"
-    />
-    <style>
-        .card {
-            cursor: pointer;
-            transition: transform 0.2s;
-        }
-        .card:hover {
-            transform: translateY(-5px);
-        }
-        .modal-img {
-            max-height: 400px;
-            object-fit: cover;
-        }
-        .full-content {
-            display: none;
-        }
-    </style>
-  </head>
 
-  <body>
-    {% include 'navbar.html' %}
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  {% load static %}
+  <title>Sustainable Campus</title>
+  <link rel="stylesheet" href="/static/css/announcement_list.css" />
+  <link rel="stylesheet" href="{% static 'css/navbar.css' %}" />
+  <link href="https://cdn.lineicons.com/5.0/lineicons.css" rel="stylesheet" />
+  <link rel="stylesheet" href="{% static '/bootstrap/css/bootstrap.min.css' %}" />
+  <style>
+    .card {
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
 
-    <div class="container py-5">
-      <h1 class="text-center mb-5">Announcements</h1>
+    .card:hover {
+      transform: translateY(-5px);
+    }
 
-      <div class="row g-4">
-        <div class="col-12 col-lg-4">
-          <div class="card h-100 shadow">
-            <img
-              src=""
-              class="card-img-top"
-              alt="announcement 1"
-            />
-            <div class="card-body">
-              <h5 class="card-title">Announcement 1</h5>
-              <p class="card-text">
-                Summary text 1
-              </p>
-              <small class="text-muted post-date"
-                >Posted on 22/02/2025</small
-              >
-              <div class="full-content">
-                Full description of the announcement 1
-              </div>
-            </div>
-          </div>
-        </div>
+    .modal-img {
+      max-height: 400px;
+      object-fit: cover;
+    }
 
-        <div class="col-12 col-lg-4">
-          <div class="card h-100 shadow">
-            <img
-              src=""
-              class="card-img-top"
-              alt="annonucement 2"
-            />
-            <div class="card-body">
-              <h5 class="card-title">Announcement 2</h5>
-              <p class="card-text">
-                Summary of announcement 2
-              </p>
-              <small class="text-muted post-date"
-                >Posted on 21/02/2025</small
-              >
-              <div class="full-content">
-                Full description of announcement 2
-              </div>
+    .full-content {
+      display: none;
+    }
+  </style>
+</head>
+
+<body>
+  {% include 'navbar.html' %}
+
+  <div class="container py-5">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <h1 class="h3 mb-0">Announcements</h1>
+      <a href="{% url 'create_announcement' %}"
+        class="btn btn-outline-success p-2 lh-1 d-flex align-items-center">Create New Announcement</a>
+    </div>
+
+    <div class="row g-4">
+      {% for announcement in announcements %}
+      <div class="col-12 col-md-6 col-lg-4">
+        <div class="card h-100 shadow">
+          {% if announcement.image %}
+          <img src="{{ announcement.image.url }}" class="card-img-top" style="height: 200px; object-fit: cover;"
+            alt="{{ announcement.title }}" />
+          {% else %}
+          <p>No image available</p>
+          {% endif %}
+          <div class="card-body">
+            <h5 class="card-title">{{ announcement.title }}</h5>
+            <p class="card-text">
+              {{ announcement.summary }}
+            </p>
+            <small class="text-muted meta-data">
+              Author: {{ announcement.author }} | Role: {{ announcement.author.role }} | Date: {{announcement.created_at }}
+            </small>
+            <div class="full-content">
+              {{ announcement.content }}
             </div>
           </div>
         </div>
       </div>
-    </nav> 
-
-<h1>Community Announcements</h1>
-    <a href="{% url 'create_announcement' %}">Create New Announcement</a>
-    <ul>
-        {% for announcement in announcements %}
-        <li>
-            <h2>{{ announcement.title }}</h2>
-            <h3>{{ announcement.summary}}</h3>
-
-            <p>{{ announcement.content }}</p>
-
-            {% if announcement.image %}
-                <img src="{{ announcement.image.url }}" alt="{{ announcement.title }}" style="max-width: 400px;">
-            {% else %}
-                <p>No image available</p>
-            {% endif %}
-            <small>Posted by {{ announcement.author }} | Role: {{ announcement.author.role }} on {{ announcement.created_at }}</small>
-        </li>
-        {% endfor %}
-    </ul>
-    {% if messages %}
-    <div class="toast-container position-fixed top-0 end-0 p-3">
-        {% for message in messages %}
-            <div class="toast show align-items-center text-white bg-danger border-0" role="alert">
-                <div class="d-flex">
-                    <div class="toast-body">
-                        {{ message }}
-                    </div>
-                    <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
-                </div>
-            </div>
-        {% endfor %}
-
-        <div class="col-12 col-lg-4">
-          <div class="card h-100 shadow">
-            <img
-              src=""
-              class="card-img-top"
-              alt="announcement 3"
-            />
-            <div class="card-body">
-              <h5 class="card-title">Announcement 3</h5>
-              <p class="card-text">
-                Summary of announcement 3
-              </p>
-              <small class="text-muted post-date"
-                >Posted on 20/02/2025</small
-              >
-              <div class="full-content">
-                Full description of announcement 3
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+      {% endfor %}
     </div>
 
     <!-- Announcement Modal -->
@@ -145,27 +75,15 @@
         <div class="modal-content">
           <div class="modal-header">
             <h5 class="modal-title" id="modalTitle"></h5>
-            <button
-              type="button"
-              class="btn-close"
-              data-bs-dismiss="modal"
-            ></button>
+            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
           </div>
           <div class="modal-body">
-            <img
-              src=""
-              class="modal-img img-fluid mb-3 w-100"
-              id="modalImage"
-            />
+            <img src="" class="modal-img img-fluid mb-3 w-100" id="modalImage" />
             <p id="modalContent"></p>
-        </div>
-        <div class="modal-footer justify-content-between">
-            <small class="text-muted" id="modalDate"></small>
-            <button
-              type="button"
-              class="btn btn-secondary"
-              data-bs-dismiss="modal"
-            >
+          </div>
+          <div class="modal-footer justify-content-between">
+            <small class="text-muted" id="modalMetaData"></small>
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
               Close
             </button>
           </div>
@@ -187,13 +105,13 @@
             // Extract data from card elements
             const title = card.querySelector(".card-title").textContent;
             const content = card.querySelector(".full-content").textContent;
-            const date = card.querySelector(".post-date").textContent;
+            const meta_data = card.querySelector(".meta-data").textContent;
             const image = card.querySelector("img").src;
 
             // Update modal content
             document.getElementById("modalTitle").textContent = title;
             document.getElementById("modalContent").textContent = content;
-            document.getElementById("modalDate").textContent = date;
+            document.getElementById("modalMetaData").textContent = meta_data;
             document.getElementById("modalImage").src = image;
 
             // Show modal
@@ -202,5 +120,24 @@
         });
       });
     </script>
-  </body>
+
+
+
+
+{% if messages %}
+    <div class="toast-container position-fixed top-0 end-0 p-3">
+        {% for message in messages %}
+            <div class="toast show align-items-center text-white bg-danger border-0" role="alert">
+                <div class="d-flex">
+                    <div class="toast-body">
+                        {{ message }}
+                    </div>
+                    <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% endif %}
+</body>
+
 </html>
