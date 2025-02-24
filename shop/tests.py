@@ -24,7 +24,6 @@ class SetUpTest(TestCase):
                                                     last_name = 'User',
                                                     role = 'player',
                                                     verified = True)
-        
         # Creates initial balance for test player
         self.player_balance = UserBalance.objects.create(user_id = self.player, currency = 20)
 
