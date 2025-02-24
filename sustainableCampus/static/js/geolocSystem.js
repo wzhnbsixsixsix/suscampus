@@ -255,8 +255,6 @@ function createMarker(data) {
     marker.setGeometry(new Point([data.get("xcoord"), data.get("ycoord")]));
 }
 
-document.querySelector("#find-loc").addEventListener("click", findLocOnMap);
-
 const markerData = document.getElementById("add-marker-form");
 
 markerData.addEventListener("submit",(event) => {
