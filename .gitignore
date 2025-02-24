@@ -1,3 +1,6 @@
+#node-modules folder
+sustainableCampus/static/js/node_modules
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
@@ -169,3 +172,4 @@ cython_debug/
 
 # PyPI configuration file
 .pypirc
+/main/templates/node_modules/
