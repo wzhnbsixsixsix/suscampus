@@ -70,6 +70,12 @@
             <h3>{{ announcement.summary}}</h3>
 
             <p>{{ announcement.content }}</p>
+
+            {% if announcement.image %}
+                <img src="{{ announcement.image.url }}" alt="{{ announcement.title }}" style="max-width: 400px;">
+            {% else %}
+                <p>No image available</p>
+            {% endif %}
             <small>Posted by {{ announcement.author }} | Role: {{ announcement.author.role }} on {{ announcement.created_at }}</small>
         </li>
         {% endfor %}
