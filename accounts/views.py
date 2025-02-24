@@ -19,6 +19,8 @@ def signup_page(request):
     # If a form is submitted, the following happens
     if request.method == 'POST':
         form = SignUpForm(request.POST)
+
+        # If form is valid, saves new user data, and sends email verification
         if form.is_valid():
             # Checks if given email is unique before saving new user data
             if CustomUser.objects.filter(email=form.cleaned_data["email"]).exists():
@@ -71,23 +73,36 @@ def email_verification(request, token):
 def login_page(request):
     form = LoginForm(request)
 
+    # If a form is submitted, the following happens
     if request.method == 'POST':
         form = LoginForm(request, data=request.POST)
         if form.is_valid():
-            username = form.cleaned_data.get("username")
-            password = form.cleaned_data.get("password")
+            # Retrieves username and password from submitted form
+            username = request.POST.get("username")
+            password = request.POST.get("password")
 
+            # Retrieves user data for matching username and password
             user = authenticate(request, username=username, password=password)
 
+            # Checks if user data has been retrieved
             if user is not None:
-                if user.verified:
+                # Checks if user is verified
+                if user.verified == True:
                     login(request, user)
-                    return redirect('/')
+                    return redirect('main:map')
+
                 else:
-                    form.add_error(None, 'Invalid username or password')
+                    form.add_error(None, 'Email has not been verified')
+
             else:
                 form.add_error(None, 'Invalid username or password')
-    return render(request, 'accounts/login.html', {'form': form})
+
+        else:
+            context = {'form': form}
+            return render(request, 'accounts/login.html', context)
+    else:
+        context = {'form': form}
+        return render(request, 'accounts/login.html', context)
 
 
 def logout_view(request):
@@ -96,7 +111,7 @@ def logout_view(request):
     return redirect("accounts:login")
 
 
-# Make sure the user is logged in
+@login_required  # Make sure the user is logged in
 def profile_page(request):
     username = request.user.username
     email = request.user.email
