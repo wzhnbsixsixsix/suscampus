@@ -7,7 +7,7 @@
     <meta name="description" content="User profile page for University of Exeter.">
     <title>User Profile - University of Exeter</title>
     <!-- Bootstrap CSS -->
-    <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
+    <link href="{% static '/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
     <link rel="stylesheet" href="{% static 'css/navbar.css' %}">
     <link rel="stylesheet" href="{% static 'css/styles.css' %}">
 </head>
@@ -30,7 +30,7 @@
             <!-- Navigation links in the center -->
             <ul class="navbar-nav mx-auto mb-2 mb-lg-0">
                 <li class="nav-item">
-                    <a href="" class="nav-link px-2 link-dark">Home</a>
+                    <a href="/" class="nav-link px-2 link-dark">Home</a>
                 </li>
                 <li class="nav-item">
                     <a href="forest" class="nav-link px-2 link-dark">My forest</a>
@@ -42,31 +42,36 @@
                     <a href="announcements/" class="nav-link px-2 link-dark">Announcements</a>
                 </li>
                 <li class="nav-item">
-                    <a href="suggestions/" class="nav-link px-2 link-dark">Suggestion box</a>
+                    <a href="{% url 'suggestions' %}" class="nav-link px-2 link-dark">Suggestion box</a>
                 </li>
             </ul>
-
             <!-- Profile dropdown on the right -->
             <div class="d-flex align-items-center">
-                <!-- Log in button if not logged in -->
-                <a href="{% url 'accounts:login' %}" class="btn btn-outline-primary mx-2">Log in</a>
-                <!-- User profile dropdown (when logged in) -->
-                <div class="dropdown text-end ms-lg-3">
-                    <a href="#" class="d-block link-dark text-decoration-none dropdown-toggle" id="dropdownUser"
-                       data-bs-toggle="dropdown" aria-expanded="false">
-                        <img src="" alt="mdo" width="32" height="32" class="rounded-circle">
-                    </a>
-                    <ul class="dropdown-menu text-small dropdown-menu-end" aria-labelledby="dropdownUser">
-                        <li><a class="dropdown-item" href="{% url 'accounts:profile' %}">Profile</a></li>
-                        <li><a class="dropdown-item" href="#">Settings</a></li>
-                        <li>
-                            <hr class="dropdown-divider">
-                        </li>
-                        <li><a class="dropdown-item" href="#">Sign out</a></li>
-                    </ul>
-                </div>
+                {% if user.is_authenticated %}
+                    <!-- User profile dropdown (when logged in) -->
+                    <div class="dropdown text-end ms-lg-3">
+                        <a href="{% url 'accounts:profile' %}" class="d-block link-dark text-decoration-none dropdown-toggle" id="dropdownUser"
+                           data-bs-toggle="dropdown" aria-expanded="false">
+                            <img src="" alt="mdo" width="32" height="32" class="rounded-circle">
+                        </a>
+                        <ul class="dropdown-menu text-small dropdown-menu-end" aria-labelledby="dropdownUser">
+                            <li><a class="dropdown-item" href="{% url 'accounts:profile' %}">Profile</a></li>
+                            <li><a class="dropdown-item" href="#">Settings</a></li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+                            <li><a class="dropdown-item" href="{% url 'accounts:logout' %}">Sign out</a></li>
+                        </ul>
+                    </div>
+                {% else %}
+                    <!-- Login button (when not logged in) -->
+                    <a href="{% url 'accounts:login' %}" class="btn btn-outline-success me-2">Log in</a>
+                    <!-- Sign up button (when not logged in) -->
+                    <a href="{% url 'accounts:signup' %}" class="btn btn-outline-success">Sign up</a>
+                {% endif %}
             </div>
         </div>
+    </div>
     </div>
 </nav>
 
@@ -164,24 +169,51 @@
         <section class="mb-4">
             <h2 class="mb-2">Email and Password</h2>
             <p><strong>Account email:</strong>{{ email }}</p>
+            {% if messages %}
+                <div class="alert-container">
+                    {% for message in messages %}
+                        <div class="alert {% if message.tags %}alert-{{ message.tags }}{% else %}alert-info{% endif %}">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+            {% if form.errors %}
+                <div class="alert alert-danger mb-3" role="alert">
+                    {% for field in form %}
+                        {% for error in field.errors %}
+                            <p class="mb-1">{{ error|escape }}</p>
+                        {% endfor %}
+                    {% endfor %}
+                    {% for error in form.non_field_errors %}
+                        <p class="mb-1">{{ error|escape }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
 
-            <form class="row g-3" action="{% url 'accounts:change_password' %}" method="post">
-
+            <!-- change password form -->
+            <form method="post" action="{% url 'accounts:change_password' %}">
                 {% csrf_token %}
                 <div class="col-12">
-                    <label for="old-password" class="form-label">Old password</label>
+                    <label for="old-password" class="form-label">Current password</label>
                     <input type="password" class="form-control" id="old-password" name="old_password"
                            placeholder="Old password" required>
                 </div>
                 <div class="col-12">
-                    <label for="new-password" class="form-label">New password</label>
-                    <input type="password" class="form-control" id="new-password" name="new_password"
+                    <label for="new-password1" class="form-label">New password</label>
+                    <input type="password" class="form-control" id="new-password1" name="new_password1"
                            placeholder="New password" required>
+                </div>
+                <div class="col-12">
+                    <label for="new-password2" class="form-label">Confirm new password</label>
+                    <input type="password" class="form-control" id="new-password2" name="new_password2"
+                           placeholder="Confirm new password" required>
                 </div>
                 <div class="col-12">
                     <button type="submit" class="btn btn-success">Change password</button>
                 </div>
             </form>
+
         </section>
 
         <div class="d-flex align-items-center gap-3 mb-4">
@@ -206,8 +238,8 @@
 
         </section>
 
-        {#        <form action="{% url 'logout' %}" method="post">#}
-        <form action="#" method="post">
+        {#       <form action="{% url 'logout' %}" method="post">#}
+        <form action="{% url 'accounts:logout' %}" method="post">
             {% csrf_token %}
             <button type="submit" class="btn btn-success">Log out</button>
         </form>
@@ -217,29 +249,29 @@
 <script>
     // Execute the function after the document content is fully loaded
     document.addEventListener("DOMContentLoaded", function () {
-       // If the show_modal variable is true, the modal box will be automatically displayed
+        // If the show_modal variable is true, the modal box will be automatically displayed
         {% if show_modal %}
             var modal = new bootstrap.Modal(document.getElementById('changeUsernameModal'));
             modal.show();
         {% endif %}
 
-       // Add a submission event listener to a form that changes username
+        // Add a submission event listener to a form that changes username
         document.getElementById("change-username-form").addEventListener("submit", function (event) {
-           // Add a submission event listener to a form that changes username
+            // Add a submission event listener to a form that changes username
             var usernameInput = document.getElementById("new-username");
             var username = usernameInput.value.trim();
             var errorContainer = document.getElementById("username-error");
 
-           // Clear the error message container
+            // Clear the error message container
             errorContainer.innerHTML = "";
 
-           /*
-             * Verify that the username is valid:
-             * Invalid conditions include the user name is empty and the length does not meet the requirements (3-20 characters).
-             * or characters containing non-letters, numbers, and underscores
-             */
+            /*
+              * Verify that the username is valid:
+              * Invalid conditions include the user name is empty and the length does not meet the requirements (3-20 characters).
+              * or characters containing non-letters, numbers, and underscores
+              */
             if (username === "" || username.length < 3 || username.length > 20 || !/^[a-zA-Z0-9_]+$/.test(username)) {
-               // If the username is invalid, the error message will be displayed
+                // If the username is invalid, the error message will be displayed
                 errorContainer.innerHTML = "<div class='alert alert-danger mt-2'>Invalid username! Username must be 3-20 characters and only contain letters, numbers, and underscores.</div>";
                 event.preventDefault();//prevent submission
                 return;
@@ -247,15 +279,30 @@
             }
         });
         var modalElement = document.getElementById('changeUsernameModal');
-    if (modalElement) {
-        modalElement.addEventListener('hidden.bs.modal', function () {
-            document.getElementById("new-username").value = "";
-            document.getElementById("username-error").innerHTML = "";
-        });
-    }
+        if (modalElement) {
+            modalElement.addEventListener('hidden.bs.modal', function () {
+                document.getElementById("new-username").value = "";
+                document.getElementById("username-error").innerHTML = "";
+            });
+        }
     });
-</script>
+    document.querySelector('form').addEventListener('submit', function (e) {
+        const new1 = document.getElementById('new-password1').value;
+        const new2 = document.getElementById('new-password2').value;
 
+        if (new1 !== new2) {
+            e.preventDefault();
+            alert('The new password entered twice is inconsistent, please re-enter');
+            document.getElementById('new-password2').focus();
+        }
+
+        if (new1.length < 8) {
+            e.preventDefault();
+            alert('Password length must not be less than 8 characters');
+        }
+    });
+
+</script>
 
 
 <!-- Bootstrap JS and Popper.js -->
