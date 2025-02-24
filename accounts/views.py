@@ -98,11 +98,10 @@ def logout_view(request):
 
 # Make sure the user is logged in
 def profile_page(request):
-    username = request.user.username
-    email = request.user.email
     context = {
-        'username': username,
-        'email': email,
+        'username': request.user.username,
+        'email': request.user.email,
+        'form': PasswordChangeForm(request.user)  # 添加默认表单
     }
     return render(request, 'accounts/profile.html', context)
 
@@ -144,6 +143,12 @@ def change_password(request):
     to ensure new password meets security requirements. Maintains user session after password
     change by updating auth hash.
     """
+    base_context = {
+        'username': request.user.username,
+        'email': request.user.email,
+        'form': PasswordChangeForm(request.user)
+    }
+
     if request.method == 'POST':
         # Initialize password change form with user and POST data
         form = PasswordChangeForm(request.user, request.POST)
@@ -158,12 +163,17 @@ def change_password(request):
             # Redirect to profile page
             return redirect('accounts:profile')
         else:
+            base_context.update({
+                'form': form,
+                'username': request.user.username,  # 显式保留用户名
+                'email': request.user.email  # 显式保留邮箱
+            })
             # Set error notification for invalid form
             messages.error(request, 'Please correct the errors below.')
-            return render(request, 'accounts/profile.html', {'form': form})
+            return render(request, 'accounts/profile.html', base_context)
 
     else:
         # Initialize empty form for GET requests
         form = PasswordChangeForm(request.user)
     # Render password change template with form context
-    return render(request, 'accounts/profile.html', {'form': form})
+    return render(request, 'accounts/profile.html', base_context)
