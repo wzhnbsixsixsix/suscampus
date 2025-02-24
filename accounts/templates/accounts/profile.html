@@ -48,30 +48,30 @@
             <!-- Profile dropdown on the right -->
             <div class="d-flex align-items-center">
                 {% if user.is_authenticated %}
-                <!-- User profile dropdown (when logged in) -->
-                <div class="dropdown text-end ms-lg-3">
-                    <a href="#" class="d-block link-dark text-decoration-none dropdown-toggle" id="dropdownUser"
-                       data-bs-toggle="dropdown" aria-expanded="false">
-                        <img src="" alt="mdo" width="32" height="32" class="rounded-circle">
-                    </a>
-                    <ul class="dropdown-menu text-small dropdown-menu-end" aria-labelledby="dropdownUser">
-                        <li><a class="dropdown-item" href="{% url 'accounts:profile' %}">Profile</a></li>
-                        <li><a class="dropdown-item" href="#">Settings</a></li>
-                        <li>
-                            <hr class="dropdown-divider">
-                        </li>
-                        <li><a class="dropdown-item" href="{% url 'accounts:logout' %}">Sign out</a></li>
-                    </ul>
-                </div>
+                    <!-- User profile dropdown (when logged in) -->
+                    <div class="dropdown text-end ms-lg-3">
+                        <a href="#" class="d-block link-dark text-decoration-none dropdown-toggle" id="dropdownUser"
+                           data-bs-toggle="dropdown" aria-expanded="false">
+                            <img src="" alt="mdo" width="32" height="32" class="rounded-circle">
+                        </a>
+                        <ul class="dropdown-menu text-small dropdown-menu-end" aria-labelledby="dropdownUser">
+                            <li><a class="dropdown-item" href="{% url 'accounts:profile' %}">Profile</a></li>
+                            <li><a class="dropdown-item" href="#">Settings</a></li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+                            <li><a class="dropdown-item" href="{% url 'accounts:logout' %}">Sign out</a></li>
+                        </ul>
+                    </div>
                 {% else %}
-                <!-- Login button (when not logged in) -->
-                <a href="{% url 'accounts:login' %}" class="btn btn-outline-success me-2">Log in</a>
+                    <!-- Login button (when not logged in) -->
+                    <a href="{% url 'accounts:login' %}" class="btn btn-outline-success me-2">Log in</a>
                     <!-- Sign up button (when not logged in) -->
-                <a href="{% url 'accounts:signup' %}" class="btn btn-outline-success">Sign up</a>
+                    <a href="{% url 'accounts:signup' %}" class="btn btn-outline-success">Sign up</a>
                 {% endif %}
             </div>
-            </div>
         </div>
+    </div>
     </div>
 </nav>
 
@@ -169,6 +169,28 @@
         <section class="mb-4">
             <h2 class="mb-2">Email and Password</h2>
             <p><strong>Account email:</strong>{{ email }}</p>
+            {% if messages %}
+                <div class="alert-container">
+                    {% for message in messages %}
+                        <div class="alert {% if message.tags %}alert-{{ message.tags }}{% else %}alert-info{% endif %}">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+            {% if form.errors %}
+                <div class="alert alert-danger mb-3" role="alert">
+                    {% for field in form %}
+                        {% for error in field.errors %}
+                            <p class="mb-1">{{ error|escape }}</p>
+                        {% endfor %}
+                    {% endfor %}
+                    {% for error in form.non_field_errors %}
+                        <p class="mb-1">{{ error|escape }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
             <!-- change password form -->
             <form method="post" action="{% url 'accounts:change_password' %}">
                 {% csrf_token %}
@@ -216,8 +238,8 @@
 
         </section>
 
-        {#        <form action="{% url 'logout' %}" method="post">#}
-        <form action="#" method="post">
+        {#       <form action="{% url 'logout' %}" method="post">#}
+        <form action="{% url 'accounts:logout' %}" method="post">
             {% csrf_token %}
             <button type="submit" class="btn btn-success">Log out</button>
         </form>
@@ -264,6 +286,22 @@
             });
         }
     });
+    document.querySelector('form').addEventListener('submit', function (e) {
+        const new1 = document.getElementById('new-password1').value;
+        const new2 = document.getElementById('new-password2').value;
+
+        if (new1 !== new2) {
+            e.preventDefault();
+            alert('The new password entered twice is inconsistent, please re-enter');
+            document.getElementById('new-password2').focus();
+        }
+
+        if (new1.length < 8) {
+            e.preventDefault();
+            alert('Password length must not be less than 8 characters');
+        }
+    });
+
 </script>
 
 
