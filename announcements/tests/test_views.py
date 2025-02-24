@@ -39,6 +39,7 @@ class AnnouncementViewTests(TestCase):
             "title": "Unauthorized Announcement",
             "content": "This should not be allowed."
         })
+        self.assertEqual(response.status_code, 302)
         self.assertRedirects(response, "/announcements/")  # Redirected with error message
         self.assertFalse(Announcement.objects.filter(title="Unauthorized Announcement").exists())
 
