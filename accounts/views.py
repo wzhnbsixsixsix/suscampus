@@ -10,6 +10,7 @@ from django.core.mail import send_mail
 from django.conf import settings
 from .models import CustomUser
 from shop.models import UserBalance
+from leaderboards.models import TreeScore
 
 
 # Handles data submitted from signup page's form
@@ -58,7 +59,11 @@ def email_verification(request, token):
         user.verified = True
         user.save()
 
+        # Creates a user balance for player
         UserBalance.objects.create(user_id=user)
+
+        # Creates a score counter for the tree game for player
+        TreeScore.objects.create(user_id=user)
 
         messages.success(request, "User has now been verified, you can now log in.")
     else:
