@@ -1,24 +1,91 @@
-<h2>Your Purchased Items</h2>
+{% load static %}
 
-{% if purchases %}
-    <ul>
-        {% for purchase in purchases %}
-            <li>
-                <h3>{{ purchase.item.name }}</h3>
-                <p>{{ purchase.item.description }}</p>
-                <p>Purchased on: {{ purchase.purchase_date_time }}</p>
-                {% if purchase.is_digital %}
-                    <button disabled>Not Redeemable</button>
-                {% elif purchase.is_redeemed %}
-                    <button disabled>Already Redeemed</button>
-                {% else %}
-                    <a href="{% url 'shop:display_redeem_code' redeem_code=purchase.redeem_code %}">
-                        <button>Redeem Item</button>
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Sustainable Campus</title>
+    <link rel="stylesheet" href="{% static "shop/css/shop.css" %}">
+    <link href="https://cdn.lineicons.com/5.0/lineicons.css" rel="stylesheet" />
+    <link
+      href="{% static '/bootstrap/css/bootstrap.min.css' %}"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    {% include 'navbar.html' %}
+
+    <div class="container my-5">
+      <div class="card shadow">
+        <div class="card-header bg-primary text-white">
+          <h2 class="mb-0">Your Purchased Items</h2>
+        </div>
+
+        <div class="card-body">
+          {% if purchases %}
+          <div class="table-responsive">
+            <table class="table table-striped table-hover align-middle" style="table-layout: fixed;">
+              <thead>
+                <tr>
+                  <th scope="col">Item</th>
+                  <th scope="col">Purchase Date</th>
+                  <th scope="col">Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for purchase in purchases %}
+                <tr>
+                  <td>
+                    <h5 class="mb-1">{{ purchase.item.name }}</h5>
+                    <p class="text-muted mb-0">
+                      {{ purchase.item.description }}
+                    </p>
+                  </td>
+                  <td>{{ purchase.purchase_date_time }}</td>
+                  <td >
+                    {% if purchase.is_digital %}
+                    <span
+                      class="badge bg-secondary rounded-pill px-3 py-1 fs-6 d-inline-block text-truncate"
+                      style="width: 160px"
+                    >
+                      Not Redeemable
+                    </span>
+                    {% elif purchase.is_redeemed %}
+                    <span
+                      class="badge bg-success rounded-pill px-3 py-1 fs-6 d-inline-block text-truncate"
+                      style="width: 160px"
+                    >
+                      Already Redeemed
+                    </span>
+                    {% else %}
+                    <a
+                      href="{% url 'shop:display_redeem_code' redeem_code=purchase.redeem_code %}"
+                      class="text-decoration-none"
+                    >
+                      <span
+                        class="badge bg-success rounded-pill px-3 py-1 fs-6 d-inline-block text-truncate"
+                        style="width: 160px"
+                      >
+                        Redeem Now
+                      </span>
                     </a>
-                {% endif %}
-            </li>
-        {% endfor %}
-    </ul>
-{% else %}
-    <p>You have no redeemable items.</p>
-{% endif %}
+                    {% endif %}
+                  </td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+          {% else %}
+          <div class="alert alert-info mb-0 d-flex align-items-center">
+            <i class="lni lni-bell-1"></i>
+            You have no purchased items.
+          </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="{% static '/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+  </body>
+</html>
