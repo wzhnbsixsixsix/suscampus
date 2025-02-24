@@ -131,7 +131,7 @@ const mapView = map.getView();
 
 function enableGeolocation() {
     if ("geolocation" in navigator) {
-        navigator.geolocation.getCurrentPosition(success, error)
+        geolocation.setTracking(true); // will automatically prompt user
     } else {
         alert("Geolocation is not supported by your browser.");
     }
