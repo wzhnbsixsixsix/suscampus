@@ -1,11 +1,3 @@
 Django==5.1.6
-
-Need to do:
-
-pip install Pillow
-
-required for the imagefield for model ShopItem attribute image, and for creating qr code image
-
-pip install qrcode
-
-required to make and display qrcode
+qrcode==8.0
+pillow==10.4.0
