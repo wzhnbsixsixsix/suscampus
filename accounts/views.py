@@ -63,7 +63,7 @@ def email_verification(request, token):
         UserBalance.objects.create(user_id=user)
 
         # Creates a score counter for the tree game for player
-        TreeScore.objects.create(user_id=user)
+        TreeScore.objects.create(user=user)
 
         messages.success(request, "User has now been verified, you can now log in.")
     else:
@@ -171,8 +171,8 @@ def change_password(request):
         else:
             base_context.update({
                 'form': form,
-                'username': request.user.username,  # 显式保留用户名
-                'email': request.user.email  # 显式保留邮箱
+                'username': request.user.username,  
+                'email': request.user.email  
             })
             # Set error notification for invalid form
             messages.error(request, 'Please correct the errors below.')

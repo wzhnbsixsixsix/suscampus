@@ -13,7 +13,7 @@ User = get_user_model()
 class AnnouncementFormTests(TestCase):
     def test_valid_form(self):
         """Test that the form is valid when given correct data"""
-        form_data = {"title": "Test Announcement", "content": "This is a test announcement."}
+        form_data = {"title": "Test Announcement", "summary":"test summary", "content": "This is a test announcement."}
         form = AnnouncementForm(data=form_data)
         self.assertTrue(form.is_valid())
 
@@ -72,20 +72,23 @@ class AnnouncementViewTests(TestCase):
         self.client = Client()
 
         # Create users: a Game Keeper and a Player
-        self.game_keeper = CustomUser.objects.create_user(username="gamekeeper", password="password", role="game_keeper", verified=True)
-        self.player = CustomUser.objects.create_user(username="player", password="password", role="player", verified=True)
+        self.game_keeper = CustomUser.objects.create_user(username="gamekeeper", password="TestPassword12345", role="gameKeeper", verified=True)
+        self.player = CustomUser.objects.create_user(username="player", password="TestPassword12345", role="player", verified=True)
 
         
 
         # Create a sample announcement
         self.announcement = Announcement.objects.create(
             title="Test Announcement",
+            summary="test summary",
             content="This is a test announcement.",
+            image=None,
             author=self.game_keeper
         )
 
     def test_announcement_list_view(self):
         """Ensure announcement list view is accessible"""
+        self.client.login(username="player", password="TestPassword12345")
         response = self.client.get(reverse("announcement_list"))
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, "Test Announcement")
@@ -93,11 +96,11 @@ class AnnouncementViewTests(TestCase):
     def test_create_announcement_requires_login(self):
         """Ensure unauthenticated users are redirected to login page"""
         response = self.client.get(reverse("create_announcement"))
-        self.assertRedirects(response, "/accounts/login/")
+        self.assertRedirects(response, "/accounts/login/?next=/announcements/create/")
 
     def test_create_announcement_denies_players(self):
         """Ensure players (non-Game Keepers) cannot create announcements"""
-        self.client.login(username="player", password="password")
+        self.client.login(username="player", password="TestPassword12345")
         response = self.client.post(reverse("create_announcement"), {
             "title": "Unauthorized Announcement",
             "content": "This should not be allowed."
@@ -108,9 +111,10 @@ class AnnouncementViewTests(TestCase):
 
     def test_create_announcement_successful(self):
         """Ensure Game Keepers can create announcements"""
-        self.client.login(username="gamekeeper", password="password")
+        self.client.login(username="gamekeeper", password="TestPassword12345")
         response = self.client.post(reverse("create_announcement"), {
             "title": "New Announcement",
+            "summary":"test summary",
             "content": "This is a valid announcement."
         })
         self.assertRedirects(response, reverse("announcement_list"))

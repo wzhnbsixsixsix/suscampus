@@ -11,8 +11,6 @@ def announcement_list(request):
 
 @login_required
 def create_announcement(request):
-
-
     if not request.user.is_authenticated: # makes sure user is logged in
         return redirect('/accounts/login/')  
     if request.user.role == 'player':  # makes sure user can't post if player role

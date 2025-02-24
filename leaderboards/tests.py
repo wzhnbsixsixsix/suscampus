@@ -43,4 +43,4 @@ class LeaderboardTest(SetUpTest):
         user_score = response.context['user_score']
 
         self.assertEqual(user_rank, 13)
-        self.assertEqual(user_score, 7)
+        self.assertEqual(user_score.score, 7)
