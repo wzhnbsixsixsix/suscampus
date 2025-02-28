@@ -60,7 +60,7 @@ def email_verification(request, token):
         user.save()
 
         # Creates a user balance for player
-        UserBalance.objects.create(user_id=user)
+        UserBalance.objects.create(user_id=user, currency=100)
 
         # Creates a score counter for the tree game for player
         TreeScore.objects.create(user=user)
