@@ -27,8 +27,8 @@
           <h1>Forest</h1>
       </div>
 
-      <div class="flex-grow-1 bg-light border mb-2">
-          <!-- Map content goes here -->
+      <div class="flex-grow-1 bg-light border mb-2" id="forest-view">
+          <div id="forest-grid"></div>
       </div>
     
       <!-- Buttons -->
@@ -40,5 +40,7 @@
 
     <!-- Bootstrap JS -->
     <script src="{% static '/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+    <!-- forest js files -->>
+    <script type="module" src="{% static '/js/forestDisplay.js' %}"></script>
   </body>
 </html>

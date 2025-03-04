@@ -1,0 +1,16 @@
+:root {
+    --forest-cols: 1;
+    --forest-rows: 1;
+}
+
+#forest-grid {
+    display: grid;
+    grid-gap: 1em;
+    grid-template-rows: repeat(var(--forest-rows), 1fr);
+    grid-template-columns: repeat(var(--forest-cols), 1fr);
+}
+
+.grid-item {
+    padding: 1em;
+    border: 1px solid #0f0
+}
