@@ -1,6 +1,10 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
+from .models import CustomUser, Profile
+from django.contrib import messages
+from django.shortcuts import render, redirect
 from .models import CustomUser
+import re
 
 
 class SignUpForm(UserCreationForm):
@@ -13,7 +17,7 @@ class SignUpForm(UserCreationForm):
         if CustomUser.objects.filter(email=email).exists():
             raise forms.ValidationError("This email address is already in use, please use another email address.")
         return email
-    
+
     def clean_username(self):
         username = self.cleaned_data.get('username')
         if CustomUser.objects.filter(username=username).exists():
@@ -24,12 +28,6 @@ class SignUpForm(UserCreationForm):
 class LoginForm(AuthenticationForm):
     pass
 
-
-from django import forms
-from django.contrib import messages
-from django.shortcuts import render, redirect
-from .models import CustomUser
-import re
 
 #  Use ModelForm to simplify input
 class ChangeUsernameForm(forms.ModelForm):
@@ -52,3 +50,14 @@ class ChangeUsernameForm(forms.ModelForm):
     #     return username
 
 
+class ProfileImageForm(forms.ModelForm):
+    class Meta:
+        model = Profile
+        fields = ['image']
+        widgets = {
+            'image': forms.FileInput(attrs={
+                'class': 'form-control mb-2',
+                'required': True,  #Forcefully adding the required attribute
+                'accept': 'image/*'
+            })
+        }

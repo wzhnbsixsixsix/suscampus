@@ -1,16 +1,23 @@
+import os
+from datetime import time
+
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth.models import User
-from django.shortcuts import redirect, render
 from django.contrib.auth import authenticate, login, update_session_auth_hash
 from .forms import SignUpForm, LoginForm, ChangeUsernameForm
 from django.contrib.auth import logout
 from django.core.mail import send_mail
-from django.conf import settings
 from .models import CustomUser
 from shop.models import UserBalance
 from leaderboards.models import TreeScore
+from django.core.files.storage import default_storage
+from django.core.files.base import ContentFile
+from django.conf import settings
+from django.shortcuts import render, redirect
+from .models import Profile
+from .forms import ProfileImageForm
 
 
 # Handles data submitted from signup page's form
@@ -101,14 +108,21 @@ def logout_view(request):
     return redirect("accounts:login")
 
 
-
 @login_required
 def profile_page(request):
+    # Ensure user has a profile
+    if not hasattr(request.user, 'profile'):
+        Profile.objects.create(user=request.user)
+
+    # Initialized context
     context = {
         'username': request.user.username,
         'email': request.user.email,
-        'form': PasswordChangeForm(request.user)  
+        'form': PasswordChangeForm(request.user),
+        'form_image': ProfileImageForm(instance=request.user.profile)
     }
+
+    #For test: print(f"DEBUG - Current User: {request.user.username}")
     return render(request, 'accounts/profile.html', context)
 
 
@@ -171,8 +185,8 @@ def change_password(request):
         else:
             base_context.update({
                 'form': form,
-                'username': request.user.username,  
-                'email': request.user.email  
+                'username': request.user.username,
+                'email': request.user.email
             })
             # Set error notification for invalid form
             messages.error(request, 'Please correct the errors below.')
@@ -183,6 +197,7 @@ def change_password(request):
         form = PasswordChangeForm(request.user)
     # Render password change template with form context
     return render(request, 'accounts/profile.html', base_context)
+
 
 def password_reset(request):
     form = SignUpForm()
@@ -202,3 +217,18 @@ def password_reset(request):
 
     context = {'form': form}
     return render(request, 'accounts/signup.html', context)
+
+
+@login_required
+def change_profile_image(request):
+    if request.method == 'POST':
+        form = ProfileImageForm(request.POST, request.FILES, instance=request.user.profile)
+        if form.is_valid():
+            profile = form.save(commit=False)
+            print("Uploaded file: ", request.FILES['image'])  # print uploaded file
+            form.save()
+            return redirect('accounts:profile')
+    else:
+        form = ProfileImageForm()
+
+    return render(request, 'accounts/change_profile_image.html', {'form': form})
