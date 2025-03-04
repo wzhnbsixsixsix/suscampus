@@ -5,9 +5,22 @@ from .forms import AnnouncementForm
 from django.contrib import messages
 
 
-@login_required
 def announcement_list(request):
-    announcements = Announcement.objects.all().order_by('-created_at')
+    announcements = Announcement.objects.all()
+
+    # Get filter parameters from the request
+    author = request.GET.get('author')
+    role = request.GET.get('role')
+    date = request.GET.get('date')
+
+    # Apply filters
+    if author:
+        announcements = announcements.filter(author__username__icontains=author)
+    if role:
+        announcements = announcements.filter(author__role__icontains=role)
+    if date:
+        announcements = announcements.filter(created_at__date=date)
+
     return render(request, 'announcements/announcement_list.html', {'announcements': announcements})
 
 @login_required

@@ -10,7 +10,7 @@ class Announcement(models.Model):
     content = models.TextField()
     image = models.ImageField(upload_to='announcement_images/', null=True, blank=True)  # Image field
 
-    created_at = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField()
     author = models.ForeignKey('accounts.CustomUser', on_delete=models.CASCADE)
     likes = models.ManyToManyField('accounts.CustomUser', related_name='liked_announcements', blank=True)  # Many-to-many relationship for likes
     dislikes = models.ManyToManyField('accounts.CustomUser', related_name='disliked_announcements', blank=True) 

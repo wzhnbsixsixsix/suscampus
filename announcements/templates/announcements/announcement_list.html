@@ -41,7 +41,24 @@
       <a href="{% url 'create_announcement' %}"
         class="btn btn-outline-success p-2 lh-1 d-flex align-items-center">Create New Announcement</a>
     </div>
+<!-- Filter Form -->
+<form method="get" action="{% url 'announcement_list' %}">
+  <label for="author">Filter by Author:</label>
+  <input type="text" name="author" id="author" value="{{ request.GET.author }}">
 
+  <label for="role">Filter by Role:</label>
+  <select name="role" id="role">
+    <option value="">All Roles</option>
+    <option value="GameKeeper" {% if request.GET.role == "Gamekeeper" %}selected{% endif %}>Gamekeeper</option>
+    <option value="Developer" {% if request.GET.role == "Developer" %}selected{% endif %}>Developer</option>
+</select>
+
+  <label for="date">Filter by Date:</label>
+  <input type="date" name="date" id="date" value="{{ request.GET.date }}">
+
+  <button type="submit" class="btn btn-primary">Filter</button>
+  <a href="{% url 'announcement_list' %}" class="btn btn-secondary">Clear Filters</a>
+</form>
     <div class="row g-4">
       {% for announcement in announcements %}
       <div class="col-12 col-md-6 col-lg-4">
