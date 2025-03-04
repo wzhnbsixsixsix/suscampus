@@ -1,8 +1,9 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from .models import Announcement
 from .forms import AnnouncementForm
 from django.contrib import messages
+
 
 @login_required
 def announcement_list(request):
@@ -28,3 +29,28 @@ def create_announcement(request):
     return render(request, 'announcements/create_announcement.html', {'form': form})
 
 
+@login_required
+def like_announcement(request, announcement_id):
+    announcement = get_object_or_404(Announcement, id=announcement_id)
+    user = request.user
+
+    if user in announcement.likes.all():
+        announcement.likes.remove(user)  # Unlike the announcement
+    else:
+        announcement.likes.add(user)  # Like the announcement
+        announcement.dislikes.remove(user)  # Remove like if the user had liked it
+
+    return redirect('/announcements/', announcement_id=announcement.id)  # Redirect to the announcement detail page
+
+@login_required
+def dislike_announcement(request, announcement_id):
+    announcement = get_object_or_404(Announcement, id=announcement_id)
+    user = request.user
+
+    if user in announcement.dislikes.all():
+        announcement.dislikes.remove(user)  # Remove dislike
+    else:
+        announcement.dislikes.add(user)  # Add dislike
+        announcement.likes.remove(user)  # Remove like if the user had liked it
+
+    return redirect('/announcements/', announcement_id=announcement.id)
