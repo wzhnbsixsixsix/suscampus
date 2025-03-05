@@ -67,7 +67,8 @@
           <img src="{{ announcement.image.url }}" class="card-img-top" style="height: 200px; object-fit: cover;"
             alt="{{ announcement.title }}" />
           {% else %}
-          <p>No image available</p>
+          <img src="{% static 'path/to/placeholder/image.jpg' %}" class="card-img-top" style="height: 200px; object-fit: cover;"
+            alt="No image available" />
           {% endif %}
           <div class="card-body">
             <h5 class="card-title">{{ announcement.title }}</h5>
@@ -160,9 +161,6 @@
         });
       });
     </script>
-
-
-
 
     {% if messages %}
     <div class="toast-container position-fixed top-0 end-0 p-3">
