@@ -28,6 +28,9 @@
     .full-content {
       display: none;
     }
+    .event-link {
+      display: none;
+    }
   </style>
 </head>
 
@@ -57,12 +60,16 @@
             <p class="card-text">
               {{ announcement.summary }}
             </p>
+            {% if announcement.is_event and user_role == 'gameKeeper' or user_role == 'developer' %}
+            <div class="event-link">
+              <a href="{% url 'announcements:display_event_qr_code' announcement.event.event_code %}" 
+                class="btn btn-primary">Display Event's QR Code</a>
+            </div>
+            {% endif %}
+
+
             <small class="text-muted meta-data">
-              Author: {{ announcement.author }} | Role: {{ announcement.author.role }} | Date: {{announcement.created_at }} 
-              {% if announcement.is_event and user_role == 'gameKeeper' or user_role == 'developer' %}
-                <a href="{% url 'announcements:display_event_qr_code' announcement.event.event_code %}" 
-                class="btn btn-primary mt-2">Display Event's QR Code</a>
-              {% endif %}
+              Author: {{ announcement.author }} | Role: {{ announcement.author.role }} | Date: {{ announcement.created_at }} 
             </small>
             <div class="full-content">
               {{ announcement.content }}
@@ -87,6 +94,7 @@
           </div>
           <div class="modal-footer justify-content-between">
             <small class="text-muted" id="modalMetaData"></small>
+            <div id="modalEventLink"></div>
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
               Close
             </button>
@@ -111,12 +119,17 @@
             const content = card.querySelector(".full-content").textContent;
             const meta_data = card.querySelector(".meta-data").textContent;
             const image = card.querySelector("img").src;
+            let eventLink = "";
+            if (card.querySelector(".event-link")) {
+              eventLink = card.querySelector(".event-link").innerHTML;
+            }
 
             // Update modal content
             document.getElementById("modalTitle").textContent = title;
             document.getElementById("modalContent").textContent = content;
             document.getElementById("modalMetaData").textContent = meta_data;
             document.getElementById("modalImage").src = image;
+            document.getElementById("modalEventLink").innerHTML = eventLink;
 
             // Show modal
             modal.show();

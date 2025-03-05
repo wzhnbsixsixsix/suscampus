@@ -36,7 +36,8 @@ def create_announcement(request):
                 event_code = event_code_generator()
 
                 Event.objects.create(announcement=new_announcement, currency_reward=currency_reward, transaction_description=transaction_description, event_date=event_date, event_code=event_code)
-
+            
+            
             return redirect('announcements:announcement_list')
     else:
         form = AnnouncementForm()

@@ -79,10 +79,72 @@
               {% endfor %}
             </div>
 
+            <!-- Is Event Checkbox -->
+            <div class="mb-3 form-check">
+              <input type="checkbox" 
+                     class="form-check-input" 
+                     id="id_is_event" 
+                     name="is_event"
+                     {% if form.is_event.value %}checked{% endif %}>
+              <label class="form-check-label" for="id_is_event">Is this an event?</label>
+              {% for error in form.is_event.errors %}
+                <div class="invalid-feedback d-block">
+                  {{ error }}
+                </div>
+              {% endfor %}
+            </div>
+
+            <!-- Event Fields (Initially Hidden) -->
+            <div id="eventFields" style="display: none;">
+              <!-- Currency Reward -->
+              <div class="mb-3">
+                <label for="id_currency_reward" class="form-label">Currency Reward</label>
+                <input type="number" 
+                      class="form-control {% if form.currency_reward.errors %}is-invalid{% endif %}" 
+                      id="id_currency_reward" 
+                      name="currency_reward" 
+                      value="{{ form.currency_reward.value|default:'' }}">
+                {% for error in form.currency_reward.errors %}
+                  <div class="invalid-feedback">
+                    {{ error }}
+                  </div>
+                {% endfor %}
+              </div>
+
+              <!-- Transaction Description -->
+              <div class="mb-3">
+                <label for="id_transaction_description" class="form-label">Transaction Description</label>
+                <textarea class="form-control {% if form.transaction_description.errors %}is-invalid{% endif %}" 
+                          id="id_transaction_description" 
+                          name="transaction_description" 
+                          rows="3">{{ form.transaction_description.value|default:'' }}</textarea>
+                {% for error in form.transaction_description.errors %}
+                  <div class="invalid-feedback">
+                    {{ error }}
+                  </div>
+                {% endfor %}
+              </div>
+
+              <!-- Event Date -->
+              <div class="mb-3">
+                <label for="id_event_date" class="form-label">Event Date</label>
+                <input type="date" 
+                      class="form-control {% if form.event_date.errors %}is-invalid{% endif %}" 
+                      id="id_event_date" 
+                      name="event_date" 
+                      value="{{ form.event_date.value|default:'' }}">
+                {% for error in form.event_date.errors %}
+                  <div class="invalid-feedback">
+                    {{ error }}
+                  </div>
+                {% endfor %}
+              </div>
+            </div>
+
             <!-- Buttons -->
             <div class="d-flex gap-3">
               <button type="submit" class="btn btn-primary px-4">Submit</button>
-              <a href="{% url 'announcement_list' %}" class="btn btn-outline-secondary">
+              <a href="{% url 'announcements:announcement_list' %}" class="btn btn-outline-secondary">
                 Back to Announcements
               </a>
             </div>
@@ -93,5 +155,22 @@
 
     <!-- Bootstrap JS -->
     <script src="{% static 'bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        const eventCheckbox = document.getElementById('id_is_event');
+        const eventFields = document.getElementById('eventFields');
+
+        function toggleEventFields() {
+          eventFields.style.display = eventCheckbox.checked ? 'block' : 'none';
+        }
+
+        // Initial check
+        toggleEventFields();
+        
+        // Add event listener
+        eventCheckbox.addEventListener('change', toggleEventFields);
+      });
+    </script>
   </body>
 </html>
