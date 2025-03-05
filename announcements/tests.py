@@ -4,7 +4,9 @@ from django.contrib.auth import get_user_model
 from announcements.forms import AnnouncementForm
 from announcements.models import Announcement
 from accounts.models import CustomUser
-
+from django.utils.timezone import now
+from .models import Announcement, Event, EventAttended
+from shop.models import UserBalance, CurrencyTransaction
 
 # Create your tests here.
 
@@ -75,7 +77,7 @@ class AnnouncementViewTests(TestCase):
         self.game_keeper = CustomUser.objects.create_user(username="gamekeeper", password="TestPassword12345", role="gameKeeper", verified=True)
         self.player = CustomUser.objects.create_user(username="player", password="TestPassword12345", role="player", verified=True)
 
-        
+        self.player_balance = UserBalance.objects.create(user_id=self.player, currency=0)
 
         # Create a sample announcement
         self.announcement = Announcement.objects.create(
@@ -84,6 +86,14 @@ class AnnouncementViewTests(TestCase):
             content="This is a test announcement.",
             image=None,
             author=self.game_keeper
+        )
+
+        self.event = Event.objects.create(
+            announcement=self.announcement,
+            currency_reward=100,
+            transaction_description="Test reward",
+            event_date=now().date(),
+            event_code="EVENTCODE"
         )
 
     def test_announcement_list_view(self):
@@ -119,3 +129,27 @@ class AnnouncementViewTests(TestCase):
         })
         self.assertRedirects(response, reverse("announcement_list"))
         self.assertTrue(Announcement.objects.filter(title="New Announcement").exists())
+
+    def test_redeem_event_reward_on_events_day_rewards_player(self):
+        self.client.login(username="gamekeeper", password="TestPassword12345")
+        response = self.client.get(reverse('announcements:redeem_event_reward', args=[self.event.event_code]))
+        self.player.refresh_from_db()
+        self.user_balance.refresh_from_db()
+
+        self.assertEqual(response.status_code, 302)
+        self.assertTrue(EventAttended.objects.count(), 1)
+        self.assertTrue(EventAttended.objects.filter(player=self.player, event=self.event), 1)
+        self.assertTrue(self.player_balance.currency, 100)
+
+    def test_redeem_event_reward_before_events_day_does_not_reward_player(self):
+        self.client.login(username="gamekeeper", password="TestPassword12345")
+        response = self.client.get(reverse('announcements:redeem_event_reward', args=[self.event.event_code]))
+        self.player.refresh_from_db()
+        self.user_balance.refresh_from_db()
+
+        self.assertEqual(response.status_code, 302)
+        self.assertTrue(EventAttended.objects.count(), 1)
+        self.assertTrue(EventAttended.objects.filter(player=self.player, event=self.event), 1)
+        self.assertTrue(self.player_balance.currency, 100)
+
+
