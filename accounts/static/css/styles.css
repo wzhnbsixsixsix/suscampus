@@ -12,6 +12,18 @@ body, html {
     align-items: center;
     min-height: 100vh;
 }
+/* 条款列表样式 */
+.icon-list li {
+    padding-left: 1.5rem;
+    position: relative;
+}
+.icon-list i {
+    position: absolute;
+    left: 0;
+    top: 0.25rem;
+}
+
+/*
 
 .right-panel {
     min-height: 100vh;
