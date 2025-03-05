@@ -22,7 +22,7 @@ def create_announcement(request):
         return redirect('accounts:login')  
     if request.user.role == 'player':  # makes sure user can't post if player role
         messages.error(request, "You must be a Game Keeper to access this page.")    
-        return redirect('announcements:announcements')
+        return redirect('announcements:announcement_list')
     if request.method == 'POST': # posts the announcement
         form = AnnouncementForm(request.POST, request.FILES)
         if form.is_valid():
@@ -76,7 +76,7 @@ def display_event_qr_code(request, event_code):
     qr_code_filepath = os.path.join(qr_code_folderpath + qr_code_name)
     qr_code.save(qr_code_filepath)
 
-    # Sends the location of qr_code and event data to html page
+    # Sends the location of qr_code and event data to the html page
     qr_code_url = f"{settings.MEDIA_URL}qr_codes/{qr_code_name}"
     context = {'qr_code':qr_code_url, 'event':event}
     return render(request, 'announcements/display_event_qr_code.html', context)
