@@ -7,6 +7,7 @@ from django.contrib import messages
 
 def announcement_list(request):
     announcements = Announcement.objects.all()
+    announcements = Announcement.objects.all().order_by('-created_at')
 
     # Get filter parameters from the request
     author = request.GET.get('author')
