@@ -1,0 +1,38 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      href="{% static 'bootstrap/css/bootstrap.min.css' %}"
+      rel="stylesheet"
+    />
+    <title>Create Announcement</title>
+  </head>
+  <body class="bg-light">
+    {% include 'navbar.html' %}
+
+    <div class="container mt-5">
+      <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+          <div class="card shadow-sm border-0">
+            <div class="card-body text-center p-5">
+              <h2 class="mb-4 fw-bold text-primary">Event QR Code</h2>
+              <div class="mb-4">
+                <img
+                  src="{{ qr_code }}"
+                  alt="QR Code"
+                  class="img-fluid rounded-3 border p-2 shadow-sm"
+                />
+              </div>    
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="{% static 'bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+  </body>
+</html>

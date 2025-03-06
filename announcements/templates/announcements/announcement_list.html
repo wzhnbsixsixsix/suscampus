@@ -29,6 +29,9 @@
     .full-content {
       display: none;
     }
+    .event-link {
+      display: none;
+    }
   </style>
 </head>
 
@@ -39,7 +42,7 @@
 
     <div class="d-flex justify-content-between align-items-center mb-4">
       <h1 class="h3 mb-0">Announcements</h1>
-      <a href="{% url 'create_announcement' %}"
+      <a href="{% url 'announcements:create_announcement' %}"
         class="btn btn-outline-success p-2 lh-1 d-flex align-items-center">Create New Announcement</a>
     </div>
 <!-- Filter Form -->
@@ -76,8 +79,16 @@
             <p class="card-text">
               {{ announcement.summary }}
             </p>
+            {% if announcement.is_event and user_role == 'gameKeeper' or user_role == 'developer' %}
+            <div class="event-link">
+              <a href="{% url 'announcements:display_event_qr_code' announcement.event.event_code %}" 
+                class="btn btn-primary">Display Event's QR Code</a>
+            </div>
+            {% endif %}
+
+
             <small class="text-muted meta-data">
-              Author: {{ announcement.author }} | Role: {{ announcement.author.role }} | Date: {{announcement.created_at}}
+              Author: {{ announcement.author }} | Role: {{ announcement.author.role }} | Date: {{ announcement.created_at }} 
             </small>
             <!--Like button-->
             <form action="{% url 'like_announcement' announcement.id %}" method="post" style="display: inline;">
@@ -125,6 +136,7 @@
           </div>
           <div class="modal-footer justify-content-between">
             <small class="text-muted" id="modalMetaData"></small>
+            <div id="modalEventLink"></div>
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
               Close
             </button>
@@ -149,12 +161,17 @@
             const content = card.querySelector(".full-content").textContent;
             const meta_data = card.querySelector(".meta-data").textContent;
             const image = card.querySelector("img").src;
+            let eventLink = "";
+            if (card.querySelector(".event-link")) {
+              eventLink = card.querySelector(".event-link").innerHTML;
+            }
 
             // Update modal content
             document.getElementById("modalTitle").textContent = title;
             document.getElementById("modalContent").textContent = content;
             document.getElementById("modalMetaData").textContent = meta_data;
             document.getElementById("modalImage").src = image;
+            document.getElementById("modalEventLink").innerHTML = eventLink;
 
             // Show modal
             modal.show();
@@ -165,16 +182,20 @@
 
     {% if messages %}
     <div class="toast-container position-fixed top-0 end-0 p-3">
-      {% for message in messages %}
-      <div class="toast show align-items-center text-white bg-danger border-0" role="alert">
-        <div class="d-flex">
-          <div class="toast-body">
-            {{ message }}
-          </div>
-          <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
-        </div>
-      </div>
-      {% endfor %}
+        {% for message in messages %}
+            {% if 'success' in message.tags %}
+                <div class="toast show align-items-center text-white bg-success border-0" role="alert">
+            {% elif 'error' in message.tags %}
+                <div class="toast show align-items-center text-white bg-danger border-0" role="alert">
+            {% endif %}
+                <div class="d-flex">
+                    <div class="toast-body">
+                        {{ message }}
+                    </div>
+                    <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+                </div>
+            </div>
+        {% endfor %}
     </div>
     {% endif %}
 </body>
