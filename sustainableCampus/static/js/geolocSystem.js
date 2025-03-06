@@ -17,7 +17,6 @@ import Select from './node_modules/ol/interaction/Select.js';
 import {click} from "./node_modules/ol/events/condition.js";
 import {useGeographic} from "./node_modules/ol/proj.js";
 import {toLonLat} from './node_modules/ol/proj.js';
-import {fromLonLat} from './node_modules/ol/proj.js';
 
 useGeographic(); // forces geographic coordinates
 
@@ -148,6 +147,30 @@ function createMarkerFromForm(event) {
     }
 
     createMarker(markerInfo);
+}
+
+async function getJSON(url) {
+    try {
+        const response = await fetch(url);
+        // throws error if the file is not retrieved.
+        if (!response.ok) {
+            throw new Error('Response Status: ${response.status}');
+        }
+
+        // returns the file
+        const json = await response.json();
+        return json;
+    } catch (error) {
+        // this should catch other errors not covered by the HTML error codes.
+        console.error(error.message);
+    }
+}
+
+function prepopulateMap() {
+    // prepopulates the map with markers based on the data in markers.json
+    const jsonMarkers = document.getElementById("marker-data").getAttribute("data-marker");
+    console.log(jsonMarkers);
+    createMarker(jsonMarkers);
 }
 
 function createMarker(data) {
@@ -305,3 +328,5 @@ clickSelection.on('select', function (e) {
         markerPopups.setPosition(markerPos);
     }
 });
+
+prepopulateMap();
