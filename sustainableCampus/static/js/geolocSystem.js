@@ -15,6 +15,11 @@ import RegularShape from "./node_modules/ol/style/RegularShape.js";
 import Overlay from "./node_modules/ol/Overlay.js";
 import Select from './node_modules/ol/interaction/Select.js';
 import {click} from "./node_modules/ol/events/condition.js";
+import {useGeographic} from "./node_modules/ol/proj.js";
+import {toLonLat} from './node_modules/ol/proj.js';
+import {fromLonLat} from './node_modules/ol/proj.js';
+
+useGeographic(); // forces geographic coordinates
 
 // the center and zoom will be changed when location tracking is enabled to focus on the user's position
 const view = new View({
@@ -83,12 +88,6 @@ geolocation.on('change', function () {
     el('speed').innerText = geolocation.getSpeed() + ' [m/s]';
 });
 
-// make the circle around the user's marker, showing the possible inaccuracy of their position
-const accuracyFeature = new Feature();
-geolocation.on('change:accuracyGeometry', function () {
-    accuracyFeature.setGeometry(geolocation.getAccuracyGeometry());
-});
-
 // controls how the user's position is visually represented on the map
 const positionFeature = new Feature();
 positionFeature.setStyle(
@@ -109,7 +108,7 @@ positionFeature.setStyle(
 // changes the position of the position indicator on the map (above) to match when the user's position updates
 // ternary operator used to create a new Point at the coordinates of the geolocator, if defined, null otherwise
 geolocation.on('change:position', function () {
-    const coordinates = geolocation.getPosition();
+    const coordinates = toLonLat(geolocation.getPosition());
     positionFeature.setGeometry(coordinates ? new Point(coordinates) : null);
     // updates the view's centre to the user's new position:
     const newPos = positionFeature.getGeometry().getCoordinates();
@@ -117,7 +116,7 @@ geolocation.on('change:position', function () {
     mapView.setCenter(newPos);
 });
 
-let userFeatures = [accuracyFeature, positionFeature];
+let userFeatures = [positionFeature];
 
 map.addLayer( new VectorLayer({
                 source: new VectorSource({
@@ -134,10 +133,6 @@ function enableGeolocation() {
         geolocation.setTracking(true); // will automatically prompt user
     } else {
         alert("Geolocation is not supported by your browser.");
-    }
-
-    function error() {
-        alert("Unable to find location.");
     }
 }
 
@@ -252,7 +247,10 @@ function createMarker(data) {
 
     // places the marker on the map
     console.log("Placing marker on map...");
-    marker.setGeometry(new Point([data.get("xcoord"), data.get("ycoord")]));
+    console.log("Latitude: " + data.get("latitude"));
+    console.log("Longitude: " + data.get("longitude"));
+    const markerPos = [data.get("latitude"), data.get("longitude")];
+    marker.setGeometry(new Point(markerPos));
 }
 
 const markerData = document.getElementById("add-marker-form");
