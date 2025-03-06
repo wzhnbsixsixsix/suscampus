@@ -20,7 +20,9 @@ class Announcement(models.Model):
 
     def get_author_role(self):
         return self.author.role  
-    
+    def total_likes(self):
+        return self.likes.count()
+
 class Event(models.Model):
     announcement = models.OneToOneField(Announcement, on_delete=models.CASCADE)
     currency_reward = models.IntegerField(validators=[MinValueValidator(0), MaxValueValidator(300)])
