@@ -1,8 +1,9 @@
 const forestView = document.getElementById("forest-grid");
 
-function onCellClick() {
-    console.log("cell clicked");
+function onCellClick(cell) {
+    console.log(cell.id +" clicked");
 }
+
 
 // generate user's forest grid 
 function generateGrid(rows, cols) {
@@ -16,7 +17,7 @@ function generateGrid(rows, cols) {
         addedCell.className = "grid-item";
         addedCell.id = "forest-cell-" + i;
         console.log("Adding event listener for click");
-        addedCell.addEventListener("click", onCellClick)
+        addedCell.addEventListener("click", function(){onCellClick(addedCell);})
     }
 }
 
