@@ -18,17 +18,20 @@ def announcement_list(request):
 
 @login_required
 def create_announcement(request):
-    if not request.user.is_authenticated: # makes sure user is logged in
-        return redirect('accounts:login')  
-    if request.user.role == 'player':  # makes sure user can't post if player role
-        messages.error(request, "You must be a Game Keeper to access this page.")    
+    # Ensures only game keepers and devs can access the create announcement page
+    if request.user.role == 'player':  
+        messages.error(request, "You must be a Game Keeper or Developer to access this page.")    
         return redirect('announcements:announcement_list')
-    if request.method == 'POST': # posts the announcement
+
+    # Creates announcement record using inputs from submitted form
+    if request.method == 'POST': 
         form = AnnouncementForm(request.POST, request.FILES)
         if form.is_valid():
             new_announcement = form.save(commit=False)
             new_announcement.author = request.user
             new_announcement.save()
+
+            # Creates event record attached to the new announcement if is_event is true on form
             if form.cleaned_data.get('is_event') == True:
                 currency_reward = form.cleaned_data.get('currency_reward')
                 transaction_description = form.cleaned_data.get('transaction_description')

@@ -80,7 +80,7 @@ class AnnouncementViewTests(TestCase):
 
         self.player_balance = UserBalance.objects.create(user_id=self.player, currency=0)
 
-        # Create a sample announcement
+        # Create a valid announcement with no event
         self.announcement = Announcement.objects.create(
             title="Test Announcement",
             summary="test summary",
@@ -89,6 +89,7 @@ class AnnouncementViewTests(TestCase):
             author=self.game_keeper
         )
 
+        # Create a valid event
         self.event = Event.objects.create(
             announcement=self.announcement,
             currency_reward=100,
@@ -97,6 +98,7 @@ class AnnouncementViewTests(TestCase):
             event_code="EVENTCODE"
         )
 
+        # Create a valid announcement with an event
         self.valid_announcement_with_event={
             'title': 'Test Announcement with Event',
             'summary': "test summary",
@@ -119,7 +121,8 @@ class AnnouncementViewTests(TestCase):
         response = self.client.get(reverse("announcements:create_announcement"))
         self.assertRedirects(response, "/accounts/login/?next=/announcements/create/")
 
-    def test_create_announcement_by_gamekeeper(self):
+    def test_create_announcement_by_game_keeper(self):
+        """Verifies a game keeper can create an announcement using valid form inputs"""
         self.client.login(username='gamekeeper', password='TestPassword12345')
         response = self.client.post(reverse('announcements:create_announcement'), self.valid_announcement_with_event)
 
@@ -128,6 +131,7 @@ class AnnouncementViewTests(TestCase):
         self.assertEqual(Event.objects.count(), 2)  
 
     def test_create_announcement_cant_be_used_by_player(self):
+        """Verifies a player can't create an announcement, even with valid form inputs"""
         self.client.login(username='player', password='TestPassword12345')
         response = self.client.post(reverse('announcements:create_announcement'), self.valid_announcement_with_event)
 
@@ -136,6 +140,7 @@ class AnnouncementViewTests(TestCase):
         self.assertEqual(Event.objects.count(), 1)  
 
     def test_redeem_event_reward_on_events_day_rewards_player(self):
+        """Verifies a player can redeem an event's attendence reward if they scan the code on the correct day"""
         self.client.login(username="player", password="TestPassword12345")
         response = self.client.get(reverse('announcements:redeem_event_reward', args=[self.event.event_code]))
         self.player.refresh_from_db()
@@ -148,6 +153,7 @@ class AnnouncementViewTests(TestCase):
         self.assertEqual(CurrencyTransaction.objects.count(), 1)
 
     def test_redeem_event_reward_before_events_day_does_not_reward_player(self):
+        """Verifies a player cant redeem an event's attendence reward if they scan the code before the correct day"""
         self.event.event_date = date(2000, 1, 1)
         self.event.save()
 
@@ -163,6 +169,7 @@ class AnnouncementViewTests(TestCase):
         self.assertEqual(CurrencyTransaction.objects.count(), 0)
 
     def test_redeem_event_reward_after_events_day_does_not_reward_player(self):
+        """Verifies a player cant redeem an event's attendence reward if they scan the code after the correct day"""
         self.event.event_date = date(2100, 1, 1)
         self.event.save()
 
@@ -178,6 +185,7 @@ class AnnouncementViewTests(TestCase):
         self.assertEqual(CurrencyTransaction.objects.count(), 0)
 
     def test_redeem_event_reward_doesnt_reward_player_twice_when_used_twice(self):
+        """Verifies a player cant redeem an event's attendence reward twice to get the same reward twice"""
         self.client.login(username="player", password="TestPassword12345")
         self.client.get(reverse('announcements:redeem_event_reward', args=[self.event.event_code]))
         response = self.client.get(reverse('announcements:redeem_event_reward', args=[self.event.event_code]))
@@ -185,19 +193,24 @@ class AnnouncementViewTests(TestCase):
         self.player_balance.refresh_from_db()
 
         self.assertEqual(response.status_code, 302)
+        self.assertRedirects(response, '/announcements/')
         self.assertEqual(EventAttended.objects.count(), 1)
         self.assertTrue(EventAttended.objects.filter(player=self.player, event=self.event).exists())
         self.assertEqual(self.player_balance.currency, 100)
         self.assertEqual(CurrencyTransaction.objects.count(), 1)
 
     def test_display_event_qr_code_can_be_accessed_by_gamekeeper(self):
+        """Verifies a game keeper can access the display event qr code page"""
         self.client.login(username='gamekeeper', password='TestPassword12345')
         response = self.client.get(reverse('announcements:display_event_qr_code', args=[self.event.event_code]))
         
         self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'announcements/display_event_qr_code.html')
 
     def test_display_event_qr_code_can_not_be_accessed_by_player(self):
+        """Verifies a player cant access the display event qr code page"""
         self.client.login(username='player', password='TestPassword12345')
         response = self.client.get(reverse('announcements:display_event_qr_code', args=[self.event.event_code]))
         
         self.assertEqual(response.status_code, 302)
+        self.assertRedirects(response, '/announcements/')
