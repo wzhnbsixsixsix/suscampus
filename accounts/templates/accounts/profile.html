@@ -238,15 +238,10 @@
     // Execute the function after the document content is fully loaded
     document.addEventListener("DOMContentLoaded", function () {
         // If the show_modal variable is true, the modal box will be automatically displayed
-        {%
-            if show_modal %
-        }
+        {% if show_modal %}
         var modal = new bootstrap.Modal(document.getElementById('changeUsernameModal'));
         modal.show();
-        {%
-            endif %
-        }
-
+        {% endif %}
         // Add a submission event listener to a form that changes username
         document.getElementById("change-username-form").addEventListener("submit", function (event) {
             // Add a submission event listener to a form that changes username
@@ -279,6 +274,7 @@
         }
         event.stopPropagation();
     });
+
     document.getElementById('change-password-form').addEventListener('submit', function (e) {
         const new1 = document.getElementById('new-password1').value;
         const new2 = document.getElementById('new-password2').value;
