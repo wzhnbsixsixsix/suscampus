@@ -144,9 +144,3 @@ class VerificationTest(SetUpTest):
         # Verifies if the user is now verified
         user = CustomUser.objects.get(username='testUser123')
         self.assertTrue(user.verified)
-
-
-
-
-
- 

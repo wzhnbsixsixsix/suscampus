@@ -1,7 +1,9 @@
-
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 import uuid
+
+from django.conf import settings
+
 
 # Create your models here.
 
@@ -21,4 +23,12 @@ class CustomUser(AbstractUser):
     creationDateTime = models.DateTimeField(auto_now_add=True)
 
 
+
+
+class Profile(models.Model):
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    image = models.ImageField(upload_to='profile_images/', default='images/default.png')
+
+    def __str__(self):
+        return f"{self.user.username}'s Profile"
 
