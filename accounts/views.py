@@ -1,11 +1,12 @@
 import os
 from datetime import time
-
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, update_session_auth_hash
+from django.db import transaction
+
 from .forms import SignUpForm, LoginForm, ChangeUsernameForm
 from django.contrib.auth import logout
 from django.core.mail import send_mail
@@ -122,7 +123,7 @@ def profile_page(request):
         'form_image': ProfileImageForm(instance=request.user.profile)
     }
 
-    #For test: print(f"DEBUG - Current User: {request.user.username}")
+    # For test: print(f"DEBUG - Current User: {request.user.username}")
     return render(request, 'accounts/profile.html', context)
 
 
@@ -232,3 +233,43 @@ def change_profile_image(request):
         form = ProfileImageForm()
 
     return render(request, 'accounts/change_profile_image.html', {'form': form})
+
+
+@login_required
+def delete_account(request):
+    if request.method == 'POST':
+        try:
+            user = request.user
+            password = request.POST.get('delete_password', '')
+
+            if not user.check_password(password):
+                messages.error(request, '密码验证失败')
+                return redirect('accounts:profile')
+
+            # 手动清理所有可能关联数据
+            with transaction.atomic():
+                # 清理用户点赞记录
+                # if 'announcements' in settings.INSTALLED_APPS:
+                #     from announcements.models import Announcement
+                    # Announcement.objects.filter(likes=user).update(likes=user)
+                    # user.liked_announcements.clear()
+
+                # 清理其他关联数据
+                UserBalance.objects.filter(user_id=user).delete()
+                TreeScore.objects.filter(user=user).delete()
+
+                # 执行登出
+                logout(request)
+
+                # 删除用户
+                user.delete()
+
+            messages.success(request, '账号已永久删除')
+            return redirect('accounts:login')
+
+        except Exception as e:
+            messages.error(request, f'删除失败: {str(e)}')
+            return redirect('accounts:profile')
+
+    return redirect('accounts:profile')
+
