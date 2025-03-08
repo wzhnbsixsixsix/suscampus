@@ -31,7 +31,7 @@ def create_quiz_question(request):
         if form.is_valid():
             form.save()
             messages.success(request, "Creation of new quiz question successful!")
-            return redirect('dailyQuiz:list-questions')
+            return redirect('dailyQuiz:list_questions')
         
     form = QuizQuestionForm()    
         
@@ -51,12 +51,12 @@ def delete_quiz_question(request, question_id):
         question = QuizQuestion.objects.get(id=question_id)
     except QuizQuestion.DoesNotExist:
         messages.error(request, "Given question does not exist")
-        return redirect('dailyQuiz:list-questions')
+        return redirect('dailyQuiz:list_questions')
     
     # Deletes the given question, and returns a success message as an indicator
     question.delete()
     messages.success(request, "Quiz question successfully deleted!")
-    return redirect('dailyQuiz:list-questions')
+    return redirect('dailyQuiz:list_questions')
     
 
 # Creates and displays 10 randomly selected quiz questons for a player
@@ -89,6 +89,7 @@ def get_daily_quiz(request):
     context = {'questions': questions}
     return render(request, 'dailyQuiz/daily_quiz.html', context)
 
+# Marks and scores the player's quiz when they press submit. Stores necessary data in the DB
 @login_required
 def submit_quiz(request):
     if request.user.role != 'player':
@@ -104,9 +105,9 @@ def submit_quiz(request):
         elif quiz_attempt.is_submitted == True: 
             messages.error(request, "You have already submitted a quiz today. Please come back tomorrow for another!")    
             return redirect('main:map')
-
         
         score = 0
+        results = []
 
         # Retrieves all questions for user's quiz
         questions = quiz_attempt.questions.all()
@@ -123,6 +124,10 @@ def submit_quiz(request):
             # If user's answer to question is correct, increase score by 1
             if user_answer == question.correct_option:
                 score += 1
+                results.append({'question':question, 'correct': True})
+            else:
+                results.append({'question':question, 'correct': False})
+
 
         # Saves final score to the quiz attempt record, and sets is_submitted to true
         quiz_attempt.score = score
@@ -141,5 +146,5 @@ def submit_quiz(request):
         streak.last_completed_quiz_date = timezone.now().date()
         streak.save()
 
-        context = {"score": score, "streak": streak.current_streak}
+        context = {"score": score, "streak": streak.current_streak, "results": results}
         return render(request, "dailyQuiz/result.html", context)

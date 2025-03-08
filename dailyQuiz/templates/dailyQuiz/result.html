@@ -1,6 +1,17 @@
 <h2>Daily Quiz Result</h2>
 
-<p>Score: {{ score }} / 10</p>
+{% for result in results %}
+    <div class="result">
+        <p>{{ result.question.question }}</p>
+        {% if result.correct == True %}
+            <p>Correct</p>
+        {% else %}
+            <p>Incorrect</p>
+        {% endif %}
+    </div>
+{% endfor %}
+
+<p>Final Score: {{ score }} / 10</p>
 {% if streak == 0 %}
 <p>Unfortunately, your daily streak has been reset as you scored less than 8 on today's quiz. Keep trying,
     and we believe you will get there soon!</p>
