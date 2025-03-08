@@ -14,13 +14,14 @@ class QuizQuestion(models.Model):
     option_b = models.CharField(max_length=255, blank=True, null=True)
     option_c = models.CharField(max_length=255, blank=True, null=True)
     option_d = models.CharField(max_length=255, blank=True, null=True)
-    correct_option = models.CharField(choices=OPTION_CHOICES)
+    correct_option = models.CharField(choices=OPTION_CHOICES, max_length=10)
 
 class QuizAttempt(models.Model):
     user = models.ForeignKey('accounts.CustomUser', on_delete=models.CASCADE)
     questions = models.ManyToManyField(QuizQuestion) 
     score = models.IntegerField(default=0)
     date = models.DateField(auto_now_add=True)
+    is_submitted = models.BooleanField(default=False)
 
 class QuizDailyStreak(models.Model):
     user = models.OneToOneField('accounts.CustomUser', on_delete=models.CASCADE)

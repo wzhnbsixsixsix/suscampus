@@ -1,10 +1,6 @@
-import os
-from datetime import time
-
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import PasswordChangeForm
-from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, update_session_auth_hash
 from .forms import SignUpForm, LoginForm, ChangeUsernameForm
 from django.contrib.auth import logout
@@ -12,12 +8,11 @@ from django.core.mail import send_mail
 from .models import CustomUser
 from shop.models import UserBalance
 from leaderboards.models import TreeScore
-from django.core.files.storage import default_storage
-from django.core.files.base import ContentFile
 from django.conf import settings
 from django.shortcuts import render, redirect
 from .models import Profile
 from .forms import ProfileImageForm
+from dailyQuiz.models import QuizDailyStreak
 
 
 # Handles data submitted from signup page's form
@@ -71,6 +66,8 @@ def email_verification(request, token):
 
         # Creates a score counter for the tree game for player
         TreeScore.objects.create(user=user)
+
+        QuizDailyStreak.objects.create(user=user)
 
         messages.success(request, "User has now been verified, you can now log in.")
     else:

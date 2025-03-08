@@ -1,0 +1,7 @@
+<h2>Create a New Quiz Question</h2>
+
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Create Question</button>
+</form>

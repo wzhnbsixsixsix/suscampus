@@ -22,8 +22,8 @@ def shop_items(request):
     items = ShopItem.objects.filter()
 
     user_balance = UserBalance.objects.get(user_id=request.user)
-    context = {'items':items, 'user_balance':user_balance}
 
+    context = {'items':items, 'user_balance':user_balance}
     return render(request, 'shop/shop.html', context)
 
 # View used for handling purchase of an item

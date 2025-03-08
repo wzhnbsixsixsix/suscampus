@@ -1,0 +1,16 @@
+<h2>Daily</h2>
+
+<form method="POST" action="{% url 'dailyQuiz:submit-quiz' %}">
+    {% csrf_token %}
+    {% for question in questions %}
+        <p>{{ question.question }}</p>
+        
+        <input type="radio" name="{{ question.id }}" value="option_a"> {{ question.option_a }}<br>
+        <input type="radio" name="{{ question.id }}" value="option_b"> {{ question.option_b }}<br>
+        <input type="radio" name="{{ question.id }}" value="option_c"> {{ question.option_c }}<br>
+        <input type="radio" name="{{ question.id }}" value="option_d"> {{ question.option_d }}<br>
+        <br>
+    {% endfor %}
+    
+    <button type="submit">Submit Quiz</button>
+</form>

@@ -1,0 +1,11 @@
+<h2>Daily Quiz Result</h2>
+
+<p>Score: {{ score }} / 10</p>
+{% if streak == 0 %}
+<p>Unfortunately, your daily streak has been reset as you scored less than 8 on today's quiz. Keep trying,
+    and we believe you will get there soon!</p>
+{% else %}
+    <p>Current streak: {{ streak }} days</p>
+{% endif %}
+
+<a href="{% url 'main:map' %}">Return to home</a>
