@@ -7,6 +7,13 @@ from .forms import QuizQuestionForm
 import random
 # Create your views here.
 
+
+def quiz_home(request):
+    # load the html
+    return render(request, 'dailyQuiz/quiz_home.html')
+
+
+
 # Retreives and displays all daily quiz questions on the list_questions html page
 @login_required
 def list_quiz_questions(request):
@@ -24,7 +31,7 @@ def create_quiz_question(request):
     # Ensures only a game keeper or developer can access this page
     if request.user.role == 'player':
         messages.error(request, "You must be a Game Keeper or Developer to access this page.")    
-        return redirect('main:map')
+        return redirect('dailyQuiz:quiz_home')
 
     if request.method == 'POST':
         form = QuizQuestionForm(request.POST)
@@ -44,7 +51,7 @@ def delete_quiz_question(request, question_id):
     # Ensures only a game keeper or developer can access this page
     if request.user.role == 'player':
         messages.error(request, "You must be a Game Keeper or Developer to access this page.")    
-        return redirect('main:map')
+        return redirect('dailyQuiz:quiz_home')
     
     # Retrives the question using given id, checks if it exists, else returns an error message
     try:
@@ -65,7 +72,7 @@ def get_daily_quiz(request):
     # Ensures only a player can do a daily quiz
     if request.user.role != 'player':
         messages.error(request, "You must be a Player to access this page.")    
-        return redirect('main:map')
+        return redirect('dailyQuiz:quiz_home')
     
     # Checks if there has been an attempt previously on the same day, to prevent people rerolling questions
     quiz_attempt = QuizAttempt.objects.filter(user=request.user, date=timezone.now().date()).first()
@@ -76,7 +83,7 @@ def get_daily_quiz(request):
 
         if quiz_attempt.is_submitted == True:
             messages.error(request, "You have already submitted a quiz today. Please come back tomorrow for another!")    
-            return redirect('main:map')
+            return redirect('dailyQuiz:quiz_home')
 
     else:
         # Generate a new quiz with 10 randomly selected unique questions
@@ -92,9 +99,9 @@ def get_daily_quiz(request):
 # Marks and scores the player's quiz when they press submit. Stores necessary data in the DB
 @login_required
 def submit_quiz(request):
-    if request.user.role != 'player':
-        messages.error(request, "You must be a Player to access this page.")    
-        return redirect('main:map')
+    #if request.user.role != 'player':
+     #   messages.error(request, "You must be a Player to access this page.")    
+      #  return redirect('main:map')
 
     if request.method == "POST":
         # Get today's quiz attempt. If no attempt today, redirects to get daily quiz page
@@ -104,7 +111,7 @@ def submit_quiz(request):
         # If quiz attempt is_submitted attribute equal to True, redirects user away, and informs them they already did a quiz today
         elif quiz_attempt.is_submitted == True: 
             messages.error(request, "You have already submitted a quiz today. Please come back tomorrow for another!")    
-            return redirect('main:map')
+            return redirect('dailyQuiz:quiz_home')
         
         score = 0
         results = []
@@ -148,3 +155,4 @@ def submit_quiz(request):
 
         context = {"score": score, "streak": streak.current_streak, "results": results}
         return render(request, "dailyQuiz/result.html", context)
+    
