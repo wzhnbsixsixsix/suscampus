@@ -43,7 +43,7 @@
         class="btn btn-outline-success p-2 lh-1 d-flex align-items-center">Create New Announcement</a>
     </div>
 <!-- Filter Form -->
-<form method="get" action="{% url 'announcement_list' %}">
+<form method="get" action="{% url 'announcements:announcement_list' %}">
   <label for="author">Filter by Author:</label>
   <input type="text" name="author" id="author" value="{{ request.GET.author }}">
 
@@ -58,7 +58,7 @@
   <input type="date" name="date" id="date" value="{{ request.GET.date }}">
 
   <button type="submit" class="btn btn-primary">Filter</button>
-  <a href="{% url 'announcement_list' %}" class="btn btn-secondary">Clear Filters</a>
+  <a href="{% url 'announcements:announcement_list' %}" class="btn btn-secondary">Clear Filters</a>
 </form>
     <div class="row g-4">
       {% for announcement in announcements %}
@@ -86,7 +86,7 @@
 
             </small>
             <!--Like button-->
-            <form action="{% url 'like_announcement' announcement.id %}" method="post" style="display: inline;">
+            <form action="{% url 'announcements:like_announcement' announcement.id %}" method="post" style="display: inline;">
               {% csrf_token %}
               <button type="submit" class="btn btn-sm btn-outline-primary">
                 {% if request.user in announcement.likes.all %}
@@ -98,7 +98,7 @@
             </form>
             <span class="text-muted">Likes: {{ announcement.total_likes }}</span>
             <!-- Dislike Button and Dislike Count -->
-            <form action="{% url 'dislike_announcement' announcement.id %}" method="post" style="display: inline;">
+            <form action="{% url 'announcements:dislike_announcement' announcement.id %}" method="post" style="display: inline;">
               {% csrf_token %}
               <button type="submit" class="btn btn-sm btn-outline-danger">
                 {% if request.user in announcement.dislikes.all %}
