@@ -1,4 +1,30 @@
-<h2>Daily Quiz Result</h2>
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    {% load static %}
+    <title>Sustainable Campus</title>
+    <link rel="stylesheet" href="" />
+    <link rel="stylesheet" href="{% static 'css/navbar.css' %}" />
+    <link href="https://cdn.lineicons.com/5.0/lineicons.css" rel="stylesheet" />
+    <link rel="stylesheet" href="{% static '/bootstrap/css/bootstrap.min.css' %}" />
+
+
+
+
+</head>
+
+<body>
+    {% include 'navbar.html' %}
+
+
+    <div class="container py-5">
+
+        <div class="d-flex justify-content-between align-items-center mb-4">
+          <h1 class="h3 mb-0">Daily Quiz Result</h1>
+
+          
+        </div>
+    </div>
 
 {% for result in results %}
     <div class="result">
@@ -20,3 +46,5 @@
 {% endif %}
 
 <a href="{% url 'main:map' %}">Return to home</a>
+
+</body>
