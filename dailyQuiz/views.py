@@ -19,7 +19,7 @@ def quiz_home(request):
 def list_quiz_questions(request):
     if request.user.role == 'player':
         messages.error(request, "You must be a Game Keeper or Developer to access this page.")    
-        return redirect('main:map')
+        return redirect('dailyQuiz:quiz_home')
 
     questions=QuizQuestion.objects.all()
     context = {'questions': questions}
@@ -81,7 +81,7 @@ def get_daily_quiz(request):
         # Uses the same questions from the same day quiz attempt
         questions = quiz_attempt.questions.all()
 
-        if quiz_attempt.is_submitted == True:
+        if quiz_attempt.is_submitted == True: # chnage this to true in final build
             messages.error(request, "You have already submitted a quiz today. Please come back tomorrow for another!")    
             return redirect('dailyQuiz:quiz_home')
 
@@ -99,9 +99,9 @@ def get_daily_quiz(request):
 # Marks and scores the player's quiz when they press submit. Stores necessary data in the DB
 @login_required
 def submit_quiz(request):
-    #if request.user.role != 'player':
-     #   messages.error(request, "You must be a Player to access this page.")    
-      #  return redirect('main:map')
+    if request.user.role != 'player':
+         messages.error(request, "You must be a Player to access this page.")    
+         return redirect('dailyQuiz:quiz_home')
 
     if request.method == "POST":
         # Get today's quiz attempt. If no attempt today, redirects to get daily quiz page
@@ -109,7 +109,7 @@ def submit_quiz(request):
         if quiz_attempt == None:
             return redirect('dailyQuiz:quiz')
         # If quiz attempt is_submitted attribute equal to True, redirects user away, and informs them they already did a quiz today
-        elif quiz_attempt.is_submitted == True: 
+        elif quiz_attempt.is_submitted == True: # change this to true in final build 
             messages.error(request, "You have already submitted a quiz today. Please come back tomorrow for another!")    
             return redirect('dailyQuiz:quiz_home')
         
@@ -155,4 +155,24 @@ def submit_quiz(request):
 
         context = {"score": score, "streak": streak.current_streak, "results": results}
         return render(request, "dailyQuiz/result.html", context)
+    
+
+
+def quiz_result_view(request):
+    # Get the current user
+    user = request.user
+
+    # Fetch the user's streak (if it exists)
+    try:
+        streak = QuizDailyStreak.objects.get(user=user).current_streak
+    except QuizDailyStreak.DoesNotExist:
+        streak = 0  # Default value if no streak exists
+
+    # Pass the streak to the template
+    return render(request, 'quiz_result.html', {
+        'streak': streak,
+        # Add other context variables as needed
+    })
+    
+    
     
