@@ -12,7 +12,9 @@ def map(request):
     path = Path(__file__).parent / "../sustainableCampus/static/js/markers.json"
     with path.open() as markerFile:
         for line in markerFile:
+            print("JSON FILE LINE: " + line)
             markers += line
+    print("markers data: " + markers)
     return render(request, "map.html", {"data": markers})
 
 @login_required

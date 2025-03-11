@@ -1,6 +1,18 @@
 {
     "markers":[
-        {"color":"red", "shape":"circle", "latitude":"-3.53", "longitude":"50.72"},
-        {"color":"yellow", "shape":"triangle", "latitude":"-3.52", "longitude":"50.75"}
+        {
+            "idno":1,
+            "color":"red",
+            "shape":"circle",
+            "latitude":"-3.53",
+            "longitude":"50.72"
+        },
+        {
+            "idno":2,
+            "color":"yellow",
+            "shape":"triangle",
+            "latitude":"-3.52",
+            "longitude":"50.75"
+        }
     ]
 }
