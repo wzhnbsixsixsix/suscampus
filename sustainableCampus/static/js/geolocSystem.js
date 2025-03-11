@@ -17,7 +17,6 @@ import Select from './node_modules/ol/interaction/Select.js';
 import {click} from "./node_modules/ol/events/condition.js";
 import {useGeographic} from "./node_modules/ol/proj.js";
 import {toLonLat} from './node_modules/ol/proj.js';
-import {fromLonLat} from './node_modules/ol/proj.js';
 
 useGeographic(); // forces geographic coordinates
 
@@ -148,6 +147,121 @@ function createMarkerFromForm(event) {
     }
 
     createMarker(markerInfo);
+}
+
+function prepopulateMap() {
+    // prepopulates the map with markers based on the data in markers.json
+    const jsonMarkers = document.getElementById("marker-data").innerHTML;
+    console.log(jsonMarkers);
+    const markersObject = JSON.parse(jsonMarkers);
+    console.log(markersObject);
+    for (const currMarker of markersObject.markers) {
+        console.log("creating marker of id: " + currMarker.idno);
+        createMarkerFromJSON(currMarker);
+    }
+}
+
+function createMarkerFromJSON(data){
+    console.log("Adding new marker...");
+
+
+    let markerShape;
+    let markerColor;
+
+    // converts chosen color to hex value
+    console.log("Setting color...");
+    console.log("color from form: " + data.color);
+    switch (data.color) {
+        case "red":
+            console.log("case: red");
+            markerColor = '#FF0000';
+            break;
+        case "green":
+            console.log("case: green");
+            markerColor = '#00FF00';
+            break;
+        case "blue":
+            console.log("case: blue");
+            markerColor = '#0000FF';
+            break;
+        case "yellow":
+            console.log("case: yellow");
+            markerColor = '#FFFF00';
+            break;
+    }
+
+    // creates the object for the marker's shape, using the shape and color specified by the user
+    console.log("Setting shape...");
+    console.log("shape from form: " + data.shape);
+    switch (data.shape) {
+        case "circle":
+            console.log("case: circle");
+            markerShape = new CircleStyle({
+                radius: 6,
+                fill: new Fill({
+                    color: markerColor,
+                }),
+                stroke: new Stroke({
+                    color: '#000',
+                    width: 2,
+                })
+            });
+            break;
+        case "square":
+            console.log("case: square");
+            markerShape = new RegularShape({
+                fill: new Fill({
+                    color: markerColor,
+                }),
+                stroke: new Stroke({
+                    color: '#000',
+                    width: 2,
+                }),
+                points: 4,
+                radius: 6,
+                angle: Math.PI / 4,
+            });
+            break;
+        case "triangle":
+            console.log("case: triangle");
+            markerShape = new RegularShape({
+                fill: new Fill({
+                    color: markerColor,
+                }),
+                stroke: new Stroke({
+                    color: '#000',
+                    width: 2,
+                }),
+                points: 3,
+                radius: 10,
+                rotation: Math.PI / 4,
+                angle: 0,
+            });
+            break;
+    }
+
+    // creates the marker
+    console.log("Making marker object...");
+    console.log("Shape and color:");
+    console.log(markerShape);
+    console.log(markerColor);
+    const marker = new Feature({
+        type: "marker",
+    });
+    marker.setStyle(new Style({
+        image: markerShape,
+    }));
+    console.log(marker);
+
+    console.log("Adding marker to vector layer...");
+    drawMarkers.getSource().addFeature(marker);
+
+    // places the marker on the map
+    console.log("Placing marker on map...");
+    console.log("Latitude: " + data.latitude);
+    console.log("Longitude: " + data.longitude);
+    const markerPos = [data.latitude, data.longitude];
+    marker.setGeometry(new Point(markerPos));
 }
 
 function createMarker(data) {
@@ -305,3 +419,5 @@ clickSelection.on('select', function (e) {
         markerPopups.setPosition(markerPos);
     }
 });
+
+prepopulateMap();
