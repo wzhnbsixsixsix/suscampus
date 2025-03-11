@@ -87,13 +87,42 @@
     padding: 10px;
     position: fixed;
     bottom: 0;
-    height: auto; 
+    height: 75px; 
     width: 100%;
     background: #d0e0e4;
 }
 
-.grid-item {
-    padding: 1em;
-    border: 1px solid #0f0
+#selected-plant-image {
+    width: 75%;
+    aspect-ratio: 1/1;
+    margin: auto;
+    background-color: #0f0;
 }
 
+.grid-item {
+    padding: 1em;
+    border: 1px solid #0f0;
+    cursor: pointer;
+}
+
+.forest-popup {
+    display: none;
+    position: fixed;
+    bottom: 80px;
+    right: 5px;
+    height: 70%;
+    width: 25%;
+    min-width: 200px;
+    max-width: 50vw;
+    background-color: #f1f1f1;
+    border-radius: 10px;
+  }
+  
+  .close-popup {
+    cursor: pointer;
+    top: 10px;
+    left: 10px;
+    width: 40px ;
+    height: 40px;
+    color: red;
+  }
