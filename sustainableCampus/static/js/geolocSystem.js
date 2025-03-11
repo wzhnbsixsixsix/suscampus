@@ -109,6 +109,12 @@ positionFeature.setStyle(
 geolocation.on('change:position', function () {
     const coordinates = toLonLat(geolocation.getPosition());
     positionFeature.setGeometry(coordinates ? new Point(coordinates) : null);
+    // iterate through all markers, checking if they are now within range to interact with.
+    const markersOnMap = drawMarkers.getSource().getFeatures()
+    console.log("MARKERS: " + markersOnMap);
+    for (const currMarker of markersOnMap) {
+        console.log(currMarker.getGeometry().getCoordinates());
+    } 
     // updates the view's centre to the user's new position:
     const newPos = positionFeature.getGeometry().getCoordinates();
     console.log("centering view on: " + newPos);
