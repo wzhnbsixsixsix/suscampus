@@ -13,6 +13,20 @@
             "shape":"triangle",
             "latitude":"-3.52",
             "longitude":"50.75"
+        },
+        {
+            "idno":3,
+            "color":"blue",
+            "shape":"square",
+            "latitude":"-3.525",
+            "longitude":"50.735"
+        },
+        {
+            "idno":4,
+            "color":"green",
+            "shape":"triangle",
+            "latitude":"-3.532",
+            "longitude":"50.728"
         }
     ]
 }
