@@ -31,6 +31,7 @@ MANIFEST
 
 # node modules
 sustainableCampus/static/js/node_modules/
+sustainableCampus/static/custom_bootstrap/node_modules/
 
 # PyInstaller
 #  Usually these files are written by a python script from a template
