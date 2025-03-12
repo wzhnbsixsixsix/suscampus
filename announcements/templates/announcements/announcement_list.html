@@ -8,18 +8,9 @@
   <title>Sustainable Campus</title>
   <link rel="stylesheet" href="/static/css/announcement_list.css" />
   <link rel="stylesheet" href="{% static 'css/navbar.css' %}" />
-  <link href="https://cdn.lineicons.com/5.0/lineicons.css" rel="stylesheet" />
-  <link rel="stylesheet" href="{% static '/bootstrap/css/bootstrap.min.css' %}" />
+  <link href="{% static '/custom_bootstrap/bootstrap.css' %}", rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
   <style>
-    .card {
-      cursor: pointer;
-      transition: transform 0.2s;
-    }
-
-    .card:hover {
-      transform: translateY(-5px);
-    }
-
     .modal-img {
   max-height: 400px; 
   object-fit: contain; 
@@ -37,107 +28,145 @@
 
   <div class="container py-5">
 
-    <div class="d-flex justify-content-between align-items-center mb-4">
-      <h1 class="h3 mb-0">Announcements</h1>
-      <a href="{% url 'announcements:create_announcement' %}"
-        class="btn btn-outline-success p-2 lh-1 d-flex align-items-center">Create New Announcement</a>
-    </div>
-<!-- Filter Form -->
-<form method="get" action="{% url 'announcements:announcement_list' %}">
-  <label for="author">Filter by Author:</label>
-  <input type="text" name="author" id="author" value="{{ request.GET.author }}">
-
-  <label for="role">Filter by Role:</label>
-  <select name="role" id="role">
-    <option value="">All Roles</option>
-    <option value="GameKeeper" {% if request.GET.role == "Gamekeeper" %}selected{% endif %}>Gamekeeper</option>
-    <option value="Developer" {% if request.GET.role == "Developer" %}selected{% endif %}>Developer</option>
-</select>
-
-  <label for="date">Filter by Date:</label>
-  <input type="date" name="date" id="date" value="{{ request.GET.date }}">
-
-  <button type="submit" class="btn btn-primary">Filter</button>
-  <a href="{% url 'announcements:announcement_list' %}" class="btn btn-secondary">Clear Filters</a>
-</form>
-    <div class="row g-4">
-      {% for announcement in announcements %}
-      <div class="col-12 col-md-6 col-lg-4">
-        <div class="card h-100 shadow">
-          {% if announcement.image %}
-          <img src="{{ announcement.image.url }}" class="card-img-top" style="height: 150px; object-fit: cover;"
-            alt="{{ announcement.title }}" />
-          {% else %}
-          <img src="{% static 'path/to/placeholder/image.jpg' %}" class="card-img-top" style="height: 150px; object-fit: cover;"
-            alt="No image available" />
-          {% endif %}
-          <div class="card-body">
-            <h5 class="card-title">{{ announcement.title }}</h5>
-            <p class="card-text">
-              {{ announcement.summary }}
-            </p>
-            <small class="text-muted meta-data">
-
-              Author: {{ announcement.author }} | Role: {{ announcement.author.role }} | Date: {{announcement.created_at }} 
-              {% if announcement.is_event and user_role == 'gameKeeper' or user_role == 'developer' %}
-                <a href="{% url 'announcements:display_event_qr_code' announcement.event.event_code %}" 
-                class="btn btn-primary mt-2">Display Event's QR Code</a>
-              {% endif %}
-
-            </small>
-            <!--Like button-->
-            <form action="{% url 'announcements:like_announcement' announcement.id %}" method="post" style="display: inline;">
-              {% csrf_token %}
-              <button type="submit" class="btn btn-sm btn-outline-primary">
-                {% if request.user in announcement.likes.all %}
-                Unlike
-                {% else %}
-                Like
-                {% endif %}
-              </button>
-            </form>
-            <span class="text-muted">Likes: {{ announcement.total_likes }}</span>
-            <!-- Dislike Button and Dislike Count -->
-            <form action="{% url 'announcements:dislike_announcement' announcement.id %}" method="post" style="display: inline;">
-              {% csrf_token %}
-              <button type="submit" class="btn btn-sm btn-outline-danger">
-                {% if request.user in announcement.dislikes.all %}
-                Undislike
-                {% else %}
-                Dislike
-                {% endif %}
-              </button>
-            </form>
-            <div class="full-content">
-              {{ announcement.content }}
-            </div>
-          </div>
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-center mb-4">
+      <h1 class="h3 mb-2 mb-md-0">Announcements</h1>
+      <div class="d-flex flex-column flex-sm-row">
+        <div class="d-flex">
+          <!-- Filter Toggle Button -->
+          <button class="btn btn-outline-primary py-1 me-2" type="button" data-bs-toggle="collapse" data-bs-target="#filterCollapse" aria-expanded="false" aria-controls="filterCollapse">
+            <i class="bi bi-funnel"></i> Filter
+          </button>
+          <a href="{% url 'announcements:create_announcement' %}" class="btn btn-outline-success py-1 lh-1 d-flex align-items-center">Post an Announcement</a>
         </div>
       </div>
+    </div>
+
+    <!-- Filter Form (Collapsible) -->
+    <div class="collapse mb-4" id="filterCollapse">
+      <div class="card card-body">
+        <form method="get" action="{% url 'announcements:announcement_list' %}" class="row g-3">
+          <div class="col-md-3">
+            <label for="author" class="form-label">Filter by Author:</label>
+            <input type="text" name="author" id="author" value="{{ request.GET.author }}" class="form-control">
+          </div>
+          
+          <div class="col-md-3">
+            <label for="role" class="form-label">Filter by Role:</label>
+            <select name="role" id="role" class="form-select">
+              <option value="">All Roles</option>
+              <option value="GameKeeper" {% if request.GET.role == "Gamekeeper" %}selected{% endif %}>Gamekeeper</option>
+              <option value="Developer" {% if request.GET.role == "Developer" %}selected{% endif %}>Developer</option>
+            </select>
+          </div>
+          
+          <div class="col-md-3">
+            <label for="date" class="form-label">Filter by Date:</label>
+            <input type="date" name="date" id="date" value="{{ request.GET.date }}" class="form-control">
+          </div>
+          
+          <div class="col-md-3 d-flex align-items-end">
+            <button type="submit" class="btn btn-primary me-2">Apply Filters</button>
+            <a href="{% url 'announcements:announcement_list' %}" class="btn btn-secondary">Clear</a>
+          </div>
+        </form>
+      </div>
+    </div> 
+    <div class="row g-4">
+      {% for announcement in announcements %}
+      <div class="col-12 col-md-12 col-lg-4">
+    <div class="card card-hover glass h-100 shadow-lg border-0 rounded-4 overflow-hidden position-relative hover-effect">
+        <!-- Announcement Image -->
+        {% if announcement.image %}
+        <img src="{{ announcement.image.url }}" class="card-img-top rounded-top" style="height: 250px; object-fit: cover;"
+            alt="{{ announcement.title }}" />
+        {% else %}
+        <img src="{% static 'path/to/placeholder/image.jpg' %}" class="card-img-top rounded-top" style="height: 200px; object-fit: cover;"
+            alt="No image available" />
+        {% endif %}
+
+        <div class="card-body card-glass d-flex flex-column p-3 rounded-bottom">
+            <!-- Announcement Title -->
+            <h5 class="card-title fw-bold mb-2">{{ announcement.title }}</h5>
+
+            <!-- Summary -->
+            <p class="card-text mb-2">
+                {{ announcement.summary }}
+            </p>
+
+            <!-- Author and Date -->
+            <div class="d-flex align-items-center justify-content-between">
+              <small class="text-muted meta-data d-block mb-2">
+                  <strong>{{ announcement.author }}</strong> 
+                  | <span class="text-capitalize">{{ announcement.author.role }}</span>
+                  | {{ announcement.created_at|date:"SHORT_DATE_FORMAT" }} 
+              </small>
+  
+              <!-- Like/Dislike Section -->
+              <div class="w-25 d-flex align-items-center justify-content-between p-2 bg-white rounded-3 shadow-sm">
+                  <!-- Like Button -->
+                  <form action="{% url 'announcements:like_announcement' announcement.id %}" method="post">
+                      {% csrf_token %}
+                      <button type="submit" class="btn btn-sm {% if request.user in announcement.likes.all %}btn-primary{% else %}btn-outline-primary{% endif %}">
+                          <i class="bi {% if request.user in announcement.likes.all %}bi-hand-thumbs-up-fill{% else %}bi-hand-thumbs-up{% endif %}"></i>
+                      </button>
+                  </form>
+  
+                  <!-- Like Count -->
+                  <span class="fw-bold text-dark">{{ announcement.total_likes }}</span>
+  
+                  <!-- Dislike Button -->
+                  <form action="{% url 'announcements:dislike_announcement' announcement.id %}" method="post">
+                      {% csrf_token %}
+                      <button type="submit" class="btn btn-sm {% if request.user in announcement.dislikes.all %}btn-danger{% else %}btn-outline-danger{% endif %}">
+                          <i class="bi {% if request.user in announcement.dislikes.all %}bi-hand-thumbs-down-fill{% else %}bi-hand-thumbs-down{% endif %}"></i>
+                      </button>
+                  </form>
+              </div>
+
+            </div>
+            <!-- QR Code Button (For Specific Roles) -->
+            {% if announcement.is_event and user_role == 'gameKeeper' or user_role == 'developer' %}
+                <a href="{% url 'announcements:display_event_qr_code' announcement.event.event_code %}" 
+                class="btn btn-sm btn-info text-white btn-outline-primary rounded-2 mt-2 w-100">Event QR Code</a>
+            {% endif %}
+
+  
+            <!-- Hidden Full Content (For Modal) -->
+            <div class="full-content d-none">
+                {{ announcement.content }}
+            </div>
+        </div>
+    </div>
+</div>
+
       {% endfor %}
     </div>
 
     <!-- Announcement Modal -->
     <div class="modal fade" id="announcementModal" tabindex="-1">
-      <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="modalTitle"></h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-          </div>
-          <div class="modal-body">
-            <img src="" class="modal-img img-fluid mb-3 w-100" id="modalImage" />
-            <p id="modalContent"></p>
-          </div>
-          <div class="modal-footer justify-content-between">
-            <small class="text-muted" id="modalMetaData"></small>
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-              Close
-            </button>
-          </div>
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content rounded-4 shadow-lg">
+            <!-- Modal Header -->
+            <div class="modal-header rounded-top">
+                <h5 class="modal-title fw-bold" id="modalTitle"></h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+
+            <!-- Modal Body -->
+            <div class="modal-body p-4">
+                <img src="" class="modal-img img-fluid mb-3 rounded-3 shadow-sm" id="modalImage" />
+                <p id="modalContent" class="text-muted"></p>
+            </div>
+
+            <!-- Modal Footer -->
+            <div class="modal-footer rounded-bottom d-flex justify-content-between align-items-center">
+                <small class="text-muted" id="modalMetaData"></small>
+                <button type="button" class="btn btn-outline-secondary px-4" data-bs-dismiss="modal">Close</button>
+            </div>
         </div>
-      </div>
     </div>
+</div>
+
 
     <!-- Bootstrap JS -->
     <script src="{% static '/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
@@ -150,6 +179,8 @@
 
         cards.forEach((card) => {
           card.addEventListener("click", () => {
+            if (event.target.closest("button, form")) return;
+
             // Extract data from card elements
             const title = card.querySelector(".card-title").textContent;
             const content = card.querySelector(".full-content").textContent;

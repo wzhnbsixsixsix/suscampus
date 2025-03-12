@@ -6,19 +6,9 @@
     <title>Sustainable Campus</title>
     <link rel="stylesheet" href="{% static "shop/css/shop.css" %}">
     <link href="https://cdn.lineicons.com/5.0/lineicons.css" rel="stylesheet" />
-    <link
-      href="{% static '/bootstrap/css/bootstrap.min.css' %}"
-      rel="stylesheet"
-    />
+    <link href="{% static '/custom_bootstrap/bootstrap.css' %}", rel="stylesheet" /> 
     <style>
-      .card {
-        transition: transform 0.2s, box-shadow 0.2s;
-      }
-
-      .card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-      }
+      
 
       .object-fit-cover {
         object-fit: cover;
@@ -68,7 +58,7 @@
       <div class="row g-4">
         {% for item in items %}
         <div class="col-12 col-sm-6 col-md-4 col-lg-3">
-          <div class="card h-100 shadow-sm">
+          <div class="card card-hover glass h-100 shadow-lg border-0 rounded-4 overflow-hidden position-relative hover-effect">
             <img
               src="{{ item.image.url }}"
               class="card-img-top object-fit-cover"
