@@ -121,7 +121,8 @@ geolocation.on('change:position', function () {
     console.log("centering view on: " + newPos);
     mapView.setCenter(newPos);
     // logs the positions of the interactable markers
-    console.log("positions of markers that can be interacted with: " + interactableMarkers);
+    console.log("positions of markers that can be interacted with: ");
+    console.log(interactableMarkers);
 });
 
 function isMarkerInRange(markerPos, playerPos){
@@ -154,12 +155,13 @@ function enableGeolocation() {
     }
 }
 
+const jsonMarkers = document.getElementById("marker-data").innerHTML;
+console.log(jsonMarkers);
+const markersObject = JSON.parse(jsonMarkers);
+console.log(markersObject);
+
 function prepopulateMap() {
     // prepopulates the map with markers based on the data in markers.json
-    const jsonMarkers = document.getElementById("marker-data").innerHTML;
-    console.log(jsonMarkers);
-    const markersObject = JSON.parse(jsonMarkers);
-    console.log(markersObject);
     for (const currMarker of markersObject.markers) {
         console.log("creating marker of id: " + currMarker.idno);
         createMarkerFromJSON(currMarker);
@@ -308,26 +310,35 @@ clickSelection.on('select', function (e) {
     // avoids a popup appearing when a marker is deselcted by clicking on the map, instead of a marker
     if (marker !== undefined) { 
         const markerPos = marker.getGeometry().getCoordinates();
+        
+        // gets the details of the marker selected
+        let markerDetails;
+        for (const currMarkerDetails of markersObject.markers) {
+            if ((currMarkerDetails.latitude == markerPos[0]) && (currMarkerDetails.longitude == markerPos[1])) {
+                markerDetails = currMarkerDetails;
+            }
+        }
 
+        // checks if the marker selected is interactable
         let interactable = false;
-        if (interactableMarkers.includes(markerPos)) {
-            console.log("SUCCESS");
-            interactable = true;
-        } else {
-            console.log("Selected marker's position: " + markerPos + " is not in " + interactableMarkers);
+        for (const subArr of interactableMarkers) {
+            console.log(subArr + " " + markerPos);
+            if ((subArr[0] == markerPos[0]) && (subArr[1] == markerPos[1])) {
+                interactable = true;
+            }
         }
 
         console.log("popup position: " + markerPos);
 
         if (interactable) {
             console.log("Selected interactable marker.");
-            popContent.innerHTML = '<p>Selected Marker at: </p><code>' + markerPos + '</code>' + '<button id="popup-button">Collect</button>';
+            popContent.innerHTML = '<h3><code>' + markerDetails.name +'</code></h3> <p>Selected Marker at: </p><code>' + markerPos + '</code>' + '<button id="popup-button">Collect</button>';
             markerPopups.setPosition(markerPos);
             const popupButton = document.getElementById("popup-button");
             popupButton.addEventListener("click", (e) => {console.log(e)});
         } else {
             console.log("Selected un-interactable marker.");
-            popContent.innerHTML = '<p>Selected Marker at: </p><code>' + markerPos + '</code>';
+            popContent.innerHTML = '<h3><code>' + markerDetails.name +'</code></h3><p>Selected Marker at: </p><code>' + markerPos + '</code>';
             markerPopups.setPosition(markerPos);
         }
     }
