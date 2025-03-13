@@ -2,6 +2,7 @@
     "markers":[
         {
             "idno":1,
+            "name":"test one",
             "color":"red",
             "shape":"circle",
             "latitude":"-3.53",
@@ -9,6 +10,7 @@
         },
         {
             "idno":2,
+            "name":"test two",
             "color":"yellow",
             "shape":"triangle",
             "latitude":"-3.52",
@@ -16,6 +18,7 @@
         },
         {
             "idno":3,
+            "name":"test three",
             "color":"blue",
             "shape":"square",
             "latitude":"-3.525",
@@ -23,10 +26,19 @@
         },
         {
             "idno":4,
+            "name":"test four",
             "color":"green",
             "shape":"triangle",
             "latitude":"-3.532",
             "longitude":"50.728"
+        },
+        {
+            "idno":5,
+            "name":"Innovation Centre Cafe",
+            "color":"red",
+            "shape":"triangle",
+            "latitude":"-3.53115",
+            "longitude":"50.73832"
         }
     ]
 }

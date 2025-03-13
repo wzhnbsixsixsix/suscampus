@@ -18,8 +18,8 @@
       }
       .map {
         position: relative;
-        width: 600px;
-        height: 600px;
+        width: 100vw;
+        height: 85vh;
       }
       .ol-popup {
           position: absolute;
@@ -62,10 +62,6 @@
     </script>
 
     <div class="container-fluid flex-grow-1 d-flex flex-column mb-2">
-      <!-- Header -->
-      <div class="py-3">
-          <h1>Map</h1>
-      </div>
 
       <div id = "map" class = "map">
           <!-- Map content goes here -->
@@ -74,57 +70,12 @@
         <a href="#" id="marker-popup-closer" class="ol-popup-closer"></a>
         <div id="marker-popup-content"></div>
       </div>
-      <div id="info" style="display: none;"></div>
-      <p>
-        position accuracy : <code id="accuracy"></code>&nbsp;&nbsp;
-        altitude : <code id="altitude"></code>&nbsp;&nbsp;
-        altitude accuracy : <code id="altitudeAccuracy"></code>&nbsp;&nbsp;
-        heading : <code id="heading"></code>&nbsp;&nbsp;
-        speed : <code id="speed"></code>
-      </p>
-    </div>  
 
-    <!-- TODO: Need to add input validation to the below -->
-    <div id="add-marker">
-      <form name="marker-details" id="add-marker-form" action="" method="POST">
-          <label for="xcoord">X Coordinate:</label>
-          <input
-                  type="text"
-                  name="latitude"
-                  id="xcoord"
-                  placeholder="Latitude"
-                  required
-                  size="16"
-                  maxlength="16"/>
-          <label for="ycoord">Y Coordinate:</label>
-          <input
-                  type="text"
-                  name="longitude"
-                  id="ycoord"
-                  placeholder="Longitude"
-                  required
-                  size="16"
-                  maxlength="16" />
-          <label for="shape">Shape:</label>
-          <select name="shape" id="shape">
-              <option value="circle">Circle</option>
-              <option value="square">Square</option>
-              <option value="triangle">Triangle</option>
-          </select>
-          <label for="color">Colour:</label>
-          <select name="color" id="color">
-              <option value="red">Red</option>
-              <option value="green">Green</option>
-              <option value="blue">Blue</option>
-              <option value="yellow">Yellow</option>
-          </select>
-          <button type="submit" id="create-marker">Create Marker</button>
-      </form>
+      <div id="marker-data" style:"display:none" data-marker={{data}}>{{data}}</div>
+      <!-- Geolocation System -->>
+      <script type="module" src="{% static '/js/geolocSystem.js' %}"></script>
+      <!-- Bootstrap JS -->
+      <script src="{% static '/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
     </div>
-    <div id="marker-data" style:"display:none" data-marker={{data}}>{{data}}</div>
-    <!-- Geolocation System -->>
-    <script type="module" src="{% static '/js/geolocSystem.js' %}"></script>
-    <!-- Bootstrap JS -->
-    <script src="{% static '/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
   </body>
 </html>

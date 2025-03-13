@@ -74,19 +74,6 @@ const geolocation = new Geolocation({
     projection: view.getProjection(),
 });
 
-function el(id) {
-    return document.getElementById(id);
-}
-
-// update the HTML page when the position changes.
-geolocation.on('change', function () {
-    el('accuracy').innerText = geolocation.getAccuracy() + ' [m]';
-    el('altitude').innerText = geolocation.getAltitude() + ' [m]';
-    el('altitudeAccuracy').innerText = geolocation.getAltitudeAccuracy() + ' [m]';
-    el('heading').innerText = geolocation.getHeading() + ' [rad]';
-    el('speed').innerText = geolocation.getSpeed() + ' [m/s]';
-});
-
 // controls how the user's position is visually represented on the map
 const positionFeature = new Feature();
 positionFeature.setStyle(
@@ -165,20 +152,6 @@ function enableGeolocation() {
     } else {
         alert("Geolocation is not supported by your browser.");
     }
-}
-
-function createMarkerFromForm(event) {
-    // first need to get all the user's input from the input fields when the button is pressed:
-    // currently assumes all user input is valid
-    console.log("Getting marker specifications from the form...");
-    let markerInfo = event.formData;
-
-    // for debugging
-    for (const [key, value] of markerInfo) {
-        console.log(`${key}: ${value}`);
-    }
-
-    createMarker(markerInfo);
 }
 
 function prepopulateMap() {
@@ -296,118 +269,6 @@ function createMarkerFromJSON(data){
     marker.setGeometry(new Point(markerPos));
 }
 
-function createMarker(data) {
-    console.log("Adding new marker...");
-
-
-    let markerShape;
-    let markerColor;
-
-    // converts chosen color to hex value
-    console.log("Setting color...");
-    console.log("color from form: " + data.get('color'));
-    switch (data.get('color')) {
-        case "red":
-            console.log("case: red");
-            markerColor = '#FF0000';
-            break;
-        case "green":
-            console.log("case: green");
-            markerColor = '#00FF00';
-            break;
-        case "blue":
-            console.log("case: blue");
-            markerColor = '#0000FF';
-            break;
-        case "yellow":
-            console.log("case: yellow");
-            markerColor = '#FFFF00';
-            break;
-    }
-
-    // creates the object for the marker's shape, using the shape and color specified by the user
-    console.log("Setting shape...");
-    console.log("shape from form: " + data.get('shape'));
-    switch (data.get('shape')) {
-        case "circle":
-            console.log("case: circle");
-            markerShape = new CircleStyle({
-                radius: 6,
-                fill: new Fill({
-                    color: markerColor,
-                }),
-                stroke: new Stroke({
-                    color: '#000',
-                    width: 2,
-                })
-            });
-            break;
-        case "square":
-            console.log("case: square");
-            markerShape = new RegularShape({
-                fill: new Fill({
-                    color: markerColor,
-                }),
-                stroke: new Stroke({
-                    color: '#000',
-                    width: 2,
-                }),
-                points: 4,
-                radius: 6,
-                angle: Math.PI / 4,
-            });
-            break;
-        case "triangle":
-            console.log("case: triangle");
-            markerShape = new RegularShape({
-                fill: new Fill({
-                    color: markerColor,
-                }),
-                stroke: new Stroke({
-                    color: '#000',
-                    width: 2,
-                }),
-                points: 3,
-                radius: 10,
-                rotation: Math.PI / 4,
-                angle: 0,
-            });
-            break;
-    }
-
-    // creates the marker
-    console.log("Making marker object...");
-    console.log("Shape and color:");
-    console.log(markerShape);
-    console.log(markerColor);
-    const marker = new Feature({
-        type: "marker",
-    });
-    marker.setStyle(new Style({
-        image: markerShape,
-    }));
-    console.log(marker);
-
-    console.log("Adding marker to vector layer...");
-    drawMarkers.getSource().addFeature(marker);
-
-    // places the marker on the map
-    console.log("Placing marker on map...");
-    console.log("Latitude: " + data.get("latitude"));
-    console.log("Longitude: " + data.get("longitude"));
-    const markerPos = [data.get("latitude"), data.get("longitude")];
-    marker.setGeometry(new Point(markerPos));
-}
-
-const markerData = document.getElementById("add-marker-form");
-
-markerData.addEventListener("submit",(event) => {
-    event.preventDefault();
-    new FormData(markerData); // this causes the formdata event for the next eventListener
-});
-
-markerData.addEventListener("formdata", (event) => createMarkerFromForm(event));
-
 // prompt user to enable geolocation
 enableGeolocation();
 
@@ -447,7 +308,7 @@ clickSelection.on('select', function (e) {
     // avoids a popup appearing when a marker is deselcted by clicking on the map, instead of a marker
     if (marker !== undefined) { 
         const markerPos = marker.getGeometry().getCoordinates();
-        
+
         let interactable = false;
         if (interactableMarkers.includes(markerPos)) {
             console.log("SUCCESS");
