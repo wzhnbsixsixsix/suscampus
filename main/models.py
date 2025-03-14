@@ -25,3 +25,7 @@ class UserForest(models.Model):
     cells = {}
     for i in range(0, 16):
         cells["cell{0}".format(i)] = models.JSONField(null=True)
+
+class Plant(models.Model):
+    requirement_type = models.IntegerField()
+    rarity = models.IntegerField()
