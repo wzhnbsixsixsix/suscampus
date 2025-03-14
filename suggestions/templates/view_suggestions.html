@@ -1,50 +1,78 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     {% load static %}
-    <title>View Suggestions</title>
-    <link href="{% static '/custom_bootstrap/bootstrap.css' %}", rel="stylesheet" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Community Suggestions | Sustainable Campus</title>
+    <link href="{% static '/custom_bootstrap/bootstrap.css' %}" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
 </head>
 <body>
-{% include 'navbar.html' %}
+    {% include 'navbar.html' %}
 
-<div class="container mt-4">
-    <h2>Submitted Suggestions</h2>
-
-    <div class="list-group">
-        {% for suggestion in suggestions %}
-        <div class="list-group-item mb-3">
-            <!--                <div class="d-flex justify-content-between">-->
-            <!--                    <h5>{{ suggestion.user.username }}</h5>-->
-            <!--                    <small class="text-muted">{{ suggestion.created_at }}</small>-->
-            <!--                </div>-->
-            <div class="d-flex justify-content-between align-items-center">
-                <h5>{{ suggestion.user.username }}</h5>
-                <div class="d-flex align-items-center">
-                    <small class="text-muted me-2">{{ suggestion.created_at }}</small>
-                    {% if request.user == suggestion.user or request.user.is_superuser %}
-                    <form action="{% url 'delete_suggestion' suggestion.id %}" method="post">
-                        {% csrf_token %}
-                        <button type="submit" class="btn btn-danger btn-sm"
-                                onclick="return confirm('Are you sure to delete this suggestion?')">
-                            <i class="lni lni-trash">Delete</i>
-                        </button>
-                    </form>
-                    {% endif %}
+    <main class="container py-5">
+        <!-- Header Section -->
+        <div>
+            <h1 class="h3 mb-1">Community Suggestions</h1>
+            <p class="text-secondary mb-0">Ideas and feedback from our campus community</p>
+        </div>    
+        
+        <!-- Suggestions List -->
+        <div class="mt-4">
+            {% for suggestion in suggestions %}
+            <div class="card mb-3">
+                <div class="bg-primary rounded-top-3 border-bottom p-2" style="--bs-bg-opacity: 0.5;">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div class="d-flex align-items-center">
+                            <div class="avatar avatar-sm mx-2">
+                                <img src="
+                                    {% if suggestion.user.profile.image %}
+                                        {{ suggestion.user.profile.image.url }}" 
+                                    {% else %}
+                                        {% static 'images/default.png' %}
+                                    {% endif %}"
+                                    alt="Profile" 
+                                    class="rounded-circle w-100 h-100 object-fit-cover"
+                                > 
+                            </div>
+                            <h5 class="fw-medium">{{ suggestion.user.username }}</h5>
+                        </div>
+                        <div class="d-flex align-items-center">
+                            <span class="text-secondary small me-3">
+                                <i class="bi bi-clock me-1"></i>
+                                {{ suggestion.created_at|date:"M d, Y" }}
+                            </span>
+                            {% if request.user == suggestion.user or request.user.is_superuser %}
+                            <form action="{% url 'delete_suggestion' suggestion.id %}" method="post" class="d-inline">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-sm btn-outline-danger rounded-pill"
+                                    onclick="return confirm('Are you sure you want to delete this suggestion?')">
+                                    <i class="bi bi-trash me-1"></i>Delete
+                                </button>
+                            </form>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                <div class="p-3">
+                    <div class="mb-2">
+                        <span class="badge bg-primary text-white">
+                            {{ suggestion.get_category_display }}
+                        </span>
+                    </div>
+                    <p class="mb-0">{{ suggestion.content }}</p>
                 </div>
             </div>
-
-            <div class="mt-2">
-                <span class="badge bg-primary">{{ suggestion.get_category_display }}</span>
-                <p class="mt-2">{{ suggestion.content }}</p>
+            {% empty %}
+            <div class="card bg-info text-center p-5" style="--bs-bg-opacity: 0.3;">
+                <i class="bi bi-chat-square-text fs-1 mb-3"></i>
+                <h3 class="h5 mb-2">No suggestions yet</h3>
             </div>
+            {% endfor %}
         </div>
-        {% empty %}
-        <div class="alert alert-info">No suggestions submitted yet.</div>
-        {% endfor %}
-    </div>
-</div>
+    </main>
 
-<script src="{% static '/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+    <script src="{% static '/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
 </body>
 </html>

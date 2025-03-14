@@ -4,12 +4,8 @@
 <html>
   <head>
     <title>Sustainable Campus</title>
-    <link rel="stylesheet" href="{% static "shop/css/shop.css" %}">
-    <link href="https://cdn.lineicons.com/5.0/lineicons.css" rel="stylesheet" />
     <link href="{% static '/custom_bootstrap/bootstrap.css' %}", rel="stylesheet" /> 
     <style>
-      
-
       .object-fit-cover {
         object-fit: cover;
       }
@@ -31,7 +27,7 @@
           <span
             class="badge bg-primary fs-6 p-2 lh-1 d-flex align-items-center"
           >
-            Balance: {{user_balance.currency }} points
+            Balance: {{ user_balance.currency }} points
           </span>
         </div>
       </div>
@@ -58,27 +54,27 @@
       <div class="row g-4">
         {% for item in items %}
         <div class="col-12 col-sm-6 col-md-4 col-lg-3">
-          <div class="card card-hover glass h-100 shadow-lg border-0 rounded-4 overflow-hidden position-relative hover-effect">
-            <img
-              src="{{ item.image.url }}"
-              class="card-img-top object-fit-cover"
-              alt="{{ item.name }}"
-              style="height: 200px"
-            />
-            <div class="card-body d-flex flex-column">
-              <h3 class="h5 card-title">{{ item.name }}</h3>
-              <p class="card-text text-muted small">{{ item.description }}</p>
-              <div
-                class="mt-auto d-flex justify-content-between align-items-center"
-              >
-                <span class="badge bg-warning text-dark fs-6 p-2 lh-1 d-flex align-items-center">
+          <div class="card card-hover h-100 border-0 shadow-sm rounded-lg overflow-hidden">
+            <div class="position-relative">
+              <img
+                src="{{ item.image.url }}"
+                class="card-img-top object-fit-cover"
+                alt="{{ item.name }}"
+                style="height: 180px"
+              />
+            </div>
+            <div class="card-body d-flex flex-column p-4">
+              <h3 class="h5 mb-2 fw-medium">{{ item.name }}</h3>
+              <p class="card-text text-secondary mb-3 small">{{ item.description }}</p>
+              <div class="mt-auto d-flex justify-content-between align-items-center gap-2">
+                <span class="fs-6 fw-medium text-primary">
                   {{ item.currency_cost }} points
                 </span>
                 <a
                   href="{% url 'shop:buy_shop_item' item_id=item.item_id %}"
-                  class="btn btn-success p-2 lh-1 d-flex align-items-center"
+                  class="btn btn-primary px-3 py-2"
                 >
-                  <i class="lni lni-cart-1"></i> Buy
+                  Buy now
                 </a>
               </div>
             </div>

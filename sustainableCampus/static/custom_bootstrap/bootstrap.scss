@@ -1,19 +1,17 @@
-// Custom theme variables
-$font-family-sans-serif: 'Poppins', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+$font-family-sans-serif: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
 $enable-shadows: true;
 $enable-gradients: false;
 $enable-rounded: true;
 $border-radius: 0.5rem;
 $border-radius-lg: 0.75rem;
 $border-radius-sm: 0.25rem;
+$border-width: 1px;
 
-// Main color palette with semantic naming
-$white: #fffdf9;
+$white: #fffdf9;   
 $black: #0b171c;
-$green-white: #C9DCD2;
-$green-light: #93bbab;
+$green-light: #93bbab; 
 $green-medium: #44897a;
-$green-dark: #1e4b59;
+$green-dark: #083400;
 $green-vibrant: #19a757;
 $blue-teal: #62a59a;
 $forest-green: #598d72;
@@ -21,91 +19,213 @@ $sunny-yellow: #e9ca1a;
 $alert-red: #f50c23;
 $lavender-light: #eae5f4;
 
-// Theme color mappings with more sustainability-focused names
+$gray-100: #f8f7f4;
+$gray-200: #e9e7e2;
+$gray-300: #d1cfc7;
+$gray-400: #b5b2a8;
+$gray-500: #92908a;
+$gray-600: #6d6c67;
+$gray-700: #494845;
+$gray-800: #302f2d;
+$gray-900: #1c1b1a;
+
+$body-bg: $white;
+$body-color: $gray-800;
+
 $theme-colors: (
-  "light": $lavender-light,
+  "light": $white,
   "dark": $black,
   "primary": $green-light,
-  "secondary": $green-white,
+  "secondary": $gray-600,
   "info": $blue-teal,
-  "accent1": $green-dark,
-  "accent2": $green-medium,
-  "accent3": $forest-green,
   "success": $green-vibrant,
   "warning": $sunny-yellow,
-  "danger": $alert-red,
-  "forest": $forest-green,
-  "earth": $green-dark,
-  "water": $blue-teal,
-  "leaf": $green-vibrant,
-  "sun": $sunny-yellow
+  "danger": $alert-red
 );
 
 // Typography settings
-$headings-font-weight: 600;
-$headings-color: $green-dark;
+$font-weight-normal: 400;
+$font-weight-medium: 500;
+$font-weight-semibold: 600;
+$font-weight-bold: 700;
+
+$font-size-base: 1rem;
+$line-height-base: 1.5;
+$headings-font-weight: $font-weight-semibold;
+$headings-line-height: 1.25;
+$headings-color: $black;
+$paragraph-margin-bottom: 1.25rem;
+$small-font-size: 0.875rem;
+
+// Spacing system
+$spacer: 1rem;
+$spacers: (
+  0: 0,
+  1: $spacer * .25,
+  2: $spacer * .5,
+  3: $spacer,
+  4: $spacer * 1.5,
+  5: $spacer * 3,
+  6: $spacer * 4,
+);
+
+// Links
+$link-color: $green-medium;
+$link-decoration: none;
+$link-hover-color: darken($green-medium, 10%);
 
 // Navbar customization
-$navbar-light-color: $green-dark;
-$navbar-light-hover-color: $green-vibrant;
-$navbar-light-active-color: $green-vibrant;
-$navbar-padding-y: 0.75rem;
-$navbar-brand-font-size: 1.5rem;
+$navbar-light-color: $gray-700;
+$navbar-padding-y: 1rem;
+$navbar-padding-x: 1rem;
+$navbar-brand-font-size: 1.25rem;
 $navbar-brand-padding-y: 0.5rem;
+$navbar-nav-link-padding-x: 1rem;
 
-// Badges and other components
-$badge-font-size: 85%;
-$badge-font-weight: 600;
-$badge-padding-y: 0.35em;
-$badge-padding-x: 0.75em;
-$badge-border-radius: 0.375rem;
+// Form controls
+$input-bg: $white;
+$input-border-color: $gray-300;
+$input-box-shadow: none;
+$input-focus-border-color: $green-light;
+$input-focus-box-shadow: none;
+$form-select-box-shadow: none;
+$input-padding-y: 0.625rem;
+$input-padding-x: 1rem;
+$input-border-radius: 0.5rem;
+$input-placeholder-color: $gray-500;
+$form-label-margin-bottom: 0.5rem;
+$form-label-font-weight: $font-weight-medium;
+$form-label-font-size: $small-font-size;
+$form-label-color: $gray-700;
 
 // Card components
-$card-border-radius: 0.75rem;
 $card-border-width: 0;
+$card-border-radius: 0.75rem;
 $card-cap-bg: transparent;
-$card-spacer-y: 1.25rem;
+$card-spacer-y: 1.5rem;
 $card-spacer-x: 1.5rem;
-$card-box-shadow: 0 4px 20px rgba($black, 0.08);
-$card-bg: #E4EDE6;
-
+$card-bg: $white;
+$card-box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+$card-title-font-size: 1.25rem;
+$card-title-font-weight: $font-weight-semibold;
 
 // Button styling
-$btn-font-weight: 600;
-$btn-border-radius: 0.5rem;
-$btn-padding-y: 0.5rem;
-$btn-padding-x: 1.25rem;
+$btn-font-weight: $font-weight-medium;
+$btn-border-radius: 100rem;
+$btn-border-radius-lg: 100rem;
+$btn-border-radius-sm: 100rem;
+$btn-padding-y: 0.75rem;
+$btn-padding-x: 1.5rem;
+$btn-padding-y-sm: 0.5rem;
+$btn-padding-x-sm: 1rem;
+$btn-padding-y-lg: 1rem;
+$btn-padding-x-lg: 2rem;
 $btn-transition: all 0.2s ease-in-out;
+$btn-focus-width: 0.2rem;
+$btn-box-shadow: none;
+$btn-focus-box-shadow: 0 0 0 $btn-focus-width rgba($green-light, 0.25);
+
+// Modal styling
+$modal-content-border-width: 0;
+$modal-content-border-radius: 1rem;
+$modal-backdrop-opacity: 0.4;
+$modal-content-box-shadow-xs: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
+$modal-content-box-shadow-sm-up: 0 1rem 3rem rgba(0, 0, 0, 0.1);
+$modal-header-border-width: 0;
+$modal-footer-border-width: 0;
+$modal-header-padding-y: 1.5rem;
+$modal-header-padding-x: 1.5rem;
+$modal-inner-padding: 1.5rem;
+
+// Badges and other components
+$badge-font-size: 75%;
+$badge-font-weight: $font-weight-medium;
+$badge-padding-y: 0.35em;
+$badge-padding-x: 0.75em;
+$badge-border-radius: 100rem;
+
+// Alert styling
+$alert-padding-y: 1rem;
+$alert-padding-x: 1.25rem;
+$alert-margin-bottom: 1.5rem;
+$alert-border-radius: 0.75rem;
+$alert-border-width: 0;
+$alert-bg-level: -10;
+$alert-border-level: -9;
+$alert-color-level: 6;
+
+// Box shadows
+$box-shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.05);
+$box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05), 0 1px 3px rgba(0, 0, 0, 0.05);
+$box-shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.1), 0 2px 10px rgba(0, 0, 0, 0.05);
+
+// Toast
+$toast-border-radius: 0.75rem;
+$toast-border-width: 0;
+$toast-box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+$toast-padding-x: 1.25rem;
+$toast-padding-y: 0.75rem;
+$toast-header-border-width: 0;
 
 @import "node_modules/bootstrap/scss/bootstrap";
 
+// Custom utility classes
+.text-medium {
+  font-weight: $font-weight-medium;
+}
+
+.rounded-pill-start {
+  border-top-left-radius: 100rem !important;
+  border-bottom-left-radius: 100rem !important;
+}
+
+.rounded-pill-end {
+  border-top-right-radius: 100rem !important;
+  border-bottom-right-radius: 100rem !important;
+}
+
 .card-hover {
-    transition: transform 0.2s, box-shadow 0.2s !important;
+  transition: transform 0.2s ease-out, box-shadow 0.2s ease-out !important;
+  will-change: transform, box-shadow;
 }
 
 .card-hover:hover {
-    transform: translateY(-5px) !important;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1) !important;
+  transform: translateY(-4px) !important;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.08) !important;
 }
 
-.glass, .frost {
-    backdrop-filter: blur(1rem);
-    
-    border: 2px solid transparent !important;
-    border-radius: 13px;  
-
-    border-top-color: rgba($white, 0.5) !important;
-    border-left-color: rgba($white, 0.5) !important;
-    border-bottom-color: rgba($white, 0.3) !important;
-    border-right-color: rgba($white, 0.3) !important;
-    
-    box-shadow: 0 4px 20px rgba($black, 0.08);    
+.avatar {
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: $font-weight-medium;
+  background-color: $green-light;
+  color: $white;
 }
 
-.glass {
-    background-color: rgba($green-white, 0.2);
+.avatar-sm {
+  width: 2rem;
+  height: 2rem;
+  font-size: 0.875rem;
 }
 
-.frost {
-    background: linear-gradient(to right bottom, rgba($green-white, 0.4), rgba($green-white, 0.2));
+.avatar-lg {
+  width: 3.5rem;
+  height: 3.5rem;
+  font-size: 1.25rem;
+}
+
+.form-control:focus, 
+.form-select:focus,
+.form-check-input:focus { 
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.form-control:focus, 
+.form-select:focus,
+.form-check-input:focus {  
+  box-shadow: 0 0 0 0.25rem rgba($green-light, 0.25);
 }
