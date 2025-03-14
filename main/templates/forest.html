@@ -1,90 +1,115 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    {% load static %}
-    <title>Sustainable Campus</title>
-    <link rel="stylesheet" href="/static/css/forest.css" />
-    <link rel="stylesheet" href="{% static 'css/navbar.css' %}" />
-    <link href="https://cdn.lineicons.com/5.0/lineicons.css" rel="stylesheet" />
-    <link
-      rel="stylesheet"
-      href="{% static '/bootstrap/css/bootstrap.min.css' %}"
-    />
-    <style>
-      body {
-        display: flex;
-        flex-direction: column;
-        min-height: 100vh;
-      }
-    </style>
-  </head>
-  <body>
-    {% include 'navbar.html' %}  
+
+<head>
+  {% load static %}
+  <title>Sustainable Campus</title>
+  <link rel="stylesheet" href="/static/css/forest.css" />
+  <link rel="stylesheet" href="{% static 'css/navbar.css' %}" />
+  <link href="https://cdn.lineicons.com/5.0/lineicons.css" rel="stylesheet" />
+  <link rel="stylesheet" href="{% static '/bootstrap/css/bootstrap.min.css' %}" />
+  <style>
+    body {
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+  </style>
+</head>
+
+<body>
+  {% include 'navbar.html' %}
 
 
-      <div id="forest-view" style="position: relative; background: #48c2e0">
-        <div id="forest-background">
-          
-          <div id="forest-background-left"></div>
-          <div id="forest-background-right"></div>
-          
+  <div id="forest-view" style="position: relative; background: #48c2e0">
+    <div id="forest-background">
 
-          
-          <div id="forest-container">
-            <div id="forest-floor"></div>
-          </div>
-          <div id="forest-container">
-            <div id="forest-grid"></div>
-          </div>
-          
-        </div>
-        
-        
-        <!-- cell selected popup -->
-         <div class="forest-popup" id="occupied-popup">
-          <div id="close-occupied-popup" class="close-popup">
-            <a style="height: 100%; width: 100%; font-size: 40px;">
-              <i class="lni lni-xmark"></i>
-            </a>
-          </div>
-          <div style="width: 90%; margin: auto;">
-            <h3 id="plant-name"> plant name </h3>
-          <div id="selected-plant-image"></div>
-          <label>plant description etc</label>
-          </div>
-          
-        </div>
+      <div id="forest-background-left"></div>
+      <div id="forest-background-right"></div>
 
 
-         <div class="forest-popup" id="empty-popup">
-          <div id="close-empty-popup" class="close-popup">
-            <a style="height: 100%; width: 100%; font-size: 40px;">
-              <i class="lni lni-xmark"></i>
-            </a>
-          </div>
-          <div style="width: 90%; margin: auto;">
-            <h3>Select plant</h3>
-          </div>
-          
 
-         </div>
+      <div id="forest-container">
+        <div id="forest-floor"></div>
+      </div>
+      <div id="forest-container">
+        <div id="forest-grid"></div>
+      </div>
+
+    </div>
 
 
-        <!-- Buttons -->
+    <!-- cell selected popup -->
+    <div class="forest-popup" id="occupied-popup">
+      <div id="close-occupied-popup" class="close-popup">
+        <a style="height: 100%; width: 100%; font-size: 60px;">
+          <i class="lni lni-xmark"></i>
+        </a>
+      </div>
+      <div style="width: 90%; margin: auto;">
+        <h3 id="plant-name"> plant name </h3>
+        <div id="selected-plant-image"></div>
+        <label>plant description etc</label>
+      </div>
 
-          <div id="button-container" class="w-100 d-flex gap-2">
-            <button type="button" class="btn btn-primary btn-lg flex-fill">Plant a tree</button>
-            <button type="button" class="btn btn-primary btn-lg flex-fill">Customise</button>
-            <button type="button" class="btn btn-primary btn-lg flex-fill">...</button>
-          </div>
+    </div>
 
+
+    <div class="forest-popup" id="empty-popup">
+      <div id="close-empty-popup" class="close-popup">
+        <a style="height: 100%; width: 100%; font-size: 60px;">
+          <i class="lni lni-xmark"></i>
+        </a>
+      </div>
+      <div style="width: 90%; margin: auto;">
+        <h3>Select plant</h3>
+      </div>
+    </div>
+
+    <div class="button-popup" id="customise-popup">
+      <div id="close-customise-popup" class="close-popup">
+        <a style="height: 100%; width: 100%; font-size: 60px;">
+          <i class="lni lni-xmark"></i>
+        </a>
+      </div>
+      <h3>customise</h3>
+    </div>
+
+    <div class="button-popup" id="sell-popup">
+      <div id="close-sell-popup" class="close-popup">
+        <a style="height: 100%; width: 100%; font-size: 60px;">
+          <i class="lni lni-xmark"></i>
+        </a>
+      </div>
+      <h3>sell</h3>
+    </div>
+
+    <div id="recycling-popup">
+      <div id="close-recycling-popup" class="close-popup">
+        <a style="height: 100%; width: 100%; font-size: 60px;">
+        </a>
+      </div>
+      <h3>recycling</h3>
+    </div>
+
+    <!-- Buttons -->
+
+    <div id="button-container" class="w-100 d-flex gap-2">
+      <button type="button" id="customise-button" class="btn btn-primary btn-lg flex-fill">Customise</button>
+      <button type="button" id="sell-button" class="btn btn-primary btn-lg flex-fill">Sell land</button>
+      <div id="recycling-button">
         
       </div>
-    
+    </div>
 
-    <!-- Bootstrap JS -->
-    <script src="{% static '/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
-    <!-- forest js files -->
-    <script type="module" src="{% static '/js/forestDisplay.js' %}"></script>
-  </body>
+
+  </div>
+
+
+  <!-- Bootstrap JS -->
+  <script src="{% static '/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+  <!-- forest js files -->
+  <script type="module" src="{% static '/js/forestDisplay.js' %}"></script>
+</body>
+
 </html>
