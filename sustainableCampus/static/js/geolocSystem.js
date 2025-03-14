@@ -23,7 +23,7 @@ useGeographic(); // forces geographic coordinates
 // the center and zoom will be changed when location tracking is enabled to focus on the user's position
 const view = new View({
     center: [0, 0],
-    zoom: 16,
+    zoom: 17,
 });
 
 const rasterLayer = new TileLayer({
@@ -128,7 +128,7 @@ geolocation.on('change:position', function () {
 function isMarkerInRange(markerPos, playerPos){
     const distance = Math.sqrt((markerPos[0] - playerPos[0])**2 + (markerPos[1] - playerPos[1])**2);
     console.log("distance: " + distance);
-    if (distance <= 0.005) {
+    if (distance <= 0.001) {
         return true;
     } else {
         return false;
@@ -283,10 +283,10 @@ const selectedMarkerStyle = new Style({
     image: new CircleStyle({
         radius: 6,
         fill: new Fill({
-            color: '#FFFFFF',
+            color: '#001000',
         }),
         stroke: new Stroke({
-            color: '#FF00FF',
+            color: '#00FAAA',
             width: 3,
         }),
     })
