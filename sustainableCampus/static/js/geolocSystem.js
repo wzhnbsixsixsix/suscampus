@@ -51,7 +51,9 @@ const markerPopups = new Overlay({
 
 // handles closing the markerPopups
 popCloser.onclick = function () {
-    markerPopups.setPosition(undefined); // removes popup
+    popContainer.style.animation = "popup-exit 0.5s";
+    setTimeout(function () {markerPopups.setPosition(undefined);}, 480);
+     // removes popup
     popCloser.blur();
     return false; // otherwise returns a href?
 };
@@ -333,14 +335,14 @@ clickSelection.on('select', function (e) {
         if (interactable) {
             console.log("Selected interactable marker.");
             popContent.innerHTML = '<h3><code>' + markerDetails.name +'</code></h3> <p>Selected Marker at: </p><code>' + markerPos + '</code>' + '<button id="popup-button">Collect</button>';
-            markerPopups.setPosition(markerPos);
             const popupButton = document.getElementById("popup-button");
             popupButton.addEventListener("click", (e) => {console.log(e)});
         } else {
             console.log("Selected un-interactable marker.");
             popContent.innerHTML = '<h3><code>' + markerDetails.name +'</code></h3><p>Selected Marker at: </p><code>' + markerPos + '</code>';
-            markerPopups.setPosition(markerPos);
         }
+        markerPopups.setPosition(markerPos);
+        popContainer.style.animation = "popup-enter 0.5s";
     }
 });
 

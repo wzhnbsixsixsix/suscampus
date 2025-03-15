@@ -84,11 +84,11 @@ function openPopup(popup) {
     }
     //open popup
     popup.style.display = "block";
-    popup.style.animation = "popup-enter 0.5s"
+    popup.style.animation = "popup-enter 0.5s";
 }
 
 function closePopup(popup) {
-    popup.style.animation = "popup-exit 0.5s"
+    popup.style.animation = "popup-exit 0.5s";
     setTimeout(function () { popup.style.display = "none"; }, 480);
 }
 

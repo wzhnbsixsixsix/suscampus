@@ -1,50 +1,20 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    {% load static %}
-    <title>Sustainable Campus</title>
-    <link rel="stylesheet" href="/static/css/map.css" />
-    <link href="https://cdn.lineicons.com/5.0/lineicons.css" rel="stylesheet" />
-    <link
-      href="{% static '/bootstrap/css/bootstrap.min.css' %}"
-      rel="stylesheet"
-    />
-    <link rel="stylesheet" href="{% static '/js/node_modules/ol/ol.css' %}" />
-    <style>
-      body {
-        display: flex;
-        flex-direction: column;
-        min-height: 100vh;
-      }
-      .map {
-        position: relative;
-        width: 100vw;
-        height: 85vh;
-      }
-      .ol-popup {
-          position: absolute;
-          background-color: #caffaa;
-          box-shadow: 0 1px 4px rgba(0,0,0,0.2);
-          padding: 15px;
-          border-radius: 10px;
-          border: 1px solid #cccccc;
-          min-width: 200px;
-      }
-      .ol-popup-closer {
-          text-decoration: none;
-          position: absolute;
-          top: 2px;
-          right: 8px;
-      }
-      .ol-popup-closer:after {
-          content: "✖";
-      }
-    </style>
-  </head>
-  <body> 
-    {% include 'navbar.html' %}  
 
-    <script type="importmap">
+<head>
+  {% load static %}
+  <title>Sustainable Campus</title>
+  <link rel="stylesheet" href="/static/css/map.css" />
+  <link href="https://cdn.lineicons.com/5.0/lineicons.css" rel="stylesheet" />
+  <link rel="stylesheet" href="/static/css/map.css" />
+  <link href="{% static '/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet" />
+  <link rel="stylesheet" href="{% static '/js/node_modules/ol/ol.css' %}" />
+</head>
+
+<body>
+  {% include 'navbar.html' %}
+
+  <script type="importmap">
       {
         "imports": {
           "rbush": "/static/js/node_modules/rbush/index.js",
@@ -61,21 +31,22 @@
       }
     </script>
 
-    <div class="container-fluid flex-grow-1 d-flex flex-column mb-2">
+  <div class="container-fluid flex-grow-1 d-flex flex-column mb-2">
 
-      <div id = "map" class = "map">
-          <!-- Map content goes here -->
-      </div>
-      <div id="marker-popup" class="ol-popup">
-        <a href="#" id="marker-popup-closer" class="ol-popup-closer"></a>
-        <div id="marker-popup-content"></div>
-      </div>
-
-      <div id="marker-data" style:"display:none" data-marker={{data}}>{{data}}</div>
-      <!-- Geolocation System -->>
-      <script type="module" src="{% static '/js/geolocSystem.js' %}"></script>
-      <!-- Bootstrap JS -->
-      <script src="{% static '/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+    <div id="map" class="map">
+      <!-- Map content goes here -->
     </div>
-  </body>
+    <div id="marker-popup" class="ol-popup">
+      <a href="#" id="marker-popup-closer" class="ol-popup-closer"></a>
+      <div id="marker-popup-content"></div>
+    </div>
+
+    <div id="marker-data" style:"display:none" data-marker={{data}}>{{data}}</div>
+    <!-- Geolocation System -->>
+    <script type="module" src="{% static '/js/geolocSystem.js' %}"></script>
+    <!-- Bootstrap JS -->
+    <script src="{% static '/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+  </div>
+</body>
+
 </html>
