@@ -7,12 +7,12 @@ from django.core.mail import send_mail
 from django.db import transaction
 from django.shortcuts import render, redirect
 from django.urls import reverse
-
 from shop.models import UserBalance
 from leaderboards.models import TreeScore
-
 from .forms import ProfileImageForm, SignUpForm, LoginForm, ChangeUsernameForm
 from .models import Profile, CustomUser
+from dailyQuiz.models import QuizDailyStreak
+
 
 
 def signup_page(request):
@@ -71,6 +71,9 @@ def email_verification(request, token: str):
         # Creates a score counter for the tree game for player
         TreeScore.objects.create(user=user)
 
+
+        QuizDailyStreak.objects.create(user=user)
+  
         messages.success(request, "Your account has now been verified, you can now log in.")
     else:
         messages.error(request, "This account has already been verified.")
