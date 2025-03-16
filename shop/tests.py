@@ -66,7 +66,7 @@ class SetUpTest(TestCase):
 
 class ShopTest(SetUpTest):
     # Verifies a user can access the page, and it displays the correct content, if logged in
-    def test_can_access_page(self):
+    def test_user_can_access_page(self):
         # Logins as test player, and tests if they can access the shop page
         self.client.login(username='player1', password='testpassword12345')
         response = self.client.get(self.shop_url)
