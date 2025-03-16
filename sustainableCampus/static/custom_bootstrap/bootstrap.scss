@@ -99,13 +99,14 @@ $form-label-font-size: $small-font-size;
 $form-label-color: $gray-700;
 
 // Card components
-$card-border-width: 0;
+$card-border-width: 0.1rem;
 $card-border-radius: 0.75rem;
-$card-cap-bg: transparent;
+$card-border-color: $gray-300;
+//$card-cap-bg: transparent;
 $card-spacer-y: 1.5rem;
 $card-spacer-x: 1.5rem;
 $card-bg: $white;
-$card-box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+//$card-box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
 $card-title-font-size: 1.25rem;
 $card-title-font-weight: $font-weight-semibold;
 

@@ -73,7 +73,7 @@
 
     <!-- Filter Form (Collapsible) -->
     <div class="collapse mb-4" id="filterCollapse">
-      <div class="card card-body border-0 shadow-sm rounded-3">
+      <div class="card card-body">
         <form method="get" action="{% url 'announcements:announcement_list' %}" class="row g-3">
           <div class="col-md-3">
             <label for="author" class="form-label">Filter by Author</label>
@@ -106,7 +106,7 @@
     <div class="row g-4">
       {% for announcement in announcements %}
       <div class="col-12 col-md-6 col-lg-4">
-        <article class="card card-hover h-100 border-0 shadow-sm rounded-3 overflow-hidden">
+        <article class="card card-hover h-100 overflow-hidden">
           <!-- Card Image Container -->
           <figure class="card-img-wrapper">
             {% if announcement.image %}
