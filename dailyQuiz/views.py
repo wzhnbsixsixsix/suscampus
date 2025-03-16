@@ -141,7 +141,10 @@ def submit_quiz(request):
         quiz_attempt.is_submitted = True
         quiz_attempt.save()
 
-        streak = QuizDailyStreak.objects.get(user=request.user)
+    
+        streak, created = QuizDailyStreak.objects.get_or_create(user=request.user)
+       
+
 
         # If score is 8 or more, increase streak by 1. Else reset streak
         if score >= 8:
