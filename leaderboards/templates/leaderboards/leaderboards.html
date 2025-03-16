@@ -7,15 +7,7 @@
     <title>Leaderboard | Exeter Sustainable Game</title>
     <link href="{% static '/custom_bootstrap/bootstrap.css' %}" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
-    <style> 
-        .leaderboard-row {
-            transition: background-color 0.2s ease;
-        }
-        
-        .leaderboard-row:hover {
-            background-color: rgba(147, 187, 171, 0.05);
-        }
-        
+    <style>  
         .rank-badge {
             display: inline-flex;
             align-items: center;
@@ -24,7 +16,7 @@
             height: 32px;
             border-radius: 50%;
             font-weight: 600;
-            font-size: 0.875rem;
+            font-size: 1rem;
         }
         
         .rank-1 {
@@ -40,12 +32,7 @@
         .rank-3 {
             background-color: rgba(173, 103, 77, 0.15);
             color: #ad674d;
-        }
-        
-        .current-user-row {
-            background-color: rgba(147, 187, 171, 0.1);
-            font-weight: 500;
-        }
+        } 
         
         .score-badge {
             display: inline-flex;
@@ -54,20 +41,15 @@
             padding: 0.35em 0.75em;
             border-radius: 100rem;
             font-weight: 500;
-            font-size: 0.875rem;
-            background-color: rgba(147, 187, 171, 0.15);
+            font-size: 1rem;
+            background-color: var(--bs-bg-primary);
             color: #44897a;
         }
         
         .tree-icon {
             color: #19a757;
             margin-right: 0.5rem;
-        }
-        
-        .username-cell {
-            display: flex;
-            align-items: center;
-        }
+        } 
         
         .avatar {
             width: 2rem;
@@ -92,7 +74,7 @@
                 <h1 class="h3 mb-0">Forest Leaderboard</h1>
                 <p class="text-secondary mb-0">Compete with others to grow the most trees</p>
             </div>
-            <div class="badge rounded-pill bg-primary py-2 px-3">
+            <div class="badge rounded-pill bg-primary fs-6 py-2 px-3">
                 <span class="text-medium">Your Rank: #{{ user_rank }}</span>
             </div>
         </div>
@@ -109,8 +91,8 @@
                     </thead>
                     <tbody>
                         {% for player in top_players %}
-                            <tr class="leaderboard-row {% if player.user_id == user_score.user_id %}current-user-row{% endif %}">
-                                <td class="py-3">
+                            <tr>
+                                <td class="py-3 align-middle">
                                     {% if forloop.counter == 1 %}
                                         <div class="rank-badge rank-1">1</div>
                                     {% elif forloop.counter == 2 %}
@@ -121,8 +103,8 @@
                                         <div class="text-secondary ms-3">{{ forloop.counter }}</div>
                                     {% endif %}
                                 </td>
-                                <td class="py-3">
-                                    <div class="username-cell">
+                                <td class="py-3 ">
+                                    <div class="d-flex align-items-center">
                                         <div class="avatar">
                                             <img src="
                                                 {% if user.is_authenticated and user.profile.image %}
@@ -147,17 +129,17 @@
                         {% endfor %}
                         
                         {% if user_score.score < top_players.9.score %}
-                            <tr class="current-user-row leaderboard-row">
+                            <tr>
                                 <td colspan="3" class="text-center p-3">
                                     <i class="bi bi-three-dots"></i>
                                 </td>
                             </tr>
-                            <tr class="current-user-row leaderboard-row">
-                                <td class="py-3">
+                            <tr>
+                                <td class="py-3 align-middle">
                                     <div class="text-secondary ms-3">{{ user_rank }}</div>
                                 </td>
                                 <td class="py-3">
-                                    <div class="username-cell">
+                                    <div class="d-flex align-items-center">
                                         <div class="avatar">
                                             <img src="
                                                 {% if user_score.user.profile.image %}
