@@ -3,6 +3,7 @@
 
 <head>
   {% load static %}
+  <script>const media_url = "{% get_media_prefix %}";</script>
   <title>Sustainable Campus</title>
   <link rel="stylesheet" href="/static/css/forest.css" />
   <link rel="stylesheet" href="{% static 'css/navbar.css' %}" />
@@ -20,14 +21,11 @@
 <body>
   {% include 'navbar.html' %}
 
-
   <div id="forest-view" style="position: relative; background: #48c2e0">
     <div id="forest-background">
 
       <div id="forest-background-left"></div>
       <div id="forest-background-right"></div>
-
-
 
       <div id="forest-container">
         <div id="forest-floor"></div>
@@ -101,9 +99,8 @@
         
       </div>
     </div>
-
-
   </div>
+
 
 
   <!-- Bootstrap JS -->

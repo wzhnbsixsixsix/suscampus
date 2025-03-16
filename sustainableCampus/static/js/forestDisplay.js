@@ -1,3 +1,5 @@
+
+
 const forestView = document.getElementById("forest-grid");
 
 function onCellClick(cell) {
@@ -106,12 +108,24 @@ function generateGrid(rows, cols) {
         console.log("Adding event listener for click");
         addedCell.addEventListener("click", function () { onCellClick(addedCell); })
         //if cell contains plant
-        // set cell to plant details
-        // else
-        addedCell.plantid = i
-        addedCell.plantGrowthStage = 0
-        addedCell.plantRequirement = 0 //0 if no requirement, 1 for fertiliser, etc
+        if (addedCell.id != 0) {
+            addedCell.plantid = i;
+            addedCell.plantGrowthStage = 1;
+            addedCell.plantRequirement = 0;
+            addedCell.plantImage = media_url + "forest_assets/id" + addedCell.plantid + "_" + addedCell.plantGrowthStage + ".png";
+            console.log(addedCell.plantImage);
+            let plantImage = document.createElement("div");
+            const addedPlantImage = addedCell.appendChild(plantImage);
+            addedPlantImage.style = "background-image: url('" + addedCell.plantImage + "'); color: red; height: 100%; width: 100%; top: 0; left: 0; z-index: 20; position:relative;";
 
+            //TODO create html to be image
+        }
+        else {
+            addedCell.plantid = 0
+            addedCell.plantGrowthStage = 0
+            addedCell.plantRequirement = 0 //0 if no requirement, 1 for fertiliser, etc
+            addedCell.image = "empty"
+        }
     }
 }
 
