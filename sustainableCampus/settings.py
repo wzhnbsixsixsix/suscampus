@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'shop',
     'suggestions',
     'leaderboards',
+    'dailyQuiz',
 ]
 
 AUTH_USER_MODEL = 'accounts.CustomUser'
