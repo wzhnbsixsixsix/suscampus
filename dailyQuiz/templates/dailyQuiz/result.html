@@ -13,25 +13,25 @@
         box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     }
     .result-card.correct {
-        border-left: 5px solid #28a745; /* Green border for correct answers */
+        border-left: 5px solid #93bbab; /* Green border for correct answers */
     }
     .result-card.incorrect {
-        border-left: 5px solid #dc3545; /* Red border for incorrect answers */
+        border-left: 5px solid #750000; /* Red border for incorrect answers */
     }
     .final-score {
         font-size: 1.5rem;
         font-weight: bold;
-        color: #28a745; /* Green color for the final score */
+        color: #93bbab; /* Green color for the final score */
     }
     .streak-info {
         font-size: 1.2rem;
         color: #6c757d; /* Gray color for streak info */
     }
     .streak-reset {
-        color: #dc3545; /* Red color for streak reset message */
+        color: #7c0000; /* Red color for streak reset message */
     }
     .btn-return-home {
-        background-color: #76c789;
+        background-color: #93bbab;
         color: white;
         padding: 0.75rem 1.5rem;
         border-radius: 5px;
@@ -40,7 +40,7 @@
         margin-top: 1.5rem;
     }
     .btn-return-home:hover {
-        background-color: #218838;
+        background-color: #759689;
         text-decoration: none;
     }
 </style>
@@ -56,9 +56,9 @@
             <p class="mb-1"><strong>Question:</strong> {{ result.question.question }}</p>
             <p class="mb-0">
                 {% if result.correct %}
-                    <span class="text-success">✅ Correct</span>
+                    <span class="text-success"style="font-size: 24px">✅ Correct</span>
                 {% else %}
-                    <span class="text-danger">❌ Incorrect</span>
+                    <span class="text-danger"style="font-size: 24px">❌ Incorrect</span>
                 {% endif %}
             </p>
         </div>
