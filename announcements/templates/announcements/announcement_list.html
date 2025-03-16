@@ -73,33 +73,48 @@
 
     <!-- Filter Form (Collapsible) -->
     <div class="collapse mb-4" id="filterCollapse">
-      <div class="card card-body">
-        <form method="get" action="{% url 'announcements:announcement_list' %}" class="row g-3">
-          <div class="col-md-3">
-            <label for="author" class="form-label">Filter by Author</label>
-            <input type="text" name="author" id="author" value="{{ request.GET.author }}" class="form-control">
-          </div>
-          
-          <div class="col-md-3">
-            <label for="role" class="form-label">Filter by Role</label>
-            <select name="role" id="role" class="form-select">
-              <option value="">All Roles</option>
-              <option value="GameKeeper" {% if request.GET.role == "Gamekeeper" %}selected{% endif %}>Gamekeeper</option>
-              <option value="Developer" {% if request.GET.role == "Developer" %}selected{% endif %}>Developer</option>
-            </select>
-          </div>
-          
-          <div class="col-md-3">
-            <label for="date" class="form-label">Filter by Date</label>
-            <input type="date" name="date" id="date" value="{{ request.GET.date }}" class="form-control">
-          </div>
-          
-          <div class="col-md-3 d-flex align-items-end">
-            <button type="submit" class="btn btn-primary me-2">Apply</button>
-            <a href="{% url 'announcements:announcement_list' %}" class="btn btn-secondary">Clear</a>
-          </div>
+         <form method="get" action="{% url 'announcements:announcement_list' %}" class="mb-4 p-4 bg-light border rounded">
+            <div class="row g-3 align-items-end">
+                <!-- Filter by Author -->
+                <div class="col-md-3">
+                    <label for="author" class="form-label">Filter by Author:</label>
+                    <input type="text" name="author" id="author" class="form-control" value="{{ request.GET.author }}"
+                           placeholder="Enter author name">
+                </div>
+
+                <!-- Filter by Role -->
+                <div class="col-md-2">
+                    <label for="role" class="form-label">Filter by Role:</label>
+                    <select name="role" id="role" class="form-select">
+                        <option value="">All Roles</option>
+                        <option value="GameKeeper" {% if request.GET.role == "Gamekeeper" %}selected{% endif %}>Gamekeeper</option>
+                        <option value="Developer" {% if request.GET.role == "Developer" %}selected{% endif %}>Developer</option>
+                    </select>
+                </div>
+
+                <!-- Filter by Date -->
+                <div class="col-md-2">
+                    <label for="date" class="form-label">Filter by Date:</label>
+                    <input type="date" name="date" id="date" class="form-control" value="{{ request.GET.date }}">
+                </div>
+
+                <!-- Sort by Oldest/Newest -->
+                <div class="col-md-2">
+                    <label for="sort" class="form-label">Sort by:</label>
+                    <select name="sort" id="sort" class="form-select">
+                        <option value="">Default</option>
+                        <option value="newest" {% if request.GET.sort == "newest" %}selected{% endif %}>Newest First</option>
+                        <option value="oldest" {% if request.GET.sort == "oldest" %}selected{% endif %}>Oldest First</option>
+                    </select>
+                </div>
+
+                <!-- Filter and Clear Buttons -->
+                <div class="col-md-3 d-flex align-items-end">
+                    <button type="submit" class="btn btn-primary me-2">Filter</button>
+                    <a href="{% url 'announcements:announcement_list' %}" class="btn btn-secondary">Clear Filters</a>
+                </div>
+            </div>
         </form>
-      </div>
     </div>
 
     <!-- Announcements Grid -->

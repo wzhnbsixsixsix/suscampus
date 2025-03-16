@@ -20,7 +20,8 @@ def announcement_list(request):
     author = request.GET.get('author')
     role = request.GET.get('role')
     date = request.GET.get('date')
-
+    sort = request.GET.get('sort')
+    
     # Apply filters
     if author:
         announcements = announcements.filter(author__username__icontains=author)
@@ -29,6 +30,11 @@ def announcement_list(request):
     if date:
         announcements = announcements.filter(created_at__date=date)
     
+    # Apply sorting
+    if sort == "newest":
+        announcements = announcements.order_by('-created_at')  # Newest first
+    elif sort == "oldest":
+        announcements = announcements.order_by('created_at')   # Oldest first
 
     context={'announcements': announcements, 'user_role': request.user.role}
     return render(request, 'announcements/announcement_list.html', context)
@@ -186,4 +192,3 @@ def dislike_announcement(request, announcement_id):
         announcement.likes.remove(user)  # Remove like if the user had liked it
 
     return redirect('/announcements/', announcement_id=announcement.id)
-
