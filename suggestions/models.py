@@ -2,6 +2,7 @@ from django.db import models
 from django.conf import settings
 from django.db import models
 class Suggestion(models.Model):
+    """Represents suggestions made by users"""
     CATEGORY_CHOICES = [
         ('location', 'Add a location'),
         ('bug', 'Bug report'),

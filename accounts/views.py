@@ -1,87 +1,94 @@
-import os
-from datetime import time
+from django.conf import settings
 from django.contrib import messages
+from django.contrib.auth import authenticate, login, update_session_auth_hash, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import PasswordChangeForm
-from django.contrib.auth import authenticate, login, update_session_auth_hash
-from django.db import transaction
-
-from .forms import SignUpForm, LoginForm, ChangeUsernameForm
-from django.contrib.auth import logout
 from django.core.mail import send_mail
-from .models import CustomUser
+from django.db import transaction
+from django.shortcuts import render, redirect
+from django.urls import reverse
 from shop.models import UserBalance
 from leaderboards.models import TreeScore
-from django.conf import settings
-from django.shortcuts import render, redirect
-from .models import Profile
-from .forms import ProfileImageForm
+from .forms import ProfileImageForm, SignUpForm, LoginForm, ChangeUsernameForm
+from .models import Profile, CustomUser
 from dailyQuiz.models import QuizDailyStreak
 
 
-# Handles data submitted from signup page's form
+
 def signup_page(request):
+    """Allows new users to create accounts. This view handles user registration through 
+       the sign up page's form."""
+    if request.user.is_authenticated:
+        return redirect('main:map')
+
     form = SignUpForm()
 
     # If a form is submitted, the following happens
     if request.method == 'POST':
         form = SignUpForm(request.POST)
         if form.is_valid():
-            # Checks if given email is unique before saving new user data
-            if CustomUser.objects.filter(email=form.cleaned_data["email"]).exists():
-                form.add_error("email", "Email is already in use.")
-            # Saves new user data, and sends email verification
-            else:
-                user = form.save()
-                send_email_verification(user)
-                return redirect('accounts:login')
+            user = form.save()
+            send_email_verification(request, user)
+            messages.success(request, "You have successfully created a new account, please check your email for a verification link!")
+            return redirect('accounts:login')
+    
 
     context = {'form': form}
     return render(request, 'accounts/signup.html', context)
 
 
-# Sends an verification email with a link to the new user
-def send_email_verification(user):
+
+def send_email_verification(request, user: CustomUser) -> None:
+    """Sends an verification email link to the new user"""
     subject = "Email Verification for Sustainable Campus"
-    link = f"http://127.0.0.1:8000/accounts/email_verification/{user.verification_token}"
+    link = request.build_absolute_uri(reverse('accounts:email_verification', args=[user.verification_token]))
     message = f"Hello {user.first_name}, \n\nPlease verify your email through the following link below:\n{link}\n\nThank You!"
     sender = settings.EMAIL_HOST_USER  # Sender of email is stored in settings.py
     receiver = [user.email]
-
+    
     send_mail(subject, message, sender, receiver)
 
 
-# Determines what happens when the verification link is clicked
-def email_verification(request, token):
-    # Retrieves user data using given verification token, returns error if invalid
+
+def email_verification(request, token: str):
+    """Handles email verification when the verification link is clicked for a new account"""
+
+    # Retrieves user data using given verification token, returns error message if invalid
     try:
         user = CustomUser.objects.get(verification_token=token)
     except CustomUser.DoesNotExist:
         messages.error(request, "Invalid or expired verification token")
         return redirect('accounts:signup')
 
-    # Verifies user if they are unverified, and creates user balance for account
+    # Verifies the user if the token matches an account
     if user.verified == False:
         user.verified = True
         user.save()
 
         # Creates a user balance for player
-        UserBalance.objects.create(user_id=user, currency=100)
+        UserBalance.objects.create(user_id=user)
 
         # Creates a score counter for the tree game for player
         TreeScore.objects.create(user=user)
 
-        QuizDailyStreak.objects.create(user=user)
 
-        messages.success(request, "User has now been verified, you can now log in.")
+        QuizDailyStreak.objects.create(user=user)
+  
+        messages.success(request, "Your account has now been verified, you can now log in.")
     else:
-        messages.error(request, "User is already verified")
+        messages.error(request, "This account has already been verified.")
 
     return redirect('accounts:login')
 
 
-# Handles data submitted by login page's form
+
 def login_page(request):
+    """Allows users to login into the website. Handles user login through the login page's form."""
+
+    # Redirect users who have already logged in
+    if request.user.is_authenticated:
+        return redirect('main:map')  
+
     form = LoginForm(request)
 
     if request.method == 'POST':
@@ -97,13 +104,18 @@ def login_page(request):
                     login(request, user)
                     return redirect('main:map')
                 else:
-                    form.add_error(None, 'Invalid username or password')
+                    messages.error(request, 'Your account has not been verified.')
             else:
-                form.add_error(None, 'Invalid username or password')
-    return render(request, 'accounts/login.html', {'form': form})
+                messages.error(request, 'Invalid username or password')
+        else:
+            messages.error(request, 'Invalid username or password')
+
+    context = {'form': form}
+    return render(request, 'accounts/login.html', context)
 
 
 def logout_view(request):
+    """Used for logging users out"""
     logout(request)
     messages.success(request, "Log out successfully")
     return redirect("accounts:login")
@@ -111,6 +123,7 @@ def logout_view(request):
 
 @login_required
 def profile_page(request):
+    """Displays info about a users profile"""
     # Ensure user has a profile
     if not hasattr(request.user, 'profile'):
         Profile.objects.create(user=request.user)

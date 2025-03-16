@@ -214,3 +214,73 @@ class AnnouncementViewTests(TestCase):
         
         self.assertEqual(response.status_code, 302)
         self.assertRedirects(response, '/announcements/')
+
+    def test_user_can_like_announcement(self):
+        """Verififies a player and game keeper can like an announcement"""
+        self.assertEqual(self.announcement.likes.count(), 0) # Verifies annoucment has no likes before test
+
+        self.client.login(username="player", password="TestPassword12345")
+        self.client.get(reverse('announcements:like_announcement', args=[self.announcement.id]))
+        self.client.logout()
+
+        self.client.login(username="gamekeeper", password="TestPassword12345")
+        response = self.client.get(reverse('announcements:like_announcement', args=[self.announcement.id]))
+
+        self.announcement.refresh_from_db()
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(self.announcement.likes.count(), 2)
+
+    def test_user_can_unlike_announcement(self):
+        """Verififies a user can unlike an announcement"""
+        self.client.login(username="player", password="TestPassword12345")
+        self.client.get(reverse('announcements:like_announcement', args=[self.announcement.id]))
+        response = self.client.get(reverse('announcements:like_announcement', args=[self.announcement.id]))
+
+        self.announcement.refresh_from_db()
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(self.announcement.likes.count(), 0)
+
+    def test_user_can_only_like_or_dislike_an_announcement_not_both(self):
+        """Verififies a user can not test"""
+        self.client.login(username="player", password="TestPassword12345")
+        self.client.get(reverse('announcements:like_announcement', args=[self.announcement.id]))
+        response = self.client.get(reverse('announcements:dislike_announcement', args=[self.announcement.id]))
+
+        self.announcement.refresh_from_db()
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(self.announcement.likes.count(), 0)
+        self.assertEqual(self.announcement.dislikes.count(), 1)
+
+        response = self.client.get(reverse('announcements:like_announcement', args=[self.announcement.id]))
+
+        self.announcement.refresh_from_db()
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(self.announcement.likes.count(), 1)
+        self.assertEqual(self.announcement.dislikes.count(), 0)
+
+    def test_user_can_dislike_announcement(self):
+        """Verififies a player and game keeper can like an announcement"""
+        self.assertEqual(self.announcement.dislikes.count(), 0) # Verifies annoucment has no dislikes before test
+
+        self.client.login(username="player", password="TestPassword12345")
+        self.client.get(reverse('announcements:dislike_announcement', args=[self.announcement.id]))
+        self.client.logout()
+
+        self.client.login(username="gamekeeper", password="TestPassword12345")
+        response = self.client.get(reverse('announcements:dislike_announcement', args=[self.announcement.id]))
+
+        self.announcement.refresh_from_db()
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(self.announcement.dislikes.count(), 2)
+
+    def test_user_can_undislike_announcement(self):
+        """Verififies a user can undislike an announcement"""
+        self.client.login(username="player", password="TestPassword12345")
+        self.client.get(reverse('announcements:dislike_announcement', args=[self.announcement.id]))
+        response = self.client.get(reverse('announcements:dislike_announcement', args=[self.announcement.id]))
+
+        self.announcement.refresh_from_db()
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(self.announcement.dislikes.count(), 0)
+
+    
