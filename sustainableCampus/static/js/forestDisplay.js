@@ -1,5 +1,3 @@
-
-
 const forestView = document.getElementById("forest-grid");
 
 function onCellClick(cell) {
@@ -112,13 +110,14 @@ function generateGrid(rows, cols) {
             addedCell.plantid = i;
             addedCell.plantGrowthStage = 1;
             addedCell.plantRequirement = 0;
-            addedCell.plantImage = media_url + "forest_assets/id" + addedCell.plantid + "_" + addedCell.plantGrowthStage + ".png";
-            console.log(addedCell.plantImage);
-            let plantImage = document.createElement("div");
-            const addedPlantImage = addedCell.appendChild(plantImage);
-            addedPlantImage.style = "background-image: url('" + addedCell.plantImage + "'); color: red; height: 100%; width: 100%; top: 0; left: 0; z-index: 20; position:relative;";
-
-            //TODO create html to be image
+            addedCell.plantImagePath = media_url +"forest_assets/id" + addedCell.plantid + "_" + addedCell.plantGrowthStage + ".png";
+            console.log("image path: " + addedCell.plantImagePath);
+            const plantImage = document.createElement("img");
+            plantImage.src = addedCell.plantImagePath;
+            const addedPlantImage = document.body.appendChild(plantImage);
+            const cellRect = addedCell.getBoundingClientRect();
+            console.log("bounding rect: " + cellRect.top + "   " + cellRect.left);
+            addedPlantImage.style = "position: absolute; height: 96px; width: 96px; top: calc(" + cellRect.top + "px - 5vh); left: calc(" + cellRect.left + "px + 1.65vw)";
         }
         else {
             addedCell.plantid = 0
