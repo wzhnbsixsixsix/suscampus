@@ -34,6 +34,9 @@
         <li class="nav-item {% if '/forest/' in request.path %}active{% endif %}">
           <a href="/forest/" class="nav-link px-3 rounded-pill">My Forest</a>
         </li>
+        <li class="nav-item {% if '/daily-quiz/' in request.path %}active{% endif %}">
+          <a href="/daily-quiz/" class="nav-link px-3 rounded-pill">Daily Quiz</a>
+        </li>
         <li class="nav-item {% if '/shop/' in request.path %}active{% endif %}">
           <a href="/shop/" class="nav-link px-3 rounded-pill">Shop</a>
         </li>
@@ -148,6 +151,11 @@
         <li class="mb-2 {% if '/forest/' in request.path %}active{% endif %}">
           <a href="/forest/" class="nav-link rounded-pill py-2 px-3 d-block">
             My Forest
+          </a>
+        </li>
+        <li class="mb-2 {% if '/daily-quiz/' in request.path %}active{% endif %}">
+          <a href="/daily-quiz/" class="nav-link rounded-pill py-2 px-3 d-block">
+            Daily Quiz 
           </a>
         </li>
         <li class="mb-2 {% if '/shop/' in request.path %}active{% endif %}">
