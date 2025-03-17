@@ -1,4 +1,3 @@
-const forestView = document.getElementById("forest-grid");
 
 function onCellClick(cell) {
     console.log(cell.id + " clicked");
@@ -16,6 +15,8 @@ function onCellClick(cell) {
         openPopup(occupiedPopup);
         //update popup details
         document.getElementById("plant-name").innerText = cell.id; //getPlantName(cell.plantid);
+        document.getElementById("selected-plant-image").src = cell.plantImagePath;
+        document.getElementById("selected-plant-description").innerText = "Growth stage: " + cell.plantGrowthStage
     }
 }
 
@@ -94,37 +95,52 @@ function closePopup(popup) {
 
 // generate user's forest grid 
 function generateGrid(rows, cols) {
-    forestView.style.setProperty('--forest-rows', rows);
-    forestView.style.setProperty('--forest-cols', cols);
+    const gridContainer = document.getElementById("forest-grid");
+    gridContainer.style.setProperty('--forest-rows', rows);
+    gridContainer.style.setProperty('--forest-cols', cols);
+    let forestContainer = document.getElementById("forest-images");
     // iterates for each cell that will be in the grid
     for (let i = 0; i < (rows * cols); i++) {
         let gridCell = document.createElement("div");
         console.log("Creating forest-cell-" + i);
-        const addedCell = forestView.appendChild(gridCell);
+        const addedCell = gridContainer.appendChild(gridCell);
         addedCell.className = "grid-item";
         addedCell.id = "forest-cell-" + i;
         console.log("Adding event listener for click");
         addedCell.addEventListener("click", function () { onCellClick(addedCell); })
+
+        //creating each image
+        const plantImage = document.createElement("img");
+        
+        let addedPlantImage = forestContainer.appendChild(plantImage);
+
         //if cell contains plant
-        if (addedCell.id != 0) {
-            addedCell.plantid = i;
+        if (i < 7) {
+            addedCell.plantId = i;
             addedCell.plantGrowthStage = 1;
             addedCell.plantRequirement = 0;
-            addedCell.plantImagePath = media_url +"forest_assets/id" + addedCell.plantid + "_" + addedCell.plantGrowthStage + ".png";
-            console.log("image path: " + addedCell.plantImagePath);
-            const plantImage = document.createElement("img");
-            plantImage.src = addedCell.plantImagePath;
-            const addedPlantImage = document.body.appendChild(plantImage);
-            const cellRect = addedCell.getBoundingClientRect();
-            console.log("bounding rect: " + cellRect.top + "   " + cellRect.left);
-            addedPlantImage.style = "position: absolute; height: 96px; width: 96px; top: calc(" + cellRect.top + "px - 5vh); left: calc(" + cellRect.left + "px + 1.65vw)";
+            //check if plant is first stage
+            if (addedCell.plantGrowthStage == 0) {
+                addedCell.plantImagePath = media_url + "forest_assets/id0.png";
+            }
+            else {
+                addedCell.plantImagePath = media_url + "forest_assets/id" + addedCell.plantId + "_" + addedCell.plantGrowthStage + ".png";
+            }
         }
         else {
-            addedCell.plantid = 0
-            addedCell.plantGrowthStage = 0
-            addedCell.plantRequirement = 0 //0 if no requirement, 1 for fertiliser, etc
-            addedCell.image = "empty"
+            addedCell.plantId = 0;
+            addedCell.plantGrowthStage = 0;
+            addedCell.plantRequirement = 0; //0 if no requirement, 1 for fertiliser, etc
+            addedCell.plantImagePath = media_url + "forest_assets/empty.png";
         }
+        //console.log("image path: " + addedCell.plantImagePath);
+
+        //placing images in correct place
+        addedPlantImage.src = addedCell.plantImagePath;
+        let cellRect = addedCell.getBoundingClientRect();
+        let forestRect = forestContainer.getBoundingClientRect();
+        addedPlantImage.style = "height: 50%; width: 20%; position:absolute; top: " + ((100 * ((cellRect.top - forestRect.top) / forestRect.height)) - 35) + "%; left: " + (100 * ((cellRect.left - forestRect.left) / forestRect.width)) + "%;";
+
     }
 }
 

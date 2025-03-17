@@ -8,19 +8,6 @@
     height: 100%;
 }
 
-#forest-container {
-    position: absolute;
-    width: 50%;
-    max-width: 90vw;
-    max-height: 40vh;
-    min-height: 30vh;
-    aspect-ratio: 1/1;
-    top: 0;
-    left: 25%;
-    align-content: center;
-    justify-content: center;
-}
-
 #forest-grid {
     position: relative;
     display: grid;
@@ -40,7 +27,7 @@
 #forest-background {
     position: absolute;
     width: 80%;
-    height: 70%;
+    height: 75%;
     max-width: 80vh;
     min-height: 60vh;
 
@@ -73,21 +60,11 @@
     background-color: #096506;
 }
 
-#forest-floor {
-    position: relative;
-    left: -50%;
-    top: -20px;
-    width: 200%;
-    aspect-ratio: 5/2;
-    background-color: #d0e0e47b;
-    margin: auto;
-}
-
 #button-container {
     padding: 10px;
     position: fixed;
     bottom: 0;
-    height: 75px;
+    height: 80px;
     width: 100%;
     background: #d0e0e4;
 }
@@ -96,13 +73,44 @@
     width: 75%;
     aspect-ratio: 1/1;
     margin: auto;
-    background-color: #0f0;
+}
+
+#forest-floor-texture {
+    background-color: #d0e0e47b;
+}
+
+.forest-container {
+    position: absolute;
+    width: 50%;
+    max-width: 90vw;
+    max-height: 40vh;
+    min-height: 30vh;
+    aspect-ratio: 1/1;
+    top: 0;
+    left: 25%;
+    align-content: center;
+    justify-content: center;
+}
+
+.forest-floor {
+    position: relative;
+    left: -50%;
+    top: -20px;
+    width: 200%;
+    aspect-ratio: 5/2;
+    margin: auto;
 }
 
 .grid-item {
     padding: 1em;
     border: 1px solid #0f0;
     cursor: pointer;
+}
+
+.plant-image {
+    height: 50%;
+    width: 20%;
+    position:absolute;
 }
 
 @media (prefers-reduced-motion: no-preference) {
