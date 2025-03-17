@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
-import json
 from pathlib import Path
+from .models import UserForest, UserInventory
 
 def first_page(request):
     return redirect('accounts:login')
@@ -19,5 +19,13 @@ def map(request):
 
 @login_required
 def forest(request):
-    return render(request, "forest.html")
+    # gets the state of the user's forest saved to the database
+    user_forest = UserForest.objects.get(user=request.user)
+    user_inventory = UserInventory.objects.get(user=request.user)
+    user_data = {"content" : user_forest.cells, "inv" : user_inventory}
+    print(user_data)
+    return render(request, "forest.html", user_data)
 
+@login_required
+def saveForest(request):
+    print("saving")

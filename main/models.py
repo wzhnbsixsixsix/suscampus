@@ -22,11 +22,11 @@ class UserInventory(models.Model):
 
 class UserForest(models.Model):
     user = models.OneToOneField('accounts.CustomUser', on_delete=models.CASCADE, primary_key=True)
-    cells = {}
-    for i in range(0, 16):
-        cells["cell{0}".format(i)] = models.JSONField(null=True)
+    cells = models.TextField(default = "{cell_0 : [0,0,0], cell_1 : [0,0,0], cell_2 : [0,0,0], cell_3 : [0,0,0], cell_4 : [0,0,0], cell_5 : [0,0,0],"
+    " cell_6 : [0,0,0], cell_7 : [0,0,0], cell_8 : [0,0,0], cell_9 : [0,0,0], cell_10 : [0,0,0], cell_11 : [0,0,0], cell_12 : [0,0,0], cell_13 : [0,0,0],"
+    " cell_14 : [0,0,0],cell_15 : [0,0,0]}", max_length=2048)
 
 class Plant(models.Model):
-    plant_name = models.TextField()
+    plant_name = models.TextField(default="plant")
     requirement_type = models.IntegerField()
     rarity = models.IntegerField()

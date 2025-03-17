@@ -113,6 +113,10 @@
     position:absolute;
 }
 
+.data-container {
+    display: none;
+}
+
 @media (prefers-reduced-motion: no-preference) {
 
     .forest-popup {
