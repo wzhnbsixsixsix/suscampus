@@ -130,7 +130,7 @@ geolocation.on('change:position', function () {
 function isMarkerInRange(markerPos, playerPos){
     const distance = Math.sqrt((markerPos[0] - playerPos[0])**2 + (markerPos[1] - playerPos[1])**2);
     console.log("distance: " + distance);
-    if (distance <= 0.001) {
+    if (distance <= 0.003) {
         return true;
     } else {
         return false;
@@ -336,11 +336,26 @@ clickSelection.on('select', function (e) {
             console.log("Selected interactable marker.");
             popContent.innerHTML = '<h3><code>' + markerDetails.name +'</code></h3> <p>Selected Marker at: </p><code>' + markerPos + '</code>' + '<button id="popup-button">Collect</button>';
             const popupButton = document.getElementById("popup-button");
-            popupButton.addEventListener("click", (e) => {console.log(e)});
+            popupButton.addEventListener("click", collectFromMarker);
         } else {
             console.log("Selected un-interactable marker.");
             popContent.innerHTML = '<h3><code>' + markerDetails.name +'</code></h3><p>Selected Marker at: </p><code>' + markerPos + '</code>';
         }
+
+        function collectFromMarker() {
+            switch (markerDetails.color) {
+                case "green":
+                    console.log("GREEN");
+                    break;
+                case "red":
+                    console.log("RED");
+                    break;
+                case "blue":
+                    console.log("BLUE");
+                    break;
+            }
+        }
+
         markerPopups.setPosition(markerPos);
         popContainer.style.animation = "popup-enter 0.5s";
     }
