@@ -30,13 +30,13 @@
       <div class="forest-container">
         <div class="forest-floor" id="forest-floor-texture"></div>
       </div>
-      <div class="forest-container" >
+      <div class="forest-container">
         <div class="forest-floor" id="forest-images"></div>
       </div>
       <div class="forest-container">
         <div id="forest-grid"></div>
       </div>
-      
+
 
     </div>
 
@@ -70,22 +70,34 @@
       </div>
     </div>
 
+
     <div class="button-popup" id="customise-popup">
-      <div id="close-customise-popup" class="close-popup">
-        <a style="height: 100%; width: 100%; font-size: 60px;">
-          <i class="lni lni-xmark"></i>
-        </a>
+      <div style="display:flex; flex-direction: row; justify-content: left; gap: 2px;">
+        <div id="close-customise-popup" class="close-popup" style="height: 100%; aspect-ratio: 1/1; text-align: center;">
+          <i class="lni lni-xmark" style="width: 100%; height: 100%; display: inline-block; font-size: 4em;"></i>
+        </div>
+        <h2>Customise</h2>
       </div>
-      <h3>customise</h3>
+
+      <div class="grid-container" id="customise-grid" style="width: 90%;">
+      </div>
     </div>
 
     <div class="button-popup" id="sell-popup">
-      <div id="close-sell-popup" class="close-popup">
-        <a style="height: 100%; width: 100%; font-size: 60px;">
-          <i class="lni lni-xmark"></i>
-        </a>
+      <div style="display:flex; flex-direction: row; justify-content: left; align-items: center; gap: 2px;">
+        <div id="close-sell-popup" class="close-popup"
+          style="max-height: 100%; aspect-ratio: 1/1; text-align: justify;">
+          <i class="lni lni-xmark" style="width: 100%; height: 100%; display: inline-block; font-size: 4em;"></i>
+        </div>
+        <h2 style="margin-top: auto;">Sell Land</h2>
       </div>
-      <h3>sell</h3>
+
+      <div id="sell-body" style="width: 90%; margin-left: auto;">
+        <div>
+          Sell your land for currency - the more plants and biodiversity will yield a higher worth!
+        </div>
+
+      </div>
     </div>
 
     <div id="recycling-popup">
@@ -102,7 +114,7 @@
       <button type="button" id="customise-button" class="btn btn-primary btn-lg flex-fill">Customise</button>
       <button type="button" id="sell-button" class="btn btn-primary btn-lg flex-fill">Sell land</button>
       <div id="recycling-button">
-        
+
       </div>
     </div>
   </div>

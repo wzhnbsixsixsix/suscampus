@@ -101,16 +101,36 @@
     margin: auto;
 }
 
+.grid-container {
+    position: relative;
+    display: grid;
+    grid-gap: 1em;
+    grid-template-rows: repeat(var(--grid-rows), 1fr);
+    grid-template-columns: repeat(var(--grid-cols), 1fr);
+    max-height: 100%;
+    width: 100%;
+    top: 2px;
+    margin: auto;
+    color: green;
+}
+
 .grid-item {
     padding: 1em;
     border: 1px solid #0f0;
     cursor: pointer;
+    aspect-ratio: 1/1;
 }
 
 .plant-image {
     height: 50%;
     width: 20%;
     position:absolute;
+}
+
+.close-popup {
+    cursor: pointer;
+    color: red;
+    
 }
 
 @media (prefers-reduced-motion: no-preference) {
@@ -181,15 +201,6 @@
     100% {
         transform: scale(0, 0);
     }
-}
-
-.close-popup {
-    cursor: pointer;
-    top: 10px;
-    left: 10px;
-    width: 60px;
-    height: 60px;
-    color: red;
 }
 
 #recycling-button {

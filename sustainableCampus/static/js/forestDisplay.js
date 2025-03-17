@@ -1,5 +1,5 @@
 
-function onCellClick(cell) {
+function onForestCellClick(cell) {
     console.log(cell.id + " clicked");
     let occupiedPopup = document.getElementById("occupied-popup");
     let emptyPopup = document.getElementById("empty-popup");
@@ -93,8 +93,21 @@ function closePopup(popup) {
     setTimeout(function () { popup.style.display = "none"; }, 480);
 }
 
+function generateCustomiseGrid(rows, cols) {
+    const gridContainer = document.getElementById("customise-grid");
+    gridContainer.style.setProperty('--grid-rows', rows);
+    gridContainer.style.setProperty('--grid-cols', cols);
+    for (let i = 0; i < (rows * cols); i++) {
+        let gridCell = document.createElement("div");
+        const addedCell = gridContainer.appendChild(gridCell);
+        addedCell.className = "grid-item";
+        addedCell.id = "item-cell-" + i;
+        addedCell.addEventListener("click", function () { onCustomiseCellClick(addedCell); });
+    }
+}
+
 // generate user's forest grid 
-function generateGrid(rows, cols) {
+function generateForestGrid(rows, cols) {
     const gridContainer = document.getElementById("forest-grid");
     gridContainer.style.setProperty('--forest-rows', rows);
     gridContainer.style.setProperty('--forest-cols', cols);
@@ -107,11 +120,11 @@ function generateGrid(rows, cols) {
         addedCell.className = "grid-item";
         addedCell.id = "forest-cell-" + i;
         console.log("Adding event listener for click");
-        addedCell.addEventListener("click", function () { onCellClick(addedCell); })
+        addedCell.addEventListener("click", function () { onForestCellClick(addedCell); })
 
         //creating each image
         const plantImage = document.createElement("img");
-        
+
         let addedPlantImage = forestContainer.appendChild(plantImage);
 
         //if cell contains plant
@@ -144,7 +157,8 @@ function generateGrid(rows, cols) {
     }
 }
 
-generateGrid(4, 4);
+generateForestGrid(4, 4);
+generateCustomiseGrid(4, 4);
 
 document.getElementById("customise-button").addEventListener("click", customiseClick);
 document.getElementById("sell-button").addEventListener("click", sellClick);
