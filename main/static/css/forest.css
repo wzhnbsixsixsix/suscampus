@@ -130,7 +130,10 @@
 .close-popup {
     cursor: pointer;
     color: red;
+}
     
+.data-container {
+    display: none;
 }
 
 @media (prefers-reduced-motion: no-preference) {
