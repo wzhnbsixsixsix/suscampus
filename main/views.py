@@ -27,5 +27,21 @@ def forest(request):
     return render(request, "forest.html", user_data)
 
 @login_required
-def saveForest(request):
+def claim_blue_marker(request):
+    print("blue claimed")
+    user_inventory = UserInventory.objects.get(user=request.user)
+
+@login_required
+def claim_red_marker(request):
+    print("red claimed")
+    user_inventory = UserInventory.objects.get(user=request.user)
+
+@login_required
+def claim_green_marker(request):
+    print("green claimed")
+    user_inventory = UserInventory.objects.get(user=request.user)
+
+@login_required
+def save_forest(request):
     print("saving")
+    user_forest = UserForest.objects.get(user=request.user)
