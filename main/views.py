@@ -1,7 +1,9 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from pathlib import Path
-from .models import UserForest, UserInventory
+from .models import UserForest, UserInventory, Plant
+from django.http import HttpResponse
+from random import randint
 
 def first_page(request):
     return redirect('accounts:login')
@@ -30,18 +32,67 @@ def forest(request):
 def claim_blue_marker(request):
     print("blue claimed")
     user_inventory = UserInventory.objects.get(user=request.user)
+    # blue markers give paper and sometimes seedlings
+    user_inventory.paper += randint(1, 4)
+    user_inventory = drop_seedling(user_inventory)
+    user_inventory.save()
+    map(request)
 
 @login_required
 def claim_red_marker(request):
     print("red claimed")
     user_inventory = UserInventory.objects.get(user=request.user)
+    # red markers give plastic and sometimes seedlings
+    user_inventory.plastic += randint(1, 4)
+    user_inventory = drop_seedling(user_inventory)
+    user_inventory.save()
+    map(request)
 
 @login_required
 def claim_green_marker(request):
     print("green claimed")
     user_inventory = UserInventory.objects.get(user=request.user)
+    # green markers give compost and sometimes seedlings
+    user_inventory.compost += randint(1, 4)
+    user_inventory = drop_seedling(user_inventory)
+    user_inventory.save()
+    map(request)
 
 @login_required
 def save_forest(request):
     print("saving")
     user_forest = UserForest.objects.get(user=request.user)
+    forest(request)
+
+def drop_seedling(inv):
+    # sometimes gives a seedling
+    if (randint(1, 10) > 5):
+        # there are different rarities of sapling
+        rarity = 0
+        rand_num_rarity = randint(1, 100)
+        if (rand_num_rarity > 90):
+            rarity = 2
+        elif (rand_num_rarity > 75):
+            rarity = 1
+        # else rarity remains 0
+        # plants that can be obtained depend on the rarity
+        match rarity:
+            case 0:
+                # there are three plants in this rarity
+                plant_got = randint(0, 2)
+                match plant_got:
+                    case 0:
+                        inv.oak += 1
+                    case 1:
+                        inv.birch += 1
+                    case 2:
+                        inv.poppy += 1
+            case 1:
+                # only two plants in this rarity
+                if (randint(0, 1)):
+                    inv.fir += 1
+                else:
+                    inv.red_campion += 1
+            case 2:
+                inv.cottoneaster += 1
+    return inv

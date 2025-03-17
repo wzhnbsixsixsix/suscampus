@@ -105,7 +105,7 @@ geolocation.on('change:position', function () {
     // resets list of interactable markers
     interactableMarkers = [];
     // iterate through all markers, checking if they are now within range to interact with.
-    const markersOnMap = drawMarkers.getSource().getFeatures()
+    const markersOnMap = drawMarkers.getSource().getFeatures();
     console.log("MARKERS: " + markersOnMap);
     for (const currMarker of markersOnMap) {
         const markerPos = currMarker.getGeometry().getCoordinates();
@@ -127,10 +127,10 @@ geolocation.on('change:position', function () {
     console.log(interactableMarkers);
 });
 
-function isMarkerInRange(markerPos, playerPos){
+function isMarkerInRange(markerPos, playerPos) {
     const distance = Math.sqrt((markerPos[0] - playerPos[0])**2 + (markerPos[1] - playerPos[1])**2);
     console.log("distance: " + distance);
-    if (distance <= 0.003) {
+    if (distance <= 0.010) { // must be changed back to 0.001 (or similar), is set higher for testing purposes
         return true;
     } else {
         return false;
@@ -170,7 +170,7 @@ function prepopulateMap() {
     }
 }
 
-function createMarkerFromJSON(data){
+function createMarkerFromJSON(data) {
     console.log("Adding new marker...");
 
 
@@ -346,12 +346,15 @@ clickSelection.on('select', function (e) {
             switch (markerDetails.color) {
                 case "green":
                     console.log("GREEN");
+                    fetch("./claim_green_marker");
                     break;
                 case "red":
                     console.log("RED");
+                    fetch("./claim_red_marker")
                     break;
                 case "blue":
                     console.log("BLUE");
+                    fetch("./claim_blue_marker")
                     break;
             }
         }
