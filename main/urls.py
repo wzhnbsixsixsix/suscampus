@@ -11,5 +11,6 @@ urlpatterns = [
     path('forest/save', views.save_forest, name='save_forest'),
     path('map/claim_blue_marker', views.claim_blue_marker, name='claim_blue_marker'),
     path('map/claim_red_marker', views.claim_red_marker, name='claim_red_marker'),
-    path('map/claim_green_marker', views.claim_green_marker, name='claim_green_marker')
+    path('map/claim_green_marker', views.claim_green_marker, name='claim_green_marker'),
+    path('map/update_inv_on_page', views.update_inv_on_page, name='update_inv_on_page')
 ]

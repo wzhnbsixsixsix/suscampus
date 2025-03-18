@@ -50,13 +50,15 @@ const markerPopups = new Overlay({
 });
 
 // handles closing the markerPopups
-popCloser.onclick = function () {
+popCloser.onclick = closePopup;
+
+function closePopup() {
     popContainer.style.animation = "popup-exit 0.5s";
     setTimeout(function () {markerPopups.setPosition(undefined);}, 480);
      // removes popup
     popCloser.blur();
     return false; // otherwise returns a href?
-};
+}
 
 const map = new Map({
     layers: [
@@ -161,6 +163,10 @@ const jsonMarkers = document.getElementById("marker-data").innerHTML;
 console.log(jsonMarkers);
 const markersObject = JSON.parse(jsonMarkers);
 console.log(markersObject);
+
+// these are updated when a marker is collected, so cannot be constant
+let collected = document.getElementById("user-inv").innerHTML;
+console.log("Initial collected data: ", collected);
 
 function prepopulateMap() {
     // prepopulates the map with markers based on the data in markers.json
@@ -334,9 +340,19 @@ clickSelection.on('select', function (e) {
 
         if (interactable) {
             console.log("Selected interactable marker.");
+
+            // creates an array of the markers that have already been collected today
+            let userInvList = collected
+
             popContent.innerHTML = '<h3><code>' + markerDetails.name +'</code></h3> <p>Selected Marker at: </p><code>' + markerPos + '</code>' + '<button id="popup-button">Collect</button>';
             const popupButton = document.getElementById("popup-button");
-            popupButton.addEventListener("click", collectFromMarker);
+            if (!userInvList.includes(markerDetails.idno)) {
+                popupButton.addEventListener("click", collectFromMarker);
+            } else {
+                // restyle button to show it's already been collected
+                popupButton.setAttribute("disabled", "") // boolean attribute, can be set to empty string to be true
+
+            }
         } else {
             console.log("Selected un-interactable marker.");
             popContent.innerHTML = '<h3><code>' + markerDetails.name +'</code></h3><p>Selected Marker at: </p><code>' + markerPos + '</code>';
@@ -346,17 +362,50 @@ clickSelection.on('select', function (e) {
             switch (markerDetails.color) {
                 case "green":
                     console.log("GREEN");
-                    fetch("./claim_green_marker");
+                    $(document).ready(ajaxCallCollectMarker("claim_green_marker"));
+                    $(document).ready(ajaxCallUpdateInvData);
+                    closePopup();
                     break;
                 case "red":
                     console.log("RED");
-                    fetch("./claim_red_marker")
+                    $(document).ready(ajaxCallCollectMarker("claim_red_marker"));
+                    $(document).ready(ajaxCallUpdateInvData);
+                    closePopup();
                     break;
                 case "blue":
                     console.log("BLUE");
-                    fetch("./claim_blue_marker")
+                    $(document).ready(ajaxCallCollectMarker("claim_blue_marker"));
+                    $(document).ready(ajaxCallUpdateInvData);
+                    closePopup();
                     break;
             }
+        }
+
+        function ajaxCallCollectMarker(funcUrl) {
+            $.ajax({
+                url: funcUrl,
+                type: 'POST',
+                data: {'marker_id': markerDetails.idno},
+                success: function(response) {
+                    console.log("sent marker id to view successfully");
+                    console.log("Response: ", response);
+                },
+                error: function(error) {
+                    console.log("encountered error when sending marker id: ", error);
+                }
+            })
+            .done(response => {console.log(response)}) // we don't need to do anything with the response
+        }
+
+        function ajaxCallUpdateInvData() {
+            $.ajax({
+                url: "update_inv_on_page",
+                type: 'GET'
+            })
+            .done(response => {
+                const collectedObj = response;
+                collected = collectedObj.collected
+            })
         }
 
         markerPopups.setPosition(markerPos);
