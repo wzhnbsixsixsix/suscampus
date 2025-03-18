@@ -20,7 +20,7 @@ class UserInventory(models.Model):
     poppy = models.IntegerField(default=0)
     cotoneaster = models.IntegerField(default=0)
     # stores the markers the user has collected today, will reset at midnight
-    collected_markers = models.TextField(default = "{}")
+    collected_markers = models.TextField(default = "")
 
 class UserForest(models.Model):
     user = models.OneToOneField('accounts.CustomUser', on_delete=models.CASCADE, primary_key=True)
