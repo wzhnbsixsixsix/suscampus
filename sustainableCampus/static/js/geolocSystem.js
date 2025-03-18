@@ -346,17 +346,25 @@ clickSelection.on('select', function (e) {
             switch (markerDetails.color) {
                 case "green":
                     console.log("GREEN");
-                    fetch("./claim_green_marker");
+                    $(document).ready(ajaxCall("claim_green_marker"))
                     break;
                 case "red":
                     console.log("RED");
-                    fetch("./claim_red_marker")
+                    $(document).ready(ajaxCall("claim_red_marker"))
                     break;
                 case "blue":
                     console.log("BLUE");
-                    fetch("./claim_blue_marker")
+                    $(document).ready(ajaxCall("claim_blue_marker"))
                     break;
             }
+        }
+
+        function ajaxCall(funcUrl) {
+            $.ajax({
+                url: funcUrl,
+                type: 'GET'
+            })
+            .done(response => {console.log(response)}) // we don't need to do anything with the response
         }
 
         markerPopups.setPosition(markerPos);

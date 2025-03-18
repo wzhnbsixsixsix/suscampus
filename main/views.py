@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from pathlib import Path
 from .models import UserForest, UserInventory, Plant
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from random import randint
 
 def first_page(request):
@@ -36,7 +36,7 @@ def claim_blue_marker(request):
     user_inventory.paper += randint(1, 4)
     user_inventory = drop_seedling(user_inventory)
     user_inventory.save()
-    map(request)
+    return JsonResponse({"result" : 1})
 
 @login_required
 def claim_red_marker(request):
@@ -46,7 +46,7 @@ def claim_red_marker(request):
     user_inventory.plastic += randint(1, 4)
     user_inventory = drop_seedling(user_inventory)
     user_inventory.save()
-    map(request)
+    return JsonResponse({"result" : 1})
 
 @login_required
 def claim_green_marker(request):
@@ -56,7 +56,7 @@ def claim_green_marker(request):
     user_inventory.compost += randint(1, 4)
     user_inventory = drop_seedling(user_inventory)
     user_inventory.save()
-    map(request)
+    return JsonResponse({"result" : 1})
 
 @login_required
 def save_forest(request):
