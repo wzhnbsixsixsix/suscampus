@@ -4,7 +4,7 @@ function onForestCellClick(cell) {
     let occupiedPopup = document.getElementById("occupied-popup");
     let emptyPopup = document.getElementById("empty-popup");
 
-    if (cell.plantid == 0) { //if cell is empty
+    if (cell.plantId == "0") { //if cell is empty
         if (occupiedPopup.style.display == "block") { closePopup(occupiedPopup); }
         //opens popup to plant tree
         openPopup(emptyPopup);
@@ -106,9 +106,35 @@ function generateCustomiseGrid(rows, cols) {
     }
 }
 
+function reloadForest(plantLocation, changedValueIndex, newValue) {
+    //TODO refresh retrieved-first-content
+    //reading database entry
+    const userForest = document.getElementById("retrieved-forest-content").innerHTML.split(";");
+    let forestArray = Array(userForest.length);
+    let i = 0;
+    for (const plant of userForest) {
+        forestArray[i] = plant.split(",");
+        i += 1;
+    }
+
+    //applying changes
+    forestArray[plantLocation][changedValueIndex] = newValue;
+
+    //rebuilding database entry
+    let forestString = "";
+    i = 0;
+    for (const plant of forestArray) {
+        forestString += plant[0] + "," + plant[1] + "," + plant[2] + ";";
+    }
+    forestString = forestString.substring(0, forestString.length - 1);
+    //save foreststring
+}
+
 // generate user's forest grid 
 function generateForestGrid(rows, cols) {
     const gridContainer = document.getElementById("forest-grid");
+    //splits data into arrays for each plant
+    const userForest = document.getElementById("retrieved-forest-content").innerHTML.split(";");
     gridContainer.style.setProperty('--forest-rows', rows);
     gridContainer.style.setProperty('--forest-cols', cols);
     let forestContainer = document.getElementById("forest-images");
@@ -122,16 +148,17 @@ function generateForestGrid(rows, cols) {
         console.log("Adding event listener for click");
         addedCell.addEventListener("click", function () { onForestCellClick(addedCell); })
 
+        let currentPlant = userForest[i].split(",");
+
         //creating each image
         const plantImage = document.createElement("img");
-
         let addedPlantImage = forestContainer.appendChild(plantImage);
 
+        addedCell.plantId = currentPlant[0]; // id of plant in cell, 0 if none
+        addedCell.plantGrowthStage = currentPlant[1]; //0, 1, or 2
+        addedCell.plantRequirement = currentPlant[2]; //0 if no requirement, 1 for fertiliser, etc
         //if cell contains plant
-        if (i < 7) {
-            addedCell.plantId = i;
-            addedCell.plantGrowthStage = 1;
-            addedCell.plantRequirement = 0;
+        if (currentPlant[0] != 0) {
             //check if plant is first stage
             if (addedCell.plantGrowthStage == 0) {
                 addedCell.plantImagePath = media_url + "forest_assets/id0.png";
@@ -141,12 +168,8 @@ function generateForestGrid(rows, cols) {
             }
         }
         else {
-            addedCell.plantId = 0;
-            addedCell.plantGrowthStage = 0;
-            addedCell.plantRequirement = 0; //0 if no requirement, 1 for fertiliser, etc
             addedCell.plantImagePath = media_url + "forest_assets/empty.png";
         }
-        //console.log("image path: " + addedCell.plantImagePath);
 
         //placing images in correct place
         addedPlantImage.src = addedCell.plantImagePath;

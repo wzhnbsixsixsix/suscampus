@@ -24,9 +24,8 @@ def forest(request):
     # gets the state of the user's forest saved to the database
     user_forest = UserForest.objects.get(user=request.user)
     user_inventory = UserInventory.objects.get(user=request.user)
-    user_data = {"content" : user_forest.cells, "inv" : user_inventory}
-    print(user_data)
-    return render(request, "forest.html", user_data)
+    print(user_inventory)
+    return render(request, "forest.html", {"user_forest" : user_forest.cells, "user_inventory" : user_inventory})
 
 @login_required
 def claim_blue_marker(request):
