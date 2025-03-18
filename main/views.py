@@ -4,6 +4,7 @@ from pathlib import Path
 from .models import UserForest, UserInventory, Plant
 from django.http import HttpResponse, JsonResponse
 from random import randint
+from django.views.decorators.csrf import csrf_exempt
 
 def first_page(request):
     return redirect('accounts:login')
@@ -17,7 +18,11 @@ def map(request):
             print("JSON FILE LINE: " + line)
             markers += line
     print("markers data: " + markers)
-    return render(request, "map.html", {"data": markers})
+    user_inventory = UserInventory.objects.get(user=request.user)
+    collected = user_inventory.collected_markers
+    print("inv: ", user_inventory)
+    print("collected markers: ", collected)
+    return render(request, "map.html", {"data": markers, "collected" : collected})
 
 @login_required
 def forest(request):
@@ -29,34 +34,55 @@ def forest(request):
     return render(request, "forest.html", user_data)
 
 @login_required
+@csrf_exempt
 def claim_blue_marker(request):
     print("blue claimed")
     user_inventory = UserInventory.objects.get(user=request.user)
     # blue markers give paper and sometimes seedlings
     user_inventory.paper += randint(1, 4)
     user_inventory = drop_seedling(user_inventory)
+    # update collected markers (needs id of marker)
+    if (request.method == 'POST' and 'marker_id' in request.POST):
+        marker_id = request.POST['marker_id']
+        user_inventory.collected_markers += (marker_id + ",")
+    else:
+        return JsonResponse({"result" : "error when recieving marker id"})
     user_inventory.save()
     return JsonResponse({"result" : 1})
 
 @login_required
+@csrf_exempt
 def claim_red_marker(request):
     print("red claimed")
     user_inventory = UserInventory.objects.get(user=request.user)
     # red markers give plastic and sometimes seedlings
     user_inventory.plastic += randint(1, 4)
     user_inventory = drop_seedling(user_inventory)
+    # update collected markers (needs id of marker)
+    if (request.method == 'POST' and 'marker_id' in request.POST):
+        marker_id = request.POST['marker_id']
+        user_inventory.collected_markers += (marker_id + ",")
+    else:
+        return JsonResponse({"result" : "error when recieving marker id"})
     user_inventory.save()
     return JsonResponse({"result" : 1})
 
 @login_required
+@csrf_exempt
 def claim_green_marker(request):
     print("green claimed")
     user_inventory = UserInventory.objects.get(user=request.user)
     # green markers give compost and sometimes seedlings
     user_inventory.compost += randint(1, 4)
     user_inventory = drop_seedling(user_inventory)
+    # update collected markers (needs id of marker)
+    if (request.method == 'POST' and 'marker_id' in request.POST):
+        marker_id = request.POST['marker_id']
+        user_inventory.collected_markers += (marker_id + ",")
+    else:
+        return JsonResponse({"result" : "error when recieving marker id"})
     user_inventory.save()
-    return JsonResponse({"result" : 1})
+    return JsonResponse({"result" : "updated user inventory successfully"})
 
 @login_required
 def save_forest(request):
@@ -64,6 +90,7 @@ def save_forest(request):
     user_forest = UserForest.objects.get(user=request.user)
     forest(request)
 
+@login_required
 def drop_seedling(inv):
     # sometimes gives a seedling
     if (randint(1, 10) > 5):
@@ -96,3 +123,11 @@ def drop_seedling(inv):
             case 2:
                 inv.cottoneaster += 1
     return inv
+
+@login_required
+def update_inv_on_page(request):
+    # used in the geolocSystem itself to update the inventory data on the map page when a user collects a marker
+    # this prevents them from collecting the same marker multiple times
+    inv_data = UserInventory.objects.get(user=request.user)
+    collected = inv_data.collected_markers
+    return JsonResponse({"collected":collected})
