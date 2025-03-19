@@ -104,7 +104,7 @@
 .grid-container {
     position: relative;
     display: grid;
-    grid-gap: 1em;
+    grid-gap: 2%;
     grid-template-rows: repeat(var(--grid-rows), 1fr);
     grid-template-columns: repeat(var(--grid-cols), 1fr);
     max-height: 100%;
@@ -130,6 +130,9 @@
 .close-popup {
     cursor: pointer;
     color: red;
+    height: 100%; 
+    aspect-ratio: 1/1; 
+    text-align: center;
 }
     
 .data-container {
@@ -141,7 +144,7 @@
     .forest-popup {
         display: none;
         position: fixed;
-        bottom: 80px;
+        bottom: 100px;
         right: 5px;
         height: 70%;
         width: 25%;
@@ -156,7 +159,7 @@
     .button-popup {
         display: none;
         position: fixed;
-        bottom: 80px;
+        bottom: 100px;
         left: 5px;
         height: 70%;
         width: 25%;
@@ -171,7 +174,7 @@
     #recycling-popup {
         display: none;
         position: fixed;
-        bottom: 80px;
+        bottom: 100px;
         left: 10%;
         height: 80%;
         width: 80%;
