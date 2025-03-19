@@ -46,6 +46,10 @@
     .full-content {
       display: none;
     }
+
+    .event-link {
+      display: none;
+    }
   </style>
 </head>
 
@@ -242,9 +246,7 @@
     <script>
       document.addEventListener("DOMContentLoaded", () => {
         const cards = document.querySelectorAll(".card");
-        const modal = new bootstrap.Modal(
-          document.getElementById("announcementModal")
-        );
+        const modal = new bootstrap.Modal(document.getElementById("announcementModal"));
 
         cards.forEach((card) => {
           card.addEventListener("click", (event) => {
@@ -259,10 +261,21 @@
             // Update modal content
             document.getElementById("modalTitle").textContent = title;
             document.getElementById("modalContent").textContent = content;
-            document.getElementById("modalMetaData").textContent = meta_data;
             document.getElementById("modalImage").src = image;
+            document.getElementById("modalAuthor").textContent = author;
+            document.getElementById("modalRole").textContent = role;
+            document.getElementById("modalDate").textContent = date;
 
-            // Show modal
+            // Show or hide the QR code button based on whether it's an event
+            const qrCodeButton = document.getElementById("modalQrCodeButton");
+            if (isEvent) {
+              qrCodeButton.style.display = "block";
+              qrCodeButton.querySelector("a").href = qrCodeUrl; // Set the href dynamically
+            } else {
+              qrCodeButton.style.display = "none";
+            }
+
+            // Show the modal
             modal.show();
           });
         });
@@ -277,7 +290,7 @@
         });
       });
     </script>
-    <div>
+  </div>
 
     <!-- Toast Notifications -->
     {% if messages %}
@@ -298,8 +311,6 @@
       {% endfor %}
     </div>
     {% endif %}
-
-  </div>
 </body>
 
 </html>
