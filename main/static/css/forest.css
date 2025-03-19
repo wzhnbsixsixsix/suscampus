@@ -154,14 +154,13 @@
         display: none;
         position: fixed;
         bottom: 100px;
+        top: 140px;
         right: 5px;
-        height: 70%;
         width: 25%;
         min-width: 200px;
         max-width: 50vw;
         background-color: #f1f1f1;
         border-radius: 10px;
-
         animation: popup-enter 0.5s;
     }
 
@@ -169,30 +168,47 @@
         display: none;
         position: fixed;
         bottom: 100px;
+        top: 140px;
         left: 5px;
-        height: 70%;
         width: 25%;
         min-width: 200px;
         max-width: 50vw;
         background-color: #f1f1f1;
         border-radius: 10px;
-
         animation: popup-enter 0.5s;
     }
 
     #recycling-popup {
         display: none;
         position: fixed;
+        top: 120px;
         bottom: 100px;
         left: 10%;
-        height: 80%;
         width: 80%;
-        background-color: #f1f1f1;
+        background-color: #f1f1f1da;
         border-radius: 10px;
-
         animation: recycling-enter 0.5s;
     }
 }
+
+.litter {
+    position: absolute; 
+    height: 10%; 
+    aspect-ratio: 1/1;
+    transition: scale 0.1s linear;
+
+    &:hover {
+        scale: 110%;
+      }
+}
+
+#recycling-button {
+    
+    &:hover {
+        scale: 110%;
+      }
+}
+
 
 @keyframes popup-enter {
     0% {

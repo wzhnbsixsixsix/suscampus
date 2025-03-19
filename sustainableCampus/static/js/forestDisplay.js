@@ -93,6 +93,30 @@ function closePopup(popup) {
     setTimeout(function () { popup.style.display = "none"; }, 480);
 }
 
+function generateRecycling() {
+    const litterContainer = document.getElementById("litter-container");
+    for (let i = 0; i < 5; i++) {
+        let litterImg = document.createElement("img");
+        const addedLitter = litterContainer.appendChild(litterImg);
+        addedLitter.litterType = 0;
+        addedLitter.draggable = "true";
+        addedLitter.classList.add("litter");
+        addedLitter.style = "top: " + Math.random() * 60 + "%; left: " +  + Math.random() * 90 + "%;";
+        switch (addedLitter.litterType) {
+            case 0:
+                addedLitter.style.backgroundColor = "red";
+            case 1:
+                addedLitter.style.backgroundColor = "blue";
+            case 2:
+                addedLitter.style.backgroundColor = "green";
+        }
+    }
+}
+
+$(function() {
+    $(".litter").draggable();
+  });
+
 function generateCustomiseGrid(rows, cols) {
     const gridContainer = document.getElementById("customise-grid");
     gridContainer.style.setProperty('--grid-rows', rows);
@@ -172,16 +196,18 @@ function generateForestGrid(rows, cols) {
         }
 
         //placing images in correct place
+        addedPlantImage.classList.add("plant-image");
         addedPlantImage.src = addedCell.plantImagePath;
         let cellRect = addedCell.getBoundingClientRect();
         let forestRect = forestContainer.getBoundingClientRect();
-        addedPlantImage.style = "height: 50%; width: 20%; position:absolute; top: " + ((100 * ((cellRect.top - forestRect.top) / forestRect.height)) - 35) + "%; left: " + (100 * ((cellRect.left - forestRect.left) / forestRect.width)) + "%;";
+        addedPlantImage.style = "top: " + ((100 * ((cellRect.top - forestRect.top) / forestRect.height)) - 37) + "%; left: " + (100 * ((cellRect.left - forestRect.left) / forestRect.width)) + "%;";
 
     }
 }
 
 generateForestGrid(4, 4);
 generateCustomiseGrid(4, 4);
+generateRecycling();
 
 document.getElementById("customise-button").addEventListener("click", customiseClick);
 document.getElementById("sell-button").addEventListener("click", sellClick);
