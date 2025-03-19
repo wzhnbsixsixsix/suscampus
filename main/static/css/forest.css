@@ -40,7 +40,7 @@
 
 #forest-background-left {
     position: absolute;
-    top: min(27%, max(16.5vw, 12vh));
+    top: min(27%, max(18vw, 12.5vh));
     left: 0;
     width: 50%;
     min-height: 73%;
@@ -51,7 +51,7 @@
 
 #forest-background-right {
     position: absolute;
-    top: min(27%, max(16.5vw, 12vh));
+    top: min(27%, max(18vw, 12vh));
     right: 0;
     width: 50%;
     min-height: 73%;
@@ -76,7 +76,16 @@
 }
 
 #forest-floor-texture {
-    background-color: #d0e0e47b;
+    position: relative;
+    background-color: #1da124;
+    rotate: 45deg;
+    justify-content: center;
+    transform: rotate(-67.5deg) skewX(45deg) scaleY(cos(45deg));
+    width: 108%;
+    aspect-ratio: 1/1;
+    top: -9%;
+    left: -4%;
+    margin: auto;
 }
 
 .forest-container {
