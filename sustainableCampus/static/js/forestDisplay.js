@@ -210,6 +210,7 @@ function generateForestGrid(rows, cols) {
     const gridContainer = document.getElementById("forest-grid");
     //splits data into arrays for each plant
     const userForest = document.getElementById("retrieved-forest-content").innerHTML.split(";");
+    console.log(userForest);
     gridContainer.style.setProperty('--forest-rows', rows);
     gridContainer.style.setProperty('--forest-cols', cols);
     let forestContainer = document.getElementById("forest-images");
