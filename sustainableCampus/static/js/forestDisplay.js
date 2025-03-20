@@ -102,7 +102,7 @@ function litterDragStart(event) {
     let litter = event.currentTarget;
     event.currentTarget.style.border = "#1da124";
     //highlighting correct bin
-    switch (litter.litterType){
+    switch (litter.litterType) {
         case 0:
             document.getElementById("plastic-recycling").style.height = "100%";
             document.getElementById("paper-recycling").style.opacity = "0.4";
@@ -135,7 +135,6 @@ function litterDragEnd(event) {
     document.getElementById("compost-recycling").style.height = "90%";
 }
 
-
 function generateRecycling() {
     const litterContainer = document.getElementById("litter-container");
     for (let i = 0; i < 5; i++) {
@@ -143,7 +142,7 @@ function generateRecycling() {
         const addedLitter = litterContainer.appendChild(litterImg);
         addedLitter.id = "added-litter-" + i;
         //TODO read litter type from database
-        addedLitter.litterType = Math.floor(Math.random() * (2 - 0 + 1) ) + 0;
+        addedLitter.litterType = Math.floor(Math.random() * (2 - 0 + 1)) + 0;
         addedLitter.draggable = "true";
         addedLitter.classList.add("litter");
         addedLitter.style = "top: " + Math.random() * 60 + "%; left: " + + Math.random() * 90 + "%;";
@@ -159,14 +158,10 @@ function generateRecycling() {
                 break;
         }
         addedLitter.ondragstart = function () { litterDragStart(event) };
-        addedLitter.ondragend = function () {litterDragEnd(event)};
+        addedLitter.ondragend = function () { litterDragEnd(event) };
 
     }
 }
-
-
-
-
 
 function generateCustomiseGrid(rows, cols) {
     const gridContainer = document.getElementById("customise-grid");
@@ -181,8 +176,9 @@ function generateCustomiseGrid(rows, cols) {
     }
 }
 
-function reloadForest(plantLocation, changedValueIndex, newValue) {
-    //TODO refresh retrieved-first-content
+function makeForestChanges(plantLocation, changedValueIndex, newValue) {
+    ajaxCallUpdateForestData();
+
     //reading database entry
     const userForest = document.getElementById("retrieved-forest-content").innerHTML.split(";");
     let forestArray = Array(userForest.length);
@@ -202,7 +198,34 @@ function reloadForest(plantLocation, changedValueIndex, newValue) {
         forestString += plant[0] + "," + plant[1] + "," + plant[2] + ";";
     }
     forestString = forestString.substring(0, forestString.length - 1);
+    ajaxCallSaveForest();
+
     //save foreststring
+    function ajaxCallSaveForest() {
+        $.ajax({
+            url: "save",
+            type: 'POST',
+            data: {'user_forest_cells': forestString},
+            success: function(response) {
+                console.log("sent marker id to view successfully");
+                console.log("Response: ", response);
+            },
+            error: function(error) {
+                console.log("encountered error when sending marker id: ", error);
+            }
+        })
+        .done(response => {console.log(response)}) // we don't need to do anything with the response
+    }
+
+    function ajaxCallUpdateForestData() {
+        $.ajax({
+            url: "update_forest_on_page",
+            type: 'GET'
+        })
+            .done(response => {
+                document.getElementById("retrieved-forest-content").innerHTML = response.user_forest;
+            })
+    }
 }
 
 // generate user's forest grid 
