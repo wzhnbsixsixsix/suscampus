@@ -11,6 +11,24 @@
   <link rel="stylesheet" href="{% static '/bootstrap/css/bootstrap.min.css' %}" />
   <script src="//code.jquery.com/jquery-1.10.2.js"></script>
   <script src="//code.jquery.com/ui/1.11.2/jquery-ui.js"></script>
+  <script>
+
+    function onDrop(event) {
+      //gets id of dropped litter
+      const litterId = event.dataTransfer.getData('text');
+      const litter = document.getElementById(litterId);
+
+      //gets dropzone
+      const recyclingDropzone = event.target;
+      console.log("dropped " + litterId + " into " + recyclingDropzone.id);
+      litter.style.backgroundColor = "pink";
+    }
+
+    function onDragOver(event) {
+      event.preventDefault();
+    }
+
+  </script>
   <style>
     body {
       display: flex;
@@ -47,7 +65,8 @@
     <div class="forest-popup" id="occupied-popup">
       <div class="popup-title">
         <div id="close-occupied-popup" class="close-popup">
-          <i class="lni lni-xmark" style="width: 100%; height: 100%; display: inline-block; font-size: max(4vw, 40px);"></i>
+          <i class="lni lni-xmark"
+            style="width: 100%; height: 100%; display: inline-block; font-size: max(4vw, 40px);"></i>
         </div>
         <div id="plant-name" style="font-size: max(2.5vw, 25px);">Customise</div>
       </div>
@@ -64,7 +83,8 @@
     <div class="forest-popup" id="empty-popup">
       <div class="popup-title">
         <div id="close-empty-popup" class="close-popup">
-          <i class="lni lni-xmark" style="width: 100%; height: 100%; display: inline-block; font-size: max(4vw, 40px);"></i>
+          <i class="lni lni-xmark"
+            style="width: 100%; height: 100%; display: inline-block; font-size: max(4vw, 40px);"></i>
         </div>
         <div style="font-size: max(2.5vw, 25px);">Select plant</div>
       </div>
@@ -74,7 +94,8 @@
     <div class="button-popup" id="customise-popup">
       <div class="popup-title">
         <div id="close-customise-popup" class="close-popup">
-          <i class="lni lni-xmark" style="width: 100%; height: 100%; display: inline-block; font-size: max(4vw, 40px);"></i>
+          <i class="lni lni-xmark"
+            style="width: 100%; height: 100%; display: inline-block; font-size: max(4vw, 40px);"></i>
         </div>
         <div style="font-size: max(2.5vw, 25px);">Customise</div>
       </div>
@@ -86,7 +107,8 @@
     <div class="button-popup" id="sell-popup">
       <div class="popup-title">
         <div id="close-sell-popup" class="close-popup">
-          <i class="lni lni-xmark" style="width: 100%; height: 100%; display: inline-block; font-size: max(4vw, 40px);"></i>
+          <i class="lni lni-xmark"
+            style="width: 100%; height: 100%; display: inline-block; font-size: max(4vw, 40px);"></i>
         </div>
         <div style="font-size: max(2.5vw, 25px);">Sell Land</div>
       </div>
@@ -102,19 +124,25 @@
     <div id="recycling-popup">
       <div class="popup-title">
         <div id="close-recycling-popup" class="close-popup">
-          <i class="lni lni-xmark" style="width: 100%; height: 100%; display: inline-block; font-size: max(4vw, 40px); "></i>
+          <i class="lni lni-xmark"
+            style="width: 100%; height: 100%; display: inline-block; font-size: max(4vw, 40px); "></i>
         </div>
         <div style="font-size: max(2.5vw, 25px);">Recycling</div>
       </div>
-      <div id="recycling-container" style="position: absolute; top: 4vw;  bottom: 0px; width: 100%; display: unset; border: 1px solid #48c2e0">
+      <div id="recycling-container"
+        style="position: absolute; top: 4vw;  bottom: 0px; width: 100%; display: unset; border: 1px solid #48c2e0">
         <div id="litter-container" style="height: 70%; width: 100%; background-color: #144f5e67;">
 
         </div>
-        <div id="bin-container" class="" style="display:flex; flex-direction: row; justify-content: space-around; height: 30%; width: 100%; background-color: #40145e67;">
-          <div id="plastic-recycling" droppable style="background-color: red; height: 100%; width: 25%;"></div>
-          <div id="paper-recycling" droppable style="background-color: blue; height: 100%; width: 25%;"></div>
-          <div id="compost-recycling" dropzone="" style="background-color: green; height: 100%; width: 25%;"></div>
-          
+        <div id="bin-container"
+          style="display:flex; flex-direction: row; justify-content: space-around; height: 30%; width: 100%; background-color: #40145e67;">
+          <div id="plastic-recycling" ondragover="onDragOver(event);" ondrop="onDrop(event);"
+            style="background-color: red; height: 100%; width: 25%;"></div>
+          <div id="paper-recycling" ondragover="onDragOver(event);" ondrop="onDrop(event);"
+            style="background-color: blue; height: 100%; width: 25%;"></div>
+          <div id="compost-recycling" ondragover="onDragOver(event);" ondrop="onDrop(event);"
+            style="background-color: green; height: 100%; width: 25%;"></div>
+
         </div>
       </div>
     </div>

@@ -93,15 +93,29 @@ function closePopup(popup) {
     setTimeout(function () { popup.style.display = "none"; }, 480);
 }
 
+
+//drag and drop handlers
+function onDragStart(event) {
+    event.dataTransfer.clearData();
+    console.log("started dragging")
+    event.dataTransfer.setData('text/plain', event.target.id);
+    event.currentTarget.style.backgroundColor = 'yellow';
+}
+
+
+
+
+
 function generateRecycling() {
     const litterContainer = document.getElementById("litter-container");
     for (let i = 0; i < 5; i++) {
         let litterImg = document.createElement("img");
         const addedLitter = litterContainer.appendChild(litterImg);
+        addedLitter.id = "added-litter-" + i;
         addedLitter.litterType = 0;
         addedLitter.draggable = "true";
         addedLitter.classList.add("litter");
-        addedLitter.style = "top: " + Math.random() * 60 + "%; left: " +  + Math.random() * 90 + "%;";
+        addedLitter.style = "top: " + Math.random() * 60 + "%; left: " + + Math.random() * 90 + "%;";
         switch (addedLitter.litterType) {
             case 0:
                 addedLitter.style.backgroundColor = "red";
@@ -110,12 +124,14 @@ function generateRecycling() {
             case 2:
                 addedLitter.style.backgroundColor = "green";
         }
+        addedLitter.ondragstart = function () { onDragStart(event) };
+
     }
 }
 
-$(function() {
-    $(".litter").draggable();
-  });
+
+
+
 
 function generateCustomiseGrid(rows, cols) {
     const gridContainer = document.getElementById("customise-grid");
