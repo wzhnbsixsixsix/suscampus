@@ -150,3 +150,12 @@ def save_forest(request):
         return JsonResponse({"result" : "error when receiving user forest"})
     user_forest.save()
     return JsonResponse({"result" : "updated user forest successfully"})
+
+@login_required
+def get_plant_list(request):
+    plantString = ""
+    for plant in Plant.objects.all():
+        plantString += plant.id + "," + plant.requirement_type + "," + plant.rarity + "," + plant.plant_name + ";"
+
+
+    return JsonResponse({"plant_list" : plantString})

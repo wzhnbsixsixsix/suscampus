@@ -6,6 +6,7 @@ function onForestCellClick(cell) {
 
     if (cell.plantId == "0") { //if cell is empty
         if (occupiedPopup.style.display == "block") { closePopup(occupiedPopup); }
+        emptyPopup.selectedCell = cell;
         //opens popup to plant tree
         openPopup(emptyPopup);
     }
@@ -20,7 +21,7 @@ function onForestCellClick(cell) {
     }
 }
 
-function customiseClick() {
+function onCustomiseClick() {
     let customisePopup = document.getElementById("customise-popup");
     let sellPopup = document.getElementById("sell-popup");
     if (customisePopup.style.display == "block") {
@@ -34,7 +35,7 @@ function customiseClick() {
     }
 }
 
-function sellClick() {
+function onSellClick() {
     let customisePopup = document.getElementById("customise-popup");
     let sellPopup = document.getElementById("sell-popup");
     if (sellPopup.style.display == "block") {
@@ -48,7 +49,7 @@ function sellClick() {
     }
 }
 
-function recyclingClick() {
+function onRecyclingClick() {
     let recyclingPopup = document.getElementById("recycling-popup");
     if (recyclingPopup.style.display == "block") {
         recyclingPopup.style.animation = "recycling-exit 0.5s";
@@ -74,6 +75,10 @@ function recyclingClick() {
         recyclingPopup.style.display = "block";
         recyclingPopup.style.animation = "recycling-enter 0.5s";
     }
+}
+
+function onPlantCellClick(cell) {
+
 }
 
 function openPopup(popup) {
@@ -160,6 +165,29 @@ function generateRecycling() {
         addedLitter.ondragstart = function () { litterDragStart(event) };
         addedLitter.ondragend = function () { litterDragEnd(event) };
 
+    }
+}
+
+function generatePlantSelectionGrid(cols) {
+    const userInv = document.getElementById("retrieved-forest-content").innerHTML.split(",");
+    const gridContainer = document.getElementById("plant-selection-grid");
+    
+    let oakCount = userInv[9];
+    let birchCOunt = userInv[10];
+    let firCount = userInv[11];
+    let redCampionCount = userInv[12];
+    let poppyCount = userInv[13];
+    let cotoneasterCount = userInv[14];
+
+    gridContainer.style.setProperty('--grid-rows', Math.ceil(plantArray.length / cols));
+    gridContainer.style.setProperty('--grid-cols', cols);
+    let i = 1;
+    for (const plant in plantArray) {
+        let gridCell = document.createElement("div");
+        const addedCell = gridContainer.appendChild(gridCell);
+        addedCell.className = "grid-item";
+        addedCell.id = "plant-selection-cell-" + i++;
+        addedCell.addEventListener("click", function () { onPlantCellClick(addedCell); });
     }
 }
 
@@ -280,13 +308,31 @@ function generateForestGrid(rows, cols) {
     }
 }
 
+function addPlant() {
+
+}
+
+function getPlants() {
+    let plantList = document.getElementById("retrieved-plant-content").innerHTML.split(";");
+    var plantArray = Array(plantList.length + 1);
+    let i = 1; //ignore first element, no plant has id=0
+    for (const plant of plantList) {
+        plantArray[i] = plant.split(",");
+        i += 1;
+    }
+    return plantArray;
+}
+
+let plantArray = getPlants();
 generateForestGrid(4, 4);
 generateCustomiseGrid(4, 4);
+generatePlantSelectionGrid(4);
 generateRecycling();
 
-document.getElementById("customise-button").addEventListener("click", customiseClick);
-document.getElementById("sell-button").addEventListener("click", sellClick);
-document.getElementById("recycling-button").addEventListener("click", recyclingClick);
+
+document.getElementById("customise-button").addEventListener("click", onCustomiseClick);
+document.getElementById("sell-button").addEventListener("click", onSellClick);
+document.getElementById("recycling-button").addEventListener("click", onRecyclingClick);
 document.getElementById("close-recycling-popup").addEventListener("click", function () { closePopup(document.getElementById("recycling-popup")) });
 document.getElementById("close-occupied-popup").addEventListener("click", function () { closePopup(document.getElementById("occupied-popup")) });
 document.getElementById("close-empty-popup").addEventListener("click", function () { closePopup(document.getElementById("empty-popup")) });

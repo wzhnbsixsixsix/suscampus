@@ -21,17 +21,17 @@
       //gets dropzone
       const recyclingDropzone = event.target;
       console.log("dropped " + litterId + " into " + recyclingDropzone.id);
-      
+
       //TODO make successful recycles save
-      if (litter.litterType == 0 && recyclingDropzone.id == "plastic-recycling"){
+      if (litter.litterType == 0 && recyclingDropzone.id == "plastic-recycling") {
         //successful plastic recycle
         litter.remove();
       }
-      else if (litter.litterType == 1 && recyclingDropzone.id == "paper-recycling"){
+      else if (litter.litterType == 1 && recyclingDropzone.id == "paper-recycling") {
         //successful paper recycle
         litter.remove();
       }
-      else if (litter.litterType == 2 && recyclingDropzone.id == "compost-recycling"){
+      else if (litter.litterType == 2 && recyclingDropzone.id == "compost-recycling") {
         //successful comnpost recycle
         litter.remove();
       }
@@ -39,7 +39,7 @@
         //incorrect bin
         let previousColor = litter.style.backgroundColor;
         litter.style.backgroundColor = "pink";
-        setTimeout(function () {litter.style.backgroundColor = previousColor}, 500)
+        setTimeout(function () { litter.style.backgroundColor = previousColor }, 500)
 
       }
     }
@@ -108,6 +108,16 @@
         </div>
         <div style="font-size: max(2.5vw, 25px);">Select plant</div>
       </div>
+      <div style="height: 70%;">
+        <div class="grid-container" id="plant-selection-grid" style="width: 90%;">
+        </div>
+      </div>
+      <div id="plant-details" class="d-flex flex-column" style="position: absolute; bottom: 20px; height: 20%; width: 90%; left: 5%;">
+        <label id="selected-plant-name" style="font-size: max(2vw, 20px);">Select a plant</label>
+        <label id="selected-plant-resource" style="font-size: max(1.5vw, 15px);">Plant Resource: </label>
+        <button type="button" style="position: relative; height: 40%; width: 100%;" id="plant-selected-button"
+          class="btn btn-primary btn-lg d-flex">Select Plant</button>
+      </div>
     </div>
 
 
@@ -149,19 +159,18 @@
         </div>
         <div style="font-size: max(2.5vw, 25px);">Recycling</div>
       </div>
-      <div id="recycling-container"
-        style="position: absolute; top: 4vw;  bottom: 0px; width: 100%; display: unset;">
+      <div id="recycling-container" style="position: absolute; top: 4vw;  bottom: 0px; width: 100%; display: unset;">
         <div id="litter-container" style="height: 70%; width: 100%;">
 
         </div>
         <div id="bin-container"
           style="display:flex; flex-direction: row; justify-content: space-around; height: 30%; width: 100%;">
-          <div class="recycling-dropzone" id="plastic-recycling" ondragover="litterDragOver(event);" ondrop="litterDrop(event);"
-            style="background-color: red;"></div>
-          <div class="recycling-dropzone" id="paper-recycling" ondragover="litterDragOver(event);" ondrop="litterDrop(event);"
-            style="background-color: blue;"></div>
-          <div class="recycling-dropzone" id="compost-recycling" ondragover="litterDragOver(event);" ondrop="litterDrop(event);"
-            style="background-color: green;"></div>
+          <div class="recycling-dropzone" id="plastic-recycling" ondragover="litterDragOver(event);"
+            ondrop="litterDrop(event);" style="background-color: red;"></div>
+          <div class="recycling-dropzone" id="paper-recycling" ondragover="litterDragOver(event);"
+            ondrop="litterDrop(event);" style="background-color: blue;"></div>
+          <div class="recycling-dropzone" id="compost-recycling" ondragover="litterDragOver(event);"
+            ondrop="litterDrop(event);" style="background-color: green;"></div>
 
         </div>
       </div>
@@ -177,15 +186,17 @@
       </div>
     </div>
     <div id="retrieved-forest-content" class="data-container">{{user_forest}}</div>
-    <div id="retrieved-inventory-content" class="data-container" style="position: fixed;">{{user_inventory}}</div>
+    <div id="retrieved-inventory-content" class="data-container">{{user_inventory}}</div>
+    <div id="retrieved-plant-content" class="data-container">{{plant_list}}</div>
   </div>
 
 
 
   <!-- Bootstrap JS -->
-  <script src="{% static '/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
-  <!-- forest js files -->
-  <script type="module" src="{% static '/js/forestDisplay.js' %}"></script>
+  <script src=" {% static '/bootstrap/js/bootstrap.bundle.min.js' %}">
+  </script>
+      <!-- forest js files -->
+      <script type="module" src="{% static '/js/forestDisplay.js' %}"></script>
 </body>
 
 </html>
