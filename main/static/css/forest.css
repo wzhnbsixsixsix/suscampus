@@ -212,6 +212,13 @@
       }
 }
 
+.recycling-dropzone {
+    height: 90%; 
+    width: 25%;
+    bottom: 0px;
+    transition: opacity 0.3s linear, height 0.3s ease;
+    align-self: flex-end;
+}
 
 #recycling-button {
     

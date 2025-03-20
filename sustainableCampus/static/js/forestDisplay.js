@@ -95,15 +95,45 @@ function closePopup(popup) {
 
 
 //drag and drop handlers
-function onDragStart(event) {
+function litterDragStart(event) {
     event.dataTransfer.clearData();
-    console.log("started dragging")
     event.dataTransfer.setData('text/plain', event.target.id);
-    event.currentTarget.style.backgroundColor = 'yellow';
+
+    let litter = event.currentTarget;
+    event.currentTarget.style.border = "#1da124";
+    //highlighting correct bin
+    switch (litter.litterType){
+        case 0:
+            document.getElementById("plastic-recycling").style.height = "100%";
+            document.getElementById("paper-recycling").style.opacity = "0.4";
+            document.getElementById("compost-recycling").style.opacity = "0.4";
+            break;
+        case 1:
+            document.getElementById("plastic-recycling").style.opacity = "0.4";
+            document.getElementById("paper-recycling").style.height = "100%";
+            document.getElementById("compost-recycling").style.opacity = "0.4";
+            break;
+        case 2:
+            document.getElementById("paper-recycling").style.opacity = "0.4";
+            document.getElementById("plastic-recycling").style.opacity = "0.4";
+            document.getElementById("compost-recycling").style.height = "100%";
+            break;
+    }
 }
 
+function litterDragEnd(event) {
+    let litter = event.currentTarget;
+    litter.style.border = "none";
 
+    //resetting bin styles
+    document.getElementById("plastic-recycling").style.opacity = "1";
+    document.getElementById("paper-recycling").style.opacity = "1";
+    document.getElementById("compost-recycling").style.opacity = "1";
 
+    document.getElementById("plastic-recycling").style.height = "90%";
+    document.getElementById("paper-recycling").style.height = "90%";
+    document.getElementById("compost-recycling").style.height = "90%";
+}
 
 
 function generateRecycling() {
@@ -112,19 +142,24 @@ function generateRecycling() {
         let litterImg = document.createElement("img");
         const addedLitter = litterContainer.appendChild(litterImg);
         addedLitter.id = "added-litter-" + i;
-        addedLitter.litterType = 0;
+        //TODO read litter type from database
+        addedLitter.litterType = Math.floor(Math.random() * (2 - 0 + 1) ) + 0;
         addedLitter.draggable = "true";
         addedLitter.classList.add("litter");
         addedLitter.style = "top: " + Math.random() * 60 + "%; left: " + + Math.random() * 90 + "%;";
         switch (addedLitter.litterType) {
             case 0:
                 addedLitter.style.backgroundColor = "red";
+                break;
             case 1:
                 addedLitter.style.backgroundColor = "blue";
+                break;
             case 2:
                 addedLitter.style.backgroundColor = "green";
+                break;
         }
-        addedLitter.ondragstart = function () { onDragStart(event) };
+        addedLitter.ondragstart = function () { litterDragStart(event) };
+        addedLitter.ondragend = function () {litterDragEnd(event)};
 
     }
 }
