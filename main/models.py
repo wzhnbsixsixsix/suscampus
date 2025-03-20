@@ -22,6 +22,24 @@ class UserInventory(models.Model):
     # stores the markers the user has collected today, will reset at midnight
     collected_markers = models.TextField(default = "")
 
+    # returns a dictionary that represents the contents of the user's inventory
+    def to_dict(self):
+        return {"paper" : self.paper,
+                "plastic" : self.plastic,
+                "compost" : self.compost,
+                "recycled_paper" : self.recycled_paper,
+                "recycled_plastic" : self.recycled_plastic,
+                "recycled_compost" : self.recycled_compost,
+                "tree_guard" : self.tree_guard,
+                "rain_catcher" : self.rain_catcher,
+                "fertilizer" : self.fertilizer,
+                "oak" : self.oak,
+                "birch" : self.birch,
+                "fir" : self.fir,
+                "red_campion" : self.red_campion,
+                "poppy" : self.poppy,
+                "cotoneaster" : self.cotoneaster}
+
 class UserForest(models.Model):
     user = models.OneToOneField('accounts.CustomUser', on_delete=models.CASCADE, primary_key=True)
     cells = models.TextField(default = "{cell_0 : [0,0,0], cell_1 : [0,0,0], cell_2 : [0,0,0], cell_3 : [0,0,0], cell_4 : [0,0,0], cell_5 : [0,0,0],"

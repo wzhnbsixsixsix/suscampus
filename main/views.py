@@ -29,8 +29,13 @@ def forest(request):
     # gets the state of the user's forest saved to the database
     user_forest = UserForest.objects.get(user=request.user)
     user_inventory = UserInventory.objects.get(user=request.user)
-    print(user_inventory)
-    return render(request, "forest.html", {"user_forest" : user_forest.cells, "user_inventory" : user_inventory})
+    user_inventory_dict = user_inventory.to_dict()
+    print(user_inventory_dict)
+    user_inventory_str = ""
+    for key in user_inventory_dict.keys():
+        user_inventory_str += str(user_inventory_dict[key]) + ","
+    print(user_inventory_str)
+    return render(request, "forest.html", {"user_forest" : user_forest.cells, "user_inventory" : user_inventory_str})
 
 @login_required
 @csrf_exempt
