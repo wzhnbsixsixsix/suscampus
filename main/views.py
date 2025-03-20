@@ -141,6 +141,51 @@ def update_forest_on_page(request):
     return JsonResponse({"user_forest" : user_forest.cells})
 
 @login_required
+def get_recycled_count(request):
+    user_inv = UserInventory.objects.get(user=request.user)
+    recycled_paper = user_inv.recycled_paper
+    recycled_plastic = user_inv.recycled_plastic
+    recycled_compost = user_inv.recycled_compost
+    return JsonResponse({"count_paper" : recycled_paper, "count_plastic" : recycled_plastic, "count_compost" : recycled_compost})
+
+@login_required
+@csrf_exempt
+def handle_recycling(request):
+    user_inv = UserInventory.objects.get(user=request.user)
+    if (request.method == 'POST' and 'type' in request.POST):
+        recycling_type = request.POST['type']
+        match recycling_type:
+            case "paper":
+                # a paper is recycled; if the user has 5 recycled papers they are automatically
+                # turned into a tree guard
+                user_inv.paper -= 1
+                user_inv.recycled_paper += 1
+                if (user_inv.recycled_paper == 5):
+                    print("made tree guard")
+                    user_inv.tree_guard += 1
+                    user_inv.recycled_paper = 0
+            case "plastic":
+                # works just as paper, but a rain catcher is made instead of a tree guard
+                user_inv.plastic -= 1
+                user_inv.recycled_plastic += 1
+                if (user_inv.recycled_plastic == 5):
+                    print("made rain catcher")
+                    user_inv.rain_catcher += 1
+                    user_inv.recycled_plastic = 0
+            case "compost":
+                # works just as paper, but fertilizer is made instead of a tree guard
+                user_inv.compost -= 1
+                user_inv.recycled_compost += 1
+                if (user_inv.recycled_compost == 5):
+                    print("made fertilizer")
+                    user_inv.fertilizer += 1
+                    user_inv.recycled_compost = 0
+    else:
+        return JsonResponse({"result" : "error when recieving recycling data"})
+    user_inv.save()
+    return JsonResponse({"result" : "database updated to reflect recyled item successfully"})
+
+@login_required
 @csrf_exempt
 def save_forest(request):
     user_forest = UserForest.objects.get(user=request.user)

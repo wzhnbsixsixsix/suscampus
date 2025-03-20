@@ -26,14 +26,20 @@
       if (litter.litterType == 0 && recyclingDropzone.id == "plastic-recycling") {
         //successful plastic recycle
         litter.remove();
+        const recyclingDataJSON = {"type": "paper"}
+        ajaxCallRecycleItem(recyclingDataJSON);
       }
       else if (litter.litterType == 1 && recyclingDropzone.id == "paper-recycling") {
         //successful paper recycle
         litter.remove();
+        const recyclingDataJSON = {"type": "plastic"}
+        ajaxCallRecycleItem(recyclingDataJSON);
       }
       else if (litter.litterType == 2 && recyclingDropzone.id == "compost-recycling") {
         //successful comnpost recycle
         litter.remove();
+        const recyclingDataJSON = {"type": "compost"}
+        ajaxCallRecycleItem(recyclingDataJSON);
       }
       else {
         //incorrect bin
@@ -46,6 +52,21 @@
 
     function litterDragOver(event) {
       event.preventDefault();
+    }
+
+    function ajaxCallRecycleItem(recyclingData) {
+      $.ajax ({
+        url: "handle_recycling",
+        type: 'POST',
+        data: recyclingData,
+        success: function(response) {
+          console.log("sent the data on the recycling event successfully");
+          console.log("Response: ", response);
+        },
+        error: function(error) {
+          console.log("encountered error when sending recycling event data: ", error);
+        }
+      })
     }
 
   </script>

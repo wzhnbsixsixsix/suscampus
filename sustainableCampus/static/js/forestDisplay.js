@@ -1,4 +1,3 @@
-
 function onForestCellClick(cell) {
     console.log(cell.id + " clicked");
     let occupiedPopup = document.getElementById("occupied-popup");
@@ -142,14 +141,28 @@ function litterDragEnd(event) {
 
 function generateRecycling() {
     const litterContainer = document.getElementById("litter-container");
-    for (let i = 0; i < 5; i++) {
+    const user_inv = document.getElementById("retrieved-inventory-content").innerHTML.split(',');
+    // populates the container with unrecycled paper
+    for (let i = 0; i < user_inv[0]; i++) {
+        addRecycleable(i, 0);
+    }
+    // populates the container with unrecycled plastic
+    for (let i = 0; i < user_inv[1]; i++) {
+        addRecycleable(i, 1);
+    }
+    //populates the container with unrecycled compost
+    for (let i = 0; i < user_inv[2]; i++) {
+        addRecycleable(i, 2);
+    }
+
+    function addRecycleable(num, type) {
         let litterImg = document.createElement("img");
         const addedLitter = litterContainer.appendChild(litterImg);
-        addedLitter.id = "added-litter-" + i;
-        //TODO read litter type from database
-        addedLitter.litterType = Math.floor(Math.random() * (2 - 0 + 1)) + 0;
+        addedLitter.id = "added-litter-" + type + "-" + num;
+        addedLitter.litterType = type
         addedLitter.draggable = "true";
         addedLitter.classList.add("litter");
+        // places litter at a random point in the container
         addedLitter.style = "top: " + Math.random() * 60 + "%; left: " + + Math.random() * 90 + "%;";
         switch (addedLitter.litterType) {
             case 0:
@@ -164,7 +177,6 @@ function generateRecycling() {
         }
         addedLitter.ondragstart = function () { litterDragStart(event) };
         addedLitter.ondragend = function () { litterDragEnd(event) };
-
     }
 }
 
