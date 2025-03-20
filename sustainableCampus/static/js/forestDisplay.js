@@ -200,7 +200,7 @@ function generateForestGrid(rows, cols) {
         addedPlantImage.src = addedCell.plantImagePath;
         let cellRect = addedCell.getBoundingClientRect();
         let forestRect = forestContainer.getBoundingClientRect();
-        addedPlantImage.style = "top: " + ((100 * ((cellRect.top - forestRect.top) / forestRect.height)) - 37) + "%; left: " + (100 * ((cellRect.left - forestRect.left) / forestRect.width)) + "%;";
+        addedPlantImage.style = "top: " + ((100 * ((cellRect.top - forestRect.top) / forestRect.height)) - 37) + "%; left: " + ((100 * ((cellRect.left - forestRect.left) / forestRect.width))) + "%;";
 
     }
 }

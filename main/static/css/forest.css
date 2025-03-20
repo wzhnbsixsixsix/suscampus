@@ -18,10 +18,12 @@
     justify-content: center;
     aspect-ratio: 1/1;
     transform: rotate(-67.5deg) skewX(45deg) scaleY(cos(45deg));
-    max-height: 100%;
-    max-width: 100%;
-    top: -20px;
+    width: 106%;
+    aspect-ratio: 1/1;
+    top: -9%;
+    left: -3%;
     margin: auto;
+    padding: 2%;
 }
 
 #forest-background {
@@ -51,7 +53,7 @@
 
 #forest-background-right {
     position: absolute;
-    top: min(27%, max(18vw, 12vh));
+    top: min(27%, max(18vw, 12.5vh));
     right: 0;
     width: 50%;
     min-height: 73%;
@@ -104,7 +106,7 @@
 .forest-floor {
     position: relative;
     left: -50%;
-    top: -20px;
+    top: -12%;
     width: 200%;
     aspect-ratio: 5/2;
     margin: auto;
@@ -146,6 +148,14 @@
     
 .data-container {
     display: none;
+}
+
+.popup-title {
+    display:flex; 
+    flex-direction: row; 
+    justify-content: left; 
+    gap: 2px; 
+    max-width: 48vw;
 }
 
 @media (prefers-reduced-motion: no-preference) {
