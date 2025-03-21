@@ -48,7 +48,7 @@
     min-height: 73%;
     max-height: 81%;
     height: 85%;
-    background-color: #167813;
+    background-color: #096506;
 }
 
 #forest-background-right {
@@ -59,7 +59,7 @@
     min-height: 73%;
     max-height: 81%;
     height: 85%;
-    background-color: #096506;
+    background-color: #167813;
 }
 
 #button-container {
@@ -144,10 +144,12 @@
     border: 1px solid #0f0;
     cursor: pointer;
     aspect-ratio: 1/1;
+    overflow: visible;
 }
 
 .popup-grid-item {
-
+    display: grid;
+    grid-template-columns: 1fr;
     aspect-ratio: 1/1;
     border: 1px solid #0f0;
     cursor: pointer;
@@ -155,13 +157,27 @@
 
     &:hover {
         scale: 110%;
-      }
+    }
 }
+
+
+.popup-grid-item img {
+    grid-row-start: 1;
+    grid-column-start: 1;
+}
+.popup-grid-item label {
+    align-self: flex-end;
+    grid-row-start: 1;
+    grid-column-start: 1;
+}
+
 
 .plant-image {
     height: 50%;
     width: 20%;
-    position:absolute;
+    position: absolute;
+    z-index: 20;
+    pointer-events: none;
 }
 
 .contained-image {
@@ -173,8 +189,8 @@
 .close-popup {
     cursor: pointer;
     color: red;
-    height: 100%; 
-    aspect-ratio: 1/1; 
+    height: 100%;
+    aspect-ratio: 1/1;
     text-align: center;
     transition: color 0.2s ease, scale 0.2s ease;
 
@@ -183,16 +199,16 @@
         scale: 110%;
     }
 }
-    
+
 .data-container {
     display: none;
 }
 
 .popup-title {
-    display:flex; 
-    flex-direction: row; 
-    justify-content: left; 
-    gap: 2px; 
+    display: flex;
+    flex-direction: row;
+    justify-content: left;
+    gap: 2px;
     max-width: 48vw;
 }
 
@@ -210,6 +226,7 @@
         background-color: #f1f1f1;
         border-radius: 10px;
         animation: popup-enter 0.5s;
+        z-index: 21;
     }
 
     .button-popup {
@@ -224,6 +241,7 @@
         background-color: #f1f1f1;
         border-radius: 10px;
         animation: popup-enter 0.5s;
+        z-index: 21;
     }
 
     #recycling-popup {
@@ -236,22 +254,23 @@
         background-color: #f1f1f1da;
         border-radius: 10px;
         animation: recycling-enter 0.5s;
+        z-index: 21;
     }
 }
 
 .litter {
-    position: absolute; 
-    height: 10%; 
+    position: absolute;
+    height: 10%;
     aspect-ratio: 1/1;
     transition: scale 0.1s linear;
 
     &:hover {
         scale: 110%;
-      }
+    }
 }
 
 .recycling-dropzone {
-    height: 90%; 
+    height: 90%;
     width: 25%;
     bottom: 0px;
     transition: opacity 0.3s linear, height 0.3s ease;
@@ -259,10 +278,10 @@
 }
 
 #recycling-button {
-    
+
     &:hover {
         scale: 110%;
-      }
+    }
 }
 
 

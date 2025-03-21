@@ -1,10 +1,12 @@
+//onClick events -------------------------------------------------------------------------------------
+
 function onForestCellClick(cell) {
     console.log(cell.id + " clicked");
     let occupiedPopup = document.getElementById("occupied-popup");
     let emptyPopup = document.getElementById("empty-popup");
 
     if (cell.plantId == "0") { //if cell is empty
-        if (occupiedPopup.style.display == "block") { closePopup(occupiedPopup); }
+        if (occupiedPopup.style.display == "block") { closePopup(occupiedPopup); }  //closes other popup
         emptyPopup.selectedCell = cell;
         //opens popup to plant tree
         openPopup(emptyPopup);
@@ -77,9 +79,17 @@ function onRecyclingClick() {
 }
 
 function onPlantCellClick(cell) {
+    //disable button if no plants are in inventory
+    let plantButton = document.getElementById("plant-selected-button");
+    if (cell.selectedPlantCount == 0) {
+        plantButton.disabled = true;
+    }
+    else {
+        plantButton.disabled = false;
+    }
     document.getElementById("selected-plant-name").innerHTML = cell.selectedPlantName;
     let resourceName = "";
-    switch (cell.selectedPlantResource){
+    switch (cell.selectedPlantResource) {
         case "0":
             resourceName = "Water";
             break;
@@ -91,6 +101,28 @@ function onPlantCellClick(cell) {
             break;
     }
     document.getElementById("selected-plant-resource").innerHTML = resourceName;
+}
+
+function addPlant() {
+    let plantButton = document.getElementById("plant-selected-button");
+    let emptyPopup = document.getElementById("empty-popup");
+    let selectedForestCell = emptyPopup.selectedCell;
+    let selectedPlantId = plantButton.selectedPlantId;
+
+    //changes to the grid
+    selectedForestCell.plantId = plantButton.selectedPlantId;
+    selectedForestCell.plantGrowthStage = 0; //0, 1, or 2
+    selectedForestCell.plantRequirement = 1; //0 if no requirement, 1 for fertiliser, etc
+    selectedForestCell.plantImagePath = media_url + "forest_assets/id0.png";
+    document.getElementById("forest-image-" + selectedForestCell.gridNumber).src = selectedForestCell.plantImagePath;   //sets image to seedling
+
+    closePopup(emptyPopup);
+
+    //changes to the database
+    //updating inventory
+
+    //updating forest
+    makeForestChange(selectedForestCell.gridNumber, [selectedForestCell.plantId, selectedForestCell.plantGrowthStage, selectedForestCell.plantRequirement])
 }
 
 function openPopup(popup) {
@@ -111,7 +143,7 @@ function closePopup(popup) {
 }
 
 
-//drag and drop handlers
+//drag and drop handlers ---------------------------------------------------------------------------------
 function litterDragStart(event) {
     event.dataTransfer.clearData();
     event.dataTransfer.setData('text/plain', event.target.id);
@@ -151,6 +183,8 @@ function litterDragEnd(event) {
     document.getElementById("paper-recycling").style.height = "90%";
     document.getElementById("compost-recycling").style.height = "90%";
 }
+
+//functions for generating items & grids -------------------------------------------------------------
 
 function generateRecycling() {
     const litterContainer = document.getElementById("litter-container");
@@ -194,31 +228,44 @@ function generateRecycling() {
 }
 
 function generatePlantSelectionGrid(cols) {
-    const userInv = document.getElementById("retrieved-forest-content").innerHTML.split(",");
+    const userInv = document.getElementById("retrieved-inventory-content").innerHTML.split(",");
     const gridContainer = document.getElementById("plant-selection-grid");
-    
-    let oakCount = userInv[9];
-    let birchCOunt = userInv[10];
-    let firCount = userInv[11];
-    let redCampionCount = userInv[12];
-    let poppyCount = userInv[13];
-    let cotoneasterCount = userInv[14];
+
+    let userSeedInv = new Array();
 
     //skips the first empty array slot
     for (let i = 1; i < (plantArray.length - 1); i++) {  //cut out first empty item
+        //creating seed inventory
+        userSeedInv[i] = userInv[i + 8];      //skips the items that arent seeds
+
+        //creating selection cells
         let gridCell = document.createElement("div");
         const addedCell = gridContainer.appendChild(gridCell);
         addedCell.className = "popup-grid-item";
+
         addedCell.id = "plant-selection-cell-" + i;
         addedCell.selectedPlantId = plantArray[i][0];
         addedCell.selectedPlantResource = plantArray[i][1];
         addedCell.selectedPlantRarity = plantArray[i][2];
         addedCell.selectedPlantName = plantArray[i][3];
+        addedCell.selectedPlantCount = userSeedInv[i];
         addedCell.addEventListener("click", function () { onPlantCellClick(addedCell); });
 
+        //getting images of plants
         const cellImage = addedCell.appendChild(document.createElement("img"));
         cellImage.classList = "contained-image";
-        cellImage.src =  media_url + "forest_assets/id" + addedCell.selectedPlantId + "_2.png";
+        cellImage.src = media_url + "forest_assets/id" + addedCell.selectedPlantId + "_2.png";
+        if (userSeedInv[i] == 0) {
+            addedCell.style.border = "2px dashed rgba(109, 109, 109, 0.34)";
+        }
+
+        let plantCount = addedCell.appendChild(document.createElement("label"));
+        plantCount.id = "plant-count-" + i;
+        plantCount.innerHTML = "x" + userSeedInv[i];
+        plantCount.style = "font-size: max(1.5vw, 15px);";
+
+        let plantButton = document.getElementById("plant-selected-button");
+        plantButton.selectedPlantId = addedCell.selectedPlantId;
     }
 }
 
@@ -283,7 +330,6 @@ function makeForestChanges(plantLocation, changedValueIndex, newValue) {
         })
             .done(response => {
                 document.getElementById("retrieved-forest-content").innerHTML = response.user_forest;
-                document.getElementById("sell-value").innerHTML = "Current value of your forest: " + response.forest_value + " tokens."
             })
     }
 }
@@ -299,11 +345,10 @@ function generateForestGrid(rows, cols) {
     // iterates for each cell that will be in the grid
     for (let i = 0; i < (rows * cols); i++) {
         let gridCell = document.createElement("div");
-        console.log("Creating forest-cell-" + i);
         const addedCell = gridContainer.appendChild(gridCell);
         addedCell.className = "grid-item";
-        addedCell.id = "forest-cell-" + i;
-        console.log("Adding event listener for click");
+        addedCell.id = "forest-cell-" + i;  //unique cell id
+        addedCell.gridNumber = i;           //used to refer to children
         addedCell.addEventListener("click", function () { onForestCellClick(addedCell); })
 
         let currentPlant = userForest[i].split(",");
@@ -317,7 +362,7 @@ function generateForestGrid(rows, cols) {
         addedCell.plantRequirement = currentPlant[2]; //0 if no requirement, 1 for fertiliser, etc
         //if cell contains plant
         if (currentPlant[0] != 0) {
-            //check if plant is first stage
+            //check if plant is first stage and assign appropriate image
             if (addedCell.plantGrowthStage == 0) {
                 addedCell.plantImagePath = media_url + "forest_assets/id0.png";
             }
@@ -330,6 +375,7 @@ function generateForestGrid(rows, cols) {
         }
 
         //placing images in correct place
+        addedPlantImage.id = "forest-image-" + i;
         addedPlantImage.classList.add("plant-image");
         addedPlantImage.src = addedCell.plantImagePath;
         let cellRect = addedCell.getBoundingClientRect();
@@ -339,15 +385,61 @@ function generateForestGrid(rows, cols) {
     }
 }
 
-function addPlant() {
+//reload and save to databases ------------------------------------------------------------------------
 
+//plantLocation - cell 0-15, plantDetails - [plantId, growthStage (0,1,2), requirement(0,1)]
+function makeForestChange(plantLocation, plantDetails) {
+    ajaxCallUpdateForestData();
+
+    //reading database entry
+    const userForest = document.getElementById("retrieved-forest-content").innerHTML.split(";");
+
+    //applying changes
+    userForest[plantLocation] = plantDetails[0] + "," + plantDetails[1] + "," + plantDetails[2]
+
+    //rebuilding database entry
+    let forestString = "";
+    for (let i = 0; i < userForest.length; i++) {
+        forestString += userForest[i] + ";";
+    }
+    forestString = forestString.substring(0, forestString.length - 1);  //remove last ;
+    //save foreststring
+    ajaxCallSaveForest(forestString);
+}
+
+
+function ajaxCallSaveForest(forestString) {
+    $.ajax({
+        url: "save",
+        type: 'POST',
+        data: { 'user_forest_cells': forestString },
+        success: function (response) {
+
+            console.log("Response: ", response);
+        },
+        error: function (error) {
+            console.log("encountered error when sending marker id: ", error);
+        }
+    })
+        .done(response => { console.log(response) }) // we don't need to do anything with the response
+}
+
+function ajaxCallUpdateForestData() {
+    $.ajax({
+        url: "update_forest_on_page",
+        type: 'GET'
+    })
+        .done(response => {
+            document.getElementById("retrieved-forest-content").innerHTML = response.user_forest;
+            document.getElementById("sell-value").innerHTML = "Current value of your forest: " + response.forest_value + " tokens."
+        })
 }
 
 function getPlants() {
     let plantList = document.getElementById("retrieved-plant-content").innerHTML.split(";");
     var plantArray = new Array(plantList.length);
     for (let i = 0; i < plantList.length; i++) {    //ignore first item, no plant has id=0
-        plantArray[i+1] = plantList[i].split(",");  //creates list where id corresponds to index, [[id, requirement_type, rarity, plant_name]]
+        plantArray[i + 1] = plantList[i].split(",");  //creates list where id corresponds to index, [[id, requirement_type, rarity, plant_name]]
     }
     return plantArray;
 }
@@ -364,10 +456,11 @@ generateCustomiseGrid(4, 4);
 generatePlantSelectionGrid(2);
 generateRecycling();
 
-
+document.getElementById("empty-popup").selectedCell = null;
 document.getElementById("customise-button").addEventListener("click", onCustomiseClick);
 document.getElementById("sell-button").addEventListener("click", onSellClick);
 document.getElementById("recycling-button").addEventListener("click", onRecyclingClick);
+document.getElementById("plant-selected-button").addEventListener("click", addPlant);
 document.getElementById("close-recycling-popup").addEventListener("click", function () { closePopup(document.getElementById("recycling-popup")) });
 document.getElementById("close-occupied-popup").addEventListener("click", function () { closePopup(document.getElementById("occupied-popup")) });
 document.getElementById("close-empty-popup").addEventListener("click", function () { closePopup(document.getElementById("empty-popup")) });
