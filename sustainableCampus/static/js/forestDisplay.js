@@ -353,6 +353,7 @@ function makeForestChange(plantLocation, plantDetails) {
     forestString = forestString.substring(0, forestString.length - 1);  //remove last ;
     //save foreststring
     ajaxCallSaveForest(forestString);
+    ajaxCallUpdateForestData();
 }
 
 
@@ -360,6 +361,8 @@ function ajaxCallSaveForest(forestString) {
     $.ajax({
         url: "save",
         type: 'POST',
+        cache: false,
+        async: false,
         data: { 'user_forest_cells': forestString },
         success: function (response) {
             console.log("Response: ", response);
@@ -368,25 +371,28 @@ function ajaxCallSaveForest(forestString) {
             console.log("encountered error when sending forest data: ", error);
         }
     })
-        .done(response => { console.log(response) }) // we don't need to do anything with the response
+        .done(response => { console.log("saved this: " + forestString) }); // we don't need to do anything with the response
 }
 
 function ajaxCallUpdateForestData() {
     $.ajax({
         url: "update_forest_on_page",
-        type: 'GET'
+        type: 'GET',
+        cache: false,
+        async: false,
     })
         .done(response => {
             document.getElementById("retrieved-forest-content").innerHTML = response.user_forest;
             document.getElementById("sell-value").innerHTML = "Current value of your forest: " + response.forest_value + " tokens."
-        })
+            console.log("loaded this: " + response.user_forest);
+        });
 }
 
 function ajaxCallAddTokens(tokens) {
     $.ajax({
         url: "add_tokens",
         type: 'POST',
-        data: {'number_of_tokens': tokens},
+        data: { 'number_of_tokens': tokens },
         success: function (response) {
             console.log("Response: ", response);
         },
@@ -414,6 +420,19 @@ function sellForest() {
     ajaxCallAddTokens(value);
     ajaxCallSaveForest("0,0,0;0,0,0;0,0,0;0,0,0;0,0,0;0,0,0;0,0,0;0,0,0;0,0,0;0,0,0;0,0,0;0,0,0;0,0,0;0,0,0;0,0,0;0,0,0");
     ajaxCallUpdateForestData();
+
+    //resetting the visuals
+    for (let i = 0; i < 16; i++) {
+        console.log("forest cell clear" + i)
+        let currentCell = document.getElementById("forest-cell-" + i)
+        currentCell.plantId = 0; // id of plant in cell, 0 if none
+        currentCell.plantGrowthStage = 0; //0, 1, or 2
+        currentCell.plantRequirement = 0; //0 if no requirement, 1 for fertiliser, etc
+        currentCell.plantImagePath = media_url + "forest_assets/empty.png";
+
+        let currentPlantImage = document.getElementById("forest-image-" + i);
+        currentPlantImage.src = currentCell.plantImagePath;
+    }
 }
 
 let plantArray = getPlants(); //[[plantid, requirement_type, rarity, plant_name]]
