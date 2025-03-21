@@ -1,4 +1,5 @@
 from django.db import models
+import datetime
 
 # Create your models here.
 class UserInventory(models.Model):
@@ -19,8 +20,10 @@ class UserInventory(models.Model):
     red_campion = models.IntegerField(default=0)
     poppy = models.IntegerField(default=0)
     cotoneaster = models.IntegerField(default=0)
-    # stores the markers the user has collected today, will reset at midnight
-    collected_markers = models.TextField(default = "")
+    # stores the markers the user has collected today, will reset when a marker is collected on a different date to last_collected
+    collected_markers = models.TextField(default="")
+    # stores the date that a marker was last collected
+    last_collected = models.TextField(default=str(datetime.date))
 
     # returns a dictionary that represents the contents of the user's inventory
     def to_dict(self):
