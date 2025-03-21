@@ -12,6 +12,7 @@ urlpatterns = [
     path('forest/handle_recycling', views.handle_recycling, name='handle_recycling'),
     path('forest/get_recycled_count', views.get_recycled_count, name='get_recycled_count'),
     path('forest/add_tokens', views.add_tokens, name='add_tokens'),
+    path('forest/update_forest_on_page', views.update_forest_on_page, name='update_forest_on_page'),
     path('map/claim_blue_marker', views.claim_blue_marker, name='claim_blue_marker'),
     path('map/claim_red_marker', views.claim_red_marker, name='claim_red_marker'),
     path('map/claim_green_marker', views.claim_green_marker, name='claim_green_marker'),

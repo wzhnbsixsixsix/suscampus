@@ -31,6 +31,9 @@ def map(request):
 def forest(request):
     # gets the state of the user's forest saved to the database
     user_forest = UserForest.objects.get(user=request.user)
+    print("before growth check: " + user_forest.last_growth_check_date)
+    check_if_plants_should_grow(user_forest)
+    print("after growth check: " + user_forest.last_growth_check_date)
     user_inventory = UserInventory.objects.get(user=request.user)
     # gets all relevant information from the plants table, allowing it to be used within the view/page
     plant_string = ""
@@ -47,6 +50,36 @@ def forest(request):
     value = calculate_forest_value(user_forest)
 
     return render(request, "forest.html", {"user_forest" : user_forest.cells, "user_inventory" : user_inventory_str, "plant_list" : plant_string, "forest_value" : value})
+
+@login_required
+def check_if_plants_should_grow(forest):
+    # get current date
+    print("checking if plants should grow")
+    curr_date = datetime.datetime.now().isocalendar()
+    curr_date = str(curr_date[0]) + "-" + str(curr_date[1]) + "-" + str(curr_date[2])
+    print("current date: " + curr_date)
+    last_growth_check = forest.last_growth_check_date
+    print("last date checked: " + last_growth_check)
+
+    # if the dates don't match, check if any plants need to grow
+    if (curr_date != last_growth_check):
+        forest_cells = forest.cells.split(";")
+        cell_details = []
+        new_forest_cells = ""
+        for cell in forest_cells:
+            cell_details.append(cell.split(","))
+        # iterate through each of the cell's details and adjust the values if any of them should grow
+        for cell_data in cell_details:
+            # if a plant HAS been given the consumable it needs to grow
+            if (cell_data[2] == '1'):
+                cell_data[1] = str(int(cell_data[1]) +  1) # increment growth stage
+                cell_data[2] == 0 # resets the value that tracks if the plant has been given the needed consumable
+            new_forest_cells += cell_data[0] + "," + cell_data[1] + "," + cell_data[2] + ";" # refroms the forest data as it is stored in the database
+
+        new_forest_cells = new_forest_cells[:-1] # removes the last ; from the string
+        forest.cells = new_forest_cells
+        forest.last_growth_check_date = curr_date
+        forest.save()
 
 @login_required
 @csrf_exempt
@@ -176,6 +209,7 @@ def update_inv_on_page(request):
 def update_forest_on_page(request):
     user_forest = UserForest.objects.get(user=request.user)
     forest_value = calculate_forest_value(user_forest)
+    print("UPDATE FOREST DATA ON THE PAGE")
     return JsonResponse({"user_forest" : user_forest.cells, "forest_value" : forest_value})
 
 @login_required
