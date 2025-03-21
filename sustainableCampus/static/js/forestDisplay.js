@@ -283,6 +283,7 @@ function makeForestChanges(plantLocation, changedValueIndex, newValue) {
         })
             .done(response => {
                 document.getElementById("retrieved-forest-content").innerHTML = response.user_forest;
+                document.getElementById("sell-value").innerHTML = "Current value of your forest: " + response.forest_value + " tokens."
             })
     }
 }
