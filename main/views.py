@@ -2,10 +2,12 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from pathlib import Path
 from .models import UserForest, UserInventory, Plant
+from shop.models import UserBalance
 from django.http import HttpResponse, JsonResponse
 from random import randint
 from django.views.decorators.csrf import csrf_exempt
 import datetime
+from math import floor
 
 def first_page(request):
     return redirect('accounts:login')
@@ -232,6 +234,7 @@ def calculate_forest_value(forest):
     value *= (1 + (unique_plants_count/10))
 
     print("calculated value: " + str(value))
+    value = floor(value) # converts to int from float
     return str(value)
 
 @login_required
@@ -297,3 +300,16 @@ def get_plant_list(request):
         plantString += plant.id + "," + plant.requirement_type + "," + plant.rarity + "," + plant.plant_name + ";"
 
     return JsonResponse({"plant_list" : plantString})
+
+@login_required
+@csrf_exempt
+def add_tokens(request):
+    user_balance = UserBalance.objects.get(user_id=request.user.id)
+    print("previous balance: " + str(user_balance.currency))
+    if (request.method == 'POST' and 'number_of_tokens' in request.POST):
+        user_balance.currency += int(request.POST['number_of_tokens'])
+    else:
+        return JsonResponse({"result" : "error when adding tokens to user balance"})
+    print("updated balance: " + str(user_balance.currency))
+    user_balance.save()
+    return JsonResponse({"result" : "updated user balance successfully"})
