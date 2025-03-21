@@ -120,6 +120,9 @@ function addPlant() {
 
     //changes to the database
     //updating inventory
+    ajaxCallUpdateInv(selectedPlantId);
+    ajaxCallUpdateInvOnPage();
+    //need to update the plant selection grid in the popup
 
     //updating forest
     makeForestChange(selectedForestCell.gridNumber, [selectedForestCell.plantId, selectedForestCell.plantGrowthStage, selectedForestCell.plantRequirement])
@@ -401,6 +404,36 @@ function ajaxCallAddTokens(tokens) {
         }
     })
         .done(response => { console.log(response) })
+}
+
+function ajaxCallUpdateInv(plantId) {
+    $.ajax({
+        url: "remove_from_inv",
+        type: 'POST',
+        cache: false,
+        async: false,
+        data: {'plant_id': plantId},
+        success: function (response) {
+            console.log("Response: ", response);
+        },
+        error: function (error) {
+            console.log("encountered error when updating inventory after planting seedling: ", error);
+        }
+    })
+        .done(response => { console.log(response) })
+}
+
+function ajaxCallUpdateInvOnPage() {
+    $.ajax({
+        url: "update_inventory_on_forest",
+        type: 'GET',
+        cache: false,
+        async: false,
+    })
+        .done(response => {
+            document.getElementById("retrieved-inventory-content").innerHTML = response.user_inventory;
+            console.log("loaded this: " + response.user_inventory);
+        });
 }
 
 function getPlants() {

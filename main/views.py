@@ -213,6 +213,17 @@ def update_forest_on_page(request):
     return JsonResponse({"user_forest" : user_forest.cells, "forest_value" : forest_value})
 
 @login_required
+def update_inventory_on_forest(request):
+    user_inventory = UserInventory.objects.get(user=request.user)
+    print("UPDATE INVENTORY ON THE PAGE")
+    user_inventory_dict = user_inventory.to_dict()
+    print(user_inventory_dict)
+    user_inventory_str = ""
+    for key in user_inventory_dict.keys():
+        user_inventory_str += str(user_inventory_dict[key]) + ","
+    return JsonResponse({"user_inventory" : user_inventory_str})
+
+@login_required
 def calculate_forest_value(forest):
     plant_list = []
     for plant in Plant.objects.all():
@@ -347,3 +358,26 @@ def add_tokens(request):
     print("updated balance: " + str(user_balance.currency))
     user_balance.save()
     return JsonResponse({"result" : "updated user balance successfully"})
+
+@login_required
+@csrf_exempt
+def remove_from_inv(request):
+    user_inventory = UserInventory.objects.get(user=request.user)
+    print("before decrementing:")
+    print("oaks: " + str(user_inventory.oak) + " birch: " + str(user_inventory.birch) + " fir: " + str(user_inventory.fir) + " red campion: " + str(user_inventory.red_campion) + " poppy: " + str(user_inventory.poppy) + " cotoneaster: " + str(user_inventory.cotoneaster))
+    if (request.method == 'POST' and 'plant_id' in request.POST):
+        plant_id = request.POST['plant_id']
+        matching_plant = ""
+        # finds the name of the plant that was just planted, this will be used to decrement the right column in the inventory record
+        for plant in Plant.objects.all():
+            if (plant.id == int(plant_id)):
+                matching_plant = plant.plant_name.lower()
+        print("plant that was planted: ", matching_plant)
+        # gets the attribute of the model with the matching name and decrements it
+        user_inventory.__dict__[matching_plant] -= 1
+        print("after decrementing:")
+        print("oaks: " + str(user_inventory.oak) + " birch: " + str(user_inventory.birch) + " fir: " + str(user_inventory.fir) + " red campion: " + str(user_inventory.red_campion) + " poppy: " + str(user_inventory.poppy) + " cotoneaster: " + str(user_inventory.cotoneaster))
+        user_inventory.save()
+    else:
+        return JsonResponse({"result" : "error when removing seedling from user's inventory"})
+    return JsonResponse({"result" : "removed seedling from user's inventory successfully"})
