@@ -34,7 +34,7 @@
     min-height: 60vh;
 
     text-align: center;
-    top: 120px;
+    bottom: 0;
     left: 0;
     right: 0;
     margin-inline: auto;
@@ -125,11 +125,37 @@
     color: green;
 }
 
+.popup-grid-container {
+    position: absolute;
+    display: grid;
+    gap: 2%;
+    grid-template-columns: repeat(auto-fill, minmax(20px, 11vw));
+    grid-template-rows: repeat(auto-fill, 11vw);
+    background-color: rgba(194, 194, 194, 0.11);
+    overflow: scroll;
+    justify-content: center;
+    padding: 5%;
+    width: 100%;
+    top: 0;
+}
+
 .grid-item {
     padding: 1em;
     border: 1px solid #0f0;
     cursor: pointer;
     aspect-ratio: 1/1;
+}
+
+.popup-grid-item {
+
+    aspect-ratio: 1/1;
+    border: 1px solid #0f0;
+    cursor: pointer;
+    transition: scale 0.1s linear;
+
+    &:hover {
+        scale: 110%;
+      }
 }
 
 .plant-image {
@@ -138,12 +164,24 @@
     position:absolute;
 }
 
+.contained-image {
+    height: 100%;
+    width: 100%;
+    background-color: #c4c4c4c4;
+}
+
 .close-popup {
     cursor: pointer;
     color: red;
     height: 100%; 
     aspect-ratio: 1/1; 
     text-align: center;
+    transition: color 0.2s ease, scale 0.2s ease;
+
+    &:hover {
+        color: darkred;
+        scale: 110%;
+    }
 }
     
 .data-container {
