@@ -282,6 +282,58 @@ function generateCustomiseGrid(rows, cols) {
     }
 }
 
+function makeForestChanges(plantLocation, changedValueIndex, newValue) {
+    ajaxCallUpdateForestData();
+
+    //reading database entry
+    const userForest = document.getElementById("retrieved-forest-content").innerHTML.split(";");
+    let forestArray = Array(userForest.length);
+    let i = 0;
+    for (const plant of userForest) {
+        forestArray[i] = plant.split(",");
+        i += 1;
+    }
+
+    //applying changes
+    forestArray[plantLocation][changedValueIndex] = newValue;
+
+    //rebuilding database entry
+    let forestString = "";
+    i = 0;
+    for (const plant of forestArray) {
+        forestString += plant[0] + "," + plant[1] + "," + plant[2] + ";";
+    }
+    forestString = forestString.substring(0, forestString.length - 1);
+    ajaxCallSaveForest();
+
+    //save foreststring
+    function ajaxCallSaveForest() {
+        $.ajax({
+            url: "save",
+            type: 'POST',
+            data: {'user_forest_cells': forestString},
+            success: function(response) {
+                console.log("sent marker id to view successfully");
+                console.log("Response: ", response);
+            },
+            error: function(error) {
+                console.log("encountered error when sending marker id: ", error);
+            }
+        })
+        .done(response => {console.log(response)}) // we don't need to do anything with the response
+    }
+
+    function ajaxCallUpdateForestData() {
+        $.ajax({
+            url: "update_forest_on_page",
+            type: 'GET'
+        })
+            .done(response => {
+                document.getElementById("retrieved-forest-content").innerHTML = response.user_forest;
+            })
+    }
+}
+
 // generate user's forest grid 
 function generateForestGrid(rows, cols) {
     const gridContainer = document.getElementById("forest-grid");
@@ -379,6 +431,7 @@ function ajaxCallUpdateForestData() {
     })
         .done(response => {
             document.getElementById("retrieved-forest-content").innerHTML = response.user_forest;
+            document.getElementById("sell-value").innerHTML = "Current value of your forest: " + response.forest_value + " tokens."
         })
 }
 

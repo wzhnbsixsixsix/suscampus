@@ -30,16 +30,21 @@ def forest(request):
     # gets the state of the user's forest saved to the database
     user_forest = UserForest.objects.get(user=request.user)
     user_inventory = UserInventory.objects.get(user=request.user)
-    plantString = ""
+    # gets all relevant information from the plants table, allowing it to be used within the view/page
+    plant_string = ""
     for plant in Plant.objects.all():
-        plantString += str(plant.id) + "," + str(plant.requirement_type) + "," + str(plant.rarity) + "," + str(plant.plant_name) + ";"
+        plant_string += str(plant.id) + "," + str(plant.requirement_type) + "," + str(plant.rarity) + "," + str(plant.plant_name) + ";"
+    # converts the contents of the user's inventory to a more useful format to be given to the page
     user_inventory_dict = user_inventory.to_dict()
     print(user_inventory_dict)
     user_inventory_str = ""
     for key in user_inventory_dict.keys():
         user_inventory_str += str(user_inventory_dict[key]) + ","
     print(user_inventory_str)
-    return render(request, "forest.html", {"user_forest" : user_forest.cells, "user_inventory" : user_inventory_str, "plant_list" : plantString})
+    # calculates the forest value on page load
+    value = calculate_forest_value(user_forest)
+
+    return render(request, "forest.html", {"user_forest" : user_forest.cells, "user_inventory" : user_inventory_str, "plant_list" : plant_string, "forest_value" : value})
 
 @login_required
 @csrf_exempt
@@ -140,7 +145,7 @@ def drop_seedling(inv):
                 else:
                     inv.red_campion += 1
             case 2:
-                inv.cottoneaster += 1
+                inv.cotoneaster += 1
     return inv
 
 @login_required
@@ -168,7 +173,66 @@ def update_inv_on_page(request):
 @login_required
 def update_forest_on_page(request):
     user_forest = UserForest.objects.get(user=request.user)
-    return JsonResponse({"user_forest" : user_forest.cells})
+    forest_value = calculate_forest_value(user_forest)
+    return JsonResponse({"user_forest" : user_forest.cells, "forest_value" : forest_value})
+
+@login_required
+def calculate_forest_value(forest):
+    plant_list = []
+    for plant in Plant.objects.all():
+        curr_plant_list = [plant.id, plant.requirement_type, plant.rarity, plant.requirement_type]
+        plant_list.append(curr_plant_list)
+    # gets the details of each cell in the user's forest, used here to calculate the value of the forest
+    forest_cells = forest.cells.split(";")
+    cell_details = []
+    for cell in forest_cells:
+        cell_details.append(cell.split(","))
+    print(cell_details)
+    # value calculation: 
+    # iterate over each cell: if there is a plant in a cell +(100 for common, 150 for uncommon, 200 for rare), account for growth stage (seedlings are worth 0 regardless of rarity, mid stage plants are worth half)
+    # count how many unique plants are used
+    # multiply total by 1.(number of unique plants)
+    unique_plants_count = 0
+    unique_plants = [] # stores ids of unique plants in the forest
+    value = 0
+    for cell in cell_details:
+        # if cell is empty skip it
+        if cell[0] == '0':
+            continue
+        else:
+            cell_val = 0
+            growth_stage = cell[1]
+            plant_id = cell[0]
+            rarity = plant_list[int(plant_id) - 1][2]
+
+            # checks if the plant is (in the cells that have been iterated through already) unique
+            if (plant_id not in unique_plants):
+                unique_plants_count += 1
+                unique_plants.append(plant_id)
+
+            # seedling only contribute to biodiversity, not the value
+            if (growth_stage == '0'):
+                continue
+
+            # now check rarity and assign base value accordingly
+            if (rarity == '2'):
+                cell_val = 200
+            elif (rarity == '1'):
+                cell_val = 150
+            else:
+                cell_val = 100
+            
+            # half the value if the plant is in the middle growth stage
+            if (growth_stage == '1'):
+                cell_val *= 0.5
+            
+            value += cell_val
+    
+    # multiplies the value by 1.(number of unique plants)
+    value *= (1 + (unique_plants_count/10))
+
+    print("calculated value: " + str(value))
+    return str(value)
 
 @login_required
 def get_recycled_count(request):

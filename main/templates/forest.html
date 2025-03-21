@@ -22,7 +22,6 @@
       const recyclingDropzone = event.target;
       console.log("dropped " + litterId + " into " + recyclingDropzone.id);
 
-      //TODO make successful recycles save
       if (litter.litterType == 0 && recyclingDropzone.id == "plastic-recycling") {
         //successful plastic recycle
         litter.remove();
@@ -175,7 +174,12 @@
 
       <div id="sell-body" style="width: 90%; margin-left: auto;">
         <div>
-          Sell your land for currency - the more plants and biodiversity will yield a higher worth!
+          Sell your land for reward tokens! Increase the value of your forest by increasing the number of plants, and the biodiversity of the land. Some plants are worth more than others, but all contribute to biodiversity!
+          <br>
+          <div id="sell-value">
+            Current value of your forest: {{forest_value}} tokens.
+          </div>
+          <button type="button" id="sell-forest-button" class="btn btn-primary btn-lg flex-fill">Sell</button>
         </div>
 
       </div>
