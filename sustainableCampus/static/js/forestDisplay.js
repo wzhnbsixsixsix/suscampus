@@ -13,12 +13,36 @@ function onForestCellClick(cell) {
     }
     else {
         if (emptyPopup.style.display == "block") { closePopup(emptyPopup); }
-        //opens popup to view tree progress
+        //opens popup to view plant progress
         openPopup(occupiedPopup);
+        let plantName = plantArray[cell.plantId][3];
+        let plantRequirementType = plantArray[cell.plantId][1];
         //update popup details
-        document.getElementById("plant-name").innerText = cell.id; //getPlantName(cell.plantid);
+        document.getElementById("plant-name").innerText = plantName;
         document.getElementById("selected-plant-image").src = cell.plantImagePath;
-        document.getElementById("selected-plant-description").innerText = "Growth stage: " + cell.plantGrowthStage
+        
+        document.getElementById("selected-plant-description").innerHTML = "Growth stage: " + cell.plantGrowthStage
+        
+        let resource = "";
+        switch (plantRequirementType){
+            case "0":
+                resource = "Water";
+                break;
+            case "1":
+                resource = "Tree Guard";
+                break;
+            case "2":
+                resource = "Fertiliser";
+                break;
+        }
+        document.getElementById("selected-plant-resource").innerHTML = "Plant Requires: " + resource;
+        document.getElementById("selected-plant-requirement-button").textContent = "Give plant " + resource;
+        if (cell.plantRequirement == 1) {
+            document.getElementById("selected-plant-resource").innerHTML = "Give " + resource;
+        }
+        else {
+            document.getElementById("selected-plant-resource").innerHTML = "Plant seems happy!";
+        }
     }
 }
 
@@ -81,6 +105,7 @@ function onRecyclingClick() {
 function onPlantCellClick(cell) {
     //disable button if no plants are in inventory
     let plantButton = document.getElementById("plant-selected-button");
+    plantButton.selectedPlantId = cell.selectedPlantId;
     if (cell.selectedPlantCount == 0) {
         plantButton.disabled = true;
     }
@@ -125,7 +150,7 @@ function addPlant() {
     //need to update the plant selection grid in the popup
 
     //updating forest
-    makeForestChange(selectedForestCell.gridNumber, [selectedForestCell.plantId, selectedForestCell.plantGrowthStage, selectedForestCell.plantRequirement])
+    makeForestChange(selectedForestCell.gridNumber, [selectedPlantId, selectedForestCell.plantGrowthStage, selectedForestCell.plantRequirement])
 }
 
 function openPopup(popup) {
@@ -311,6 +336,7 @@ function generateForestGrid(rows, cols) {
         addedCell.plantId = currentPlant[0]; // id of plant in cell, 0 if none
         addedCell.plantGrowthStage = currentPlant[1]; //0, 1, or 2
         addedCell.plantRequirement = currentPlant[2]; //0 if no requirement, 1 for fertiliser, etc
+        //getting plant details from the plant table
         //if cell contains plant
         if (currentPlant[0] != 0) {
             //check if plant is first stage and assign appropriate image

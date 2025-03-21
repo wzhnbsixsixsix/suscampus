@@ -217,8 +217,10 @@
     .forest-popup {
         display: none;
         position: fixed;
-        bottom: 100px;
-        top: 140px;
+        top: max(15vh, 140px);
+        height: 60vw;
+        max-height: 65vh;
+        min-height: 45vh;
         right: 5px;
         width: 25%;
         min-width: 200px;
@@ -232,8 +234,10 @@
     .button-popup {
         display: none;
         position: fixed;
-        bottom: 100px;
-        top: 140px;
+        top: max(15vh, 140px);
+        height: 60vw;
+        max-height: 65vh;
+        min-height: 45vh;
         left: 5px;
         width: 25%;
         min-width: 200px;

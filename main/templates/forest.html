@@ -101,7 +101,7 @@
     </div>
 
 
-    <!-- cell selected popup -->
+    <!-- cell selected popups -->
     <div class="forest-popup" id="occupied-popup">
       <div class="popup-title">
         <div id="close-occupied-popup" class="close-popup">
@@ -110,12 +110,26 @@
         </div>
         <div id="plant-name" style="font-size: max(2.5vw, 25px);">Customise</div>
       </div>
+
       <div style="width: 90%; margin: auto;">
-        <div>
-          <img id="selected-plant-image" src="" alt="" style="height: 100%; width: 100%;">
-        </div>
-        <label id="selected-plant-description">plant description</label>
+        <img id="selected-plant-image" src="" alt="" style="height: 100%; width: 100%;">
       </div>
+
+      <div id="plant-details"
+        style="position: absolute; bottom: 0; height: calc(75px + max(50px, 5vw)); width: 100%; border-radius: 10px; background-color: rgba(216, 216, 216, 0.582);">
+        <div style="margin-left: auto; width: 90%; height: 100%;">
+          <label id="selected-plant-description"
+            style="position: absolute; bottom: calc(50px + max(35px, 3.5vw)); left: 5%; font-size: max(2vw, 20px);">plant
+            description</label>
+          <label id="selected-plant-resource"
+            style="position: absolute; bottom: calc(30px + max(25px, 2.5vw)); left: 5%; font-size: max(1.5vw, 15px);">Plant
+            Resource: </label>
+          <button type="button"
+            style="position: absolute; bottom: 5px; left: 5%; font-size:max(2vw, 20px); width: 90%; vertical-align: middle;"
+            id="selected-plant-requirement-button" class="btn btn-primary d-flex text-center">Give</button>
+        </div>
+      </div>
+
 
     </div>
 
@@ -133,7 +147,6 @@
         <div class="popup-grid-container" id="plant-selection-grid" style="bottom: calc(30px + max(70px, 7vw));">
         </div>
 
-
         <div id="plant-details"
           style="position: absolute; bottom: 0; height: calc(100px + max(50px, 5vw)); width: 90%; left: 5%;">
           <label id="selected-plant-name"
@@ -143,13 +156,13 @@
             style="position: absolute; bottom: calc(30px + max(25px, 2.5vw)); left: 5%; font-size: max(1.5vw, 15px);">Plant
             Resource: </label>
           <button disabled type="button"
-            style="position: absolute; bottom: 5px; left: 5%; font-size:max(2vw, 20px); width: 90%; text-align: center;"
-            id="plant-selected-button" class="btn btn-primary btn-lg d-flex">Select Plant</button>
+            style="position: absolute; bottom: 5px; left: 5%; font-size:max(2vw, 20px); width: 90%; vertical-align: middle;"
+            id="plant-selected-button" class="btn btn-primary d-flex text-center">Select Plant</button>
         </div>
       </div>
     </div>
 
-
+    <!-- popups from buttons -->
     <div class="button-popup" id="customise-popup">
       <div class="popup-title">
         <div id="close-customise-popup" class="close-popup">
@@ -174,7 +187,8 @@
 
       <div id="sell-body" style="width: 90%; margin-left: auto;">
         <div>
-          Sell your land for reward tokens! Increase the value of your forest by increasing the number of plants, and the biodiversity of the land. Some plants are worth more than others, but all contribute to biodiversity!
+          Sell your land for reward tokens! Increase the value of your forest by increasing the number of plants, and
+          the biodiversity of the land. Some plants are worth more than others, but all contribute to biodiversity!
           <br>
           <div id="sell-value">
             Current value of your forest: {{forest_value}} tokens.
