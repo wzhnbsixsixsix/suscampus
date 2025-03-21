@@ -352,6 +352,12 @@ function getPlants() {
     return plantArray;
 }
 
+function sellForest() {
+    // adds the value of the forest to the user's token balance, and resets the grid on the page and database
+    // adding the value will be done in django, as will resetting the user's forest in the database
+    // then the grid's contents should update to reflect the changes
+}
+
 let plantArray = getPlants(); //[[plantid, requirement_type, rarity, plant_name]]
 generateForestGrid(4, 4);
 generateCustomiseGrid(4, 4);
@@ -367,3 +373,4 @@ document.getElementById("close-occupied-popup").addEventListener("click", functi
 document.getElementById("close-empty-popup").addEventListener("click", function () { closePopup(document.getElementById("empty-popup")) });
 document.getElementById("close-customise-popup").addEventListener("click", function () { closePopup(document.getElementById("customise-popup")) });
 document.getElementById("close-sell-popup").addEventListener("click", function () { closePopup(document.getElementById("sell-popup")) });
+document.getElementById("sell-forest-button").addEventListener("click", sellForest);
