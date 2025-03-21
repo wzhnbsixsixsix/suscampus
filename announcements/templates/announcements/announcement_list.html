@@ -130,10 +130,10 @@
           <figure class="card-img-wrapper">
             {% if announcement.image %}
             <img src="{{ announcement.image.url }}" class="card-img-top" 
-              alt="{{ announcement.title }}" style="height: 250px; object-fit: cover;">
+              alt="{{ announcement.title }}" style="height: 250px; object-fit: contain;">
             {% else %}
-            <img src="{% static 'path/to/placeholder/image.jpg' %}" class="card-img-top" 
-              style="height: 250px; object-fit: cover;" alt="No image available">
+            <img src="" class="card-img-top" 
+              style="height: 250px; object-fit: contain;">
             {% endif %}
             
             <!-- Author Role -->
@@ -244,51 +244,43 @@
     <!-- Bootstrap JS -->
     <script src="{% static '/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
     <script>
-      document.addEventListener("DOMContentLoaded", () => {
-        const cards = document.querySelectorAll(".card");
-        const modal = new bootstrap.Modal(document.getElementById("announcementModal"));
+     document.addEventListener("DOMContentLoaded", () => {
+  const cards = document.querySelectorAll(".card");
+  const modal = new bootstrap.Modal(document.getElementById("announcementModal"));
 
-        cards.forEach((card) => {
-          card.addEventListener("click", (event) => {
-            if (event.target.closest("button, form")) return;
+  cards.forEach((card) => {
+    card.addEventListener("click", (event) => {
+      if (event.target.closest("button, form")) return; // Prevent clicks on buttons/forms
 
-            // Extract data from card elements
-            const title = card.querySelector(".card-title").textContent;
-            const content = card.querySelector(".full-content").textContent;
-            const meta_data = card.querySelector(".meta-data").textContent;
-            const image = card.querySelector("img").src;
+      // Extract data from card elements
+      const title = card.querySelector(".card-title").textContent;
+      const content = card.querySelector(".full-content").textContent;
+      const metaData = card.querySelector(".meta-data").textContent;
+      const image = card.querySelector("img").src;
 
-            // Update modal content
-            document.getElementById("modalTitle").textContent = title;
-            document.getElementById("modalContent").textContent = content;
-            document.getElementById("modalImage").src = image;
-            document.getElementById("modalAuthor").textContent = author;
-            document.getElementById("modalRole").textContent = role;
-            document.getElementById("modalDate").textContent = date;
+      // Debugging: Log extracted data
+      console.log({ title, content, metaData, image });
 
-            // Show or hide the QR code button based on whether it's an event
-            const qrCodeButton = document.getElementById("modalQrCodeButton");
-            if (isEvent) {
-              qrCodeButton.style.display = "block";
-              qrCodeButton.querySelector("a").href = qrCodeUrl; // Set the href dynamically
-            } else {
-              qrCodeButton.style.display = "none";
-            }
+      // Update modal content
+      document.getElementById("modalTitle").textContent = title;
+      document.getElementById("modalContent").textContent = content;
+      document.getElementById("modalImage").src = image;
+      document.getElementById("modalMetaData").textContent = metaData;
 
-            // Show the modal
-            modal.show();
-          });
-        });
-        
-        // Auto-dismiss toasts after 5 seconds
-        const toasts = document.querySelectorAll('.toast');
-        toasts.forEach(toast => {
-          setTimeout(() => {
-            const bsToast = bootstrap.Toast.getInstance(toast);
-            if (bsToast) bsToast.hide();
-          }, 5000);
-        });
-      });
+      // Show the modal
+      modal.show();
+    });
+  });
+
+  // Auto-dismiss toasts after 5 seconds
+  const toasts = document.querySelectorAll('.toast');
+  toasts.forEach(toast => {
+    setTimeout(() => {
+      const bsToast = bootstrap.Toast.getInstance(toast);
+      if (bsToast) bsToast.hide();
+    }, 5000);
+  });
+});
     </script>
   </div>
 
