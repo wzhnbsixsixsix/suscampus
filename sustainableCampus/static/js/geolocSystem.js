@@ -358,6 +358,10 @@ clickSelection.on('select', function (e) {
             popContent.innerHTML = '<h3><code>' + markerDetails.name +'</code></h3><p>Selected Marker at: </p><code>' + markerPos + '</code>';
         }
 
+        // called here to ensure the player does not softlock into a situation where all markers are collected and cannot reset
+        // as the update call would otherwise only be called when a marker is collected
+        ajaxCallUpdateInvData()
+
         function collectFromMarker() {
             switch (markerDetails.color) {
                 case "green":

@@ -5,6 +5,7 @@ from .models import UserForest, UserInventory, Plant
 from django.http import HttpResponse, JsonResponse
 from random import randint
 from django.views.decorators.csrf import csrf_exempt
+import datetime
 
 def first_page(request):
     return redirect('accounts:login')
@@ -52,6 +53,10 @@ def claim_blue_marker(request):
     if (request.method == 'POST' and 'marker_id' in request.POST):
         marker_id = request.POST['marker_id']
         user_inventory.collected_markers += (marker_id + ",")
+        curr_date = datetime.datetime.now().isocalendar()
+        print("iso date:", curr_date)
+        user_inventory.last_collected = str(curr_date[0]) + "-" + str(curr_date[1]) + "-" + str(curr_date[2])
+        print("MARKER CLAIMED AT: " + user_inventory.last_collected)
     else:
         return JsonResponse({"result" : "error when recieving marker id"})
     user_inventory.save()
@@ -69,6 +74,10 @@ def claim_red_marker(request):
     if (request.method == 'POST' and 'marker_id' in request.POST):
         marker_id = request.POST['marker_id']
         user_inventory.collected_markers += (marker_id + ",")
+        curr_date = datetime.datetime.now().isocalendar()
+        print("iso date:", curr_date)
+        user_inventory.last_collected = str(curr_date[0]) + "-" + str(curr_date[1]) + "-" + str(curr_date[2])
+        print("MARKER CLAIMED AT: " + user_inventory.last_collected)
     else:
         return JsonResponse({"result" : "error when recieving marker id"})
     user_inventory.save()
@@ -86,6 +95,10 @@ def claim_green_marker(request):
     if (request.method == 'POST' and 'marker_id' in request.POST):
         marker_id = request.POST['marker_id']
         user_inventory.collected_markers += (marker_id + ",")
+        curr_date = datetime.datetime.now().isocalendar()
+        print("iso date:", curr_date)
+        user_inventory.last_collected = str(curr_date[0]) + "-" + str(curr_date[1]) + "-" + str(curr_date[2])
+        print("MARKER CLAIMED AT: " + user_inventory.last_collected)
     else:
         return JsonResponse({"result" : "error when recieving marker id"})
     user_inventory.save()
@@ -136,6 +149,20 @@ def update_inv_on_page(request):
     # this prevents them from collecting the same marker multiple times
     inv_data = UserInventory.objects.get(user=request.user)
     collected = inv_data.collected_markers
+    # if the date of the last collected marker is not the current date, reset collected markers so they can all be collected again
+    if (collected != ""):
+        print("LAST COLLECTED: " + inv_data.last_collected)
+        curr_date = datetime.datetime.now().isocalendar()
+        curr_date = str(curr_date[0]) + "-" + str(curr_date[1]) + "-" + str(curr_date[2])
+        print("CURRENT DATE: " + curr_date)
+        if (inv_data.last_collected != curr_date):
+            print("Resetting collected markers, the date has changed")
+            inv_data.collected_markers = ""
+            collected = ""
+            inv_data.save()
+        else:
+            print("Collected markers do not need to be reset")
+
     return JsonResponse({"collected":collected})
 
 @login_required
@@ -204,6 +231,5 @@ def get_plant_list(request):
     plantString = ""
     for plant in Plant.objects.all():
         plantString += plant.id + "," + plant.requirement_type + "," + plant.rarity + "," + plant.plant_name + ";"
-
 
     return JsonResponse({"plant_list" : plantString})
