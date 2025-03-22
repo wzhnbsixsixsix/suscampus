@@ -6,6 +6,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
 
 from .models import ShopItem, UserBalance, ItemPurchase, CurrencyTransaction
+from accounts.models import CustomUser
 
 # View for shop_items.html page. Displays buyable items, and sends buy requests to buy_shop_item view
 @login_required 
@@ -303,3 +304,31 @@ def refund_item(request, purchase_id):
     messages.success(request, f"You have successfully refunded {purchase.item.name} and received {purchase.item.currency_cost} currency.")
     
     return redirect('shop:purchased_items')
+
+@login_required
+def transaction_history(request, user_id):
+    """Allows players to view all transactions done on their account. It also allows game keepers and 
+       developers to view the transactions of a specified player."""
+    
+    try:
+        # Retrieves user 
+        user = CustomUser.objects.get(id=user_id)
+    except CustomUser.DoesNotExist:
+        # Returns error user does not exist
+        messages.error(request, "Cannot display transactions of specified player as the given ID isnt associated with any account.")
+        return redirect('main:map')
+
+    # Check if the logged-in user is either the owner or a gamekeeper
+    if request.user != user and request.user.role == 'player':
+        messages.error(request, "You do not have permissions to view the transactions of specified player.")
+        return redirect('main:map')
+    
+    # Ensures only players can have their transactions viewed
+    if user.role != "player":
+        messages.error(request, "Gamekeepers and developers do not have transactions to view.")
+        return redirect('main:map')
+
+    # Retrieve transactions for the player, sorted from newest to oldest
+    transactions = CurrencyTransaction.objects.filter(user=user).order_by('-transaction_datetime')
+
+    return render(request, 'shop/transaction_history.html', {'transactions': transactions, 'user': user})

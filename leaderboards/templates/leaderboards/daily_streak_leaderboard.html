@@ -107,8 +107,8 @@
                                     <div class="d-flex align-items-center">
                                         <div class="avatar">
                                             <img src="
-                                                {% if player.user.profile.image %}
-                                                    {{ player.user.profile.image.url }}" 
+                                                {% if user.is_authenticated and user.profile.image %}
+                                                    {{ user.profile.image.url }}" 
                                                 {% else %}
                                                     {% static 'images/default.png' %}
                                                 {% endif %}"
@@ -128,7 +128,7 @@
                             </tr>
                         {% endfor %}
                         
-                        {% if user_score.score < top_players.9.score %}
+                        {% if user_daily_streak.current_streak < top_players.9.current_streak %}
                             <tr>
                                 <td colspan="3" class="text-center p-3">
                                     <i class="bi bi-three-dots"></i>
@@ -151,13 +151,13 @@
                                                 class="rounded-circle w-100 h-100 object-fit-cover"
                                             > 
                                         </div>
-                                        <span>{{ user_score.user.username }}</span>
+                                        <span>{{ user_daily_streak.user.username }}</span>
                                     </div>
                                 </td>
                                 <td class="py-3 text-end">
                                     <div class="score-badge">
                                         <i class="bi bi-tree-fill tree-icon"></i>
-                                        {{ user_score.score }}
+                                        {{ user_daily_streak.current_streak }}
                                     </div>
                                 </td>
                             </tr>

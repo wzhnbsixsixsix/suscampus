@@ -133,7 +133,8 @@ def profile_page(request):
         'username': request.user.username,
         'email': request.user.email,
         'form': PasswordChangeForm(request.user),
-        'form_image': ProfileImageForm(instance=request.user.profile)
+        'form_image': ProfileImageForm(instance=request.user.profile),
+        'creation_date': request.user.creationDateTime.date()
     }
 
     # For test: print(f"DEBUG - Current User: {request.user.username}")

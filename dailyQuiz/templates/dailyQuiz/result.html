@@ -81,6 +81,15 @@
         {% endif %}
     </div>
 
+    <!-- Quiz Reward -->
+    <div class="streak-info mt-3">
+        {% if quiz_reward > 0 %}
+            <p class="streak-reset">You earned {{ quiz_reward }} currency as a reward!</p>
+        {% else %}
+            <p>❌ No reward earned today. Answer 8 or more questions correctly next time to earn currency!</p>
+        {% endif %}
+    </div>
+
     <!-- Return to Home Button -->
     <a href="{% url 'main:map' %}" class="btn-return-home">
         Return to Home

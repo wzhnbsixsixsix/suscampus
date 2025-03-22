@@ -46,7 +46,7 @@ def create_announcement(request):
     # Ensures only a game keeper or developer can create an announcement
     if request.user.role == 'player':  
         messages.error(request, "You must be a Game Keeper to access this page.")    
-        return redirect('/announcements/')
+        return redirect('announcements:announcement_list')
     
     if request.method == 'POST': # posts the announcement
         form = AnnouncementForm(request.POST, request.FILES)
