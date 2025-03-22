@@ -399,9 +399,9 @@ def use_consumeable(request):
         consumeable_id = request.POST['consumeable_id']
         match str(consumeable_id):
             case '0':
-                user_inventory.tree_guard -= 1
-            case '1':
                 user_inventory.rain_catcher -= 1
+            case '1':
+                user_inventory.tree_guard -= 1
             case '2':
                 user_inventory.fertilizer -= 1
         print("after decrementing:")

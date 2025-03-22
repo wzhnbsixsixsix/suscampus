@@ -162,7 +162,7 @@ function giveResource(){
         //marks plant as given resource
         currentCell.plantRequirement = 0;
 
-        //TODO remove resourceType
+        ajaxCallUseConsumeable(resourceType);
         ajaxCallUpdateInvOnPage();
 
         makeForestChange(currentCell.gridNumber, [currentCell.plantId, currentCell.plantGrowthStage, currentCell.plantRequirement])
