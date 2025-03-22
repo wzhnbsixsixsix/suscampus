@@ -1,0 +1,124 @@
+{
+    "markers":[
+        {
+            "idno":1,
+            "name":"Reed Pond",
+            "color":"green",
+            "shape":"triangle",
+            "latitude":"-3.53763",
+            "longitude":"50.73438"
+        },
+        {
+            "idno":2,
+            "name":"Poole Gate and Old Botanic Garden",
+            "color":"green",
+            "shape":"triangle",
+            "latitude":"-3.53404",
+            "longitude":"50.73381"
+        },
+        {
+            "idno":3,
+            "name":"Plantation",
+            "color":"green",
+            "shape":"triangle",
+            "latitude":"-3.53369",
+            "longitude":"50.73666"
+        },
+        {
+            "idno":4,
+            "name":"Diamond Waterway",
+            "color":"green",
+            "shape":"triangle",
+            "latitude":"-3.52725",
+            "longitude":"50.73627"
+        },
+        {
+            "idno":5,
+            "name":"Edinburgh Wild Conifer Colllection",
+            "color":"green",
+            "shape":"triangle",
+            "latitude":"-3.53518",
+            "longitude":"50.73784"
+        },
+        {
+            "idno":6,
+            "name":"Innovation Centre Cafe",
+            "color":"red",
+            "shape":"triangle",
+            "latitude":"-3.53115",
+            "longitude":"50.73832"
+        },
+        {
+            "idno":7,
+            "name":"Amory Building Cafe",
+            "color":"red",
+            "shape":"triangle",
+            "latitude":"-3.53157",
+            "longitude":"50.73645"
+        },
+        {
+            "idno":8,
+            "name":"La Touche Cafe",
+            "color":"red",
+            "shape":"triangle",
+            "latitude":"-3.53014",
+            "longitude":"50.73544"
+        },
+        {
+            "idno":9,
+            "name":"The Ram Bar",
+            "color":"red",
+            "shape":"triangle",
+            "latitude":"-3.53435",
+            "longitude":"50.73523"
+        },
+        {
+            "idno":10,
+            "name":"Peter Chalk Centre",
+            "color":"red",
+            "shape":"triangle",
+            "latitude":"-3.53591",
+            "longitude":"50.73622"
+        },
+        {
+            "idno":11,
+            "name":"Newman Building",
+            "color":"blue",
+            "shape":"triangle",
+            "latitude":"-3.53592",
+            "longitude":"50.73651"
+        },
+        {
+            "idno":12,
+            "name":"Harrison Building",
+            "color":"blue",
+            "shape":"triangle",
+            "latitude":"-3.53292",
+            "longitude":"50.73738"
+        },
+        {
+            "idno":13,
+            "name":"Forum Library",
+            "color":"blue",
+            "shape":"triangle",
+            "latitude":"-3.53338",
+            "longitude":"50.73539"
+        },
+        {
+            "idno":14,
+            "name":"INTO International Study Centre",
+            "color":"blue",
+            "shape":"triangle",
+            "latitude":"-3.53406",
+            "longitude":"50.73598"
+        },
+        {
+            "idno":15,
+            "name":"Old Library",
+            "color":"blue",
+            "shape":"triangle",
+            "latitude":"-3.53387",
+            "longitude":"50.73353"
+        }
+    ]
+}

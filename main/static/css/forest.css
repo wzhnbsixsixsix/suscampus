@@ -1,0 +1,323 @@
+:root {
+    --forest-cols: 1;
+    --forest-rows: 1;
+}
+
+#forest-view {
+    min-height: 89vh;
+    height: 100%;
+}
+
+#forest-grid {
+    position: relative;
+    display: grid;
+    grid-gap: 1em;
+    grid-template-rows: repeat(var(--forest-rows), 1fr);
+    grid-template-columns: repeat(var(--forest-cols), 1fr);
+    rotate: 45deg;
+    justify-content: center;
+    aspect-ratio: 1/1;
+    transform: rotate(-67.5deg) skewX(45deg) scaleY(cos(45deg));
+    width: 106%;
+    aspect-ratio: 1/1;
+    top: -9%;
+    left: -3%;
+    margin: auto;
+    padding: 2%;
+}
+
+#forest-background {
+    position: absolute;
+    width: 80%;
+    height: 75%;
+    max-width: 80vh;
+    min-height: 60vh;
+
+    text-align: center;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin-inline: auto;
+}
+
+#forest-background-left {
+    position: absolute;
+    top: min(27%, max(18vw, 12.5vh));
+    left: 0;
+    width: 50%;
+    min-height: 73%;
+    max-height: 81%;
+    height: 85%;
+    background-color: #096506;
+}
+
+#forest-background-right {
+    position: absolute;
+    top: min(27%, max(18vw, 12.5vh));
+    right: 0;
+    width: 50%;
+    min-height: 73%;
+    max-height: 81%;
+    height: 85%;
+    background-color: #167813;
+}
+
+#button-container {
+    padding: 10px;
+    position: fixed;
+    bottom: 0;
+    height: 80px;
+    width: 100%;
+    background: #d0e0e4;
+}
+
+#selected-plant-image {
+    width: 75%;
+    aspect-ratio: 1/1;
+    margin: auto;
+}
+
+#forest-floor-texture {
+    position: relative;
+    background-color: #1da124;
+    rotate: 45deg;
+    justify-content: center;
+    transform: rotate(-67.5deg) skewX(45deg) scaleY(cos(45deg));
+    width: 108%;
+    aspect-ratio: 1/1;
+    top: -9%;
+    left: -4%;
+    margin: auto;
+}
+
+.forest-container {
+    position: absolute;
+    width: 50%;
+    max-width: 90vw;
+    max-height: 40vh;
+    min-height: 30vh;
+    aspect-ratio: 1/1;
+    top: 0;
+    left: 25%;
+    align-content: center;
+    justify-content: center;
+}
+
+.forest-floor {
+    position: relative;
+    left: -50%;
+    top: -12%;
+    width: 200%;
+    aspect-ratio: 5/2;
+    margin: auto;
+}
+
+.grid-container {
+    position: relative;
+    display: grid;
+    grid-gap: 2%;
+    grid-template-rows: repeat(var(--grid-rows), 1fr);
+    grid-template-columns: repeat(var(--grid-cols), 1fr);
+    max-height: 100%;
+    width: 100%;
+    top: 2px;
+    margin: auto;
+    color: green;
+}
+
+.popup-grid-container {
+    position: absolute;
+    display: grid;
+    gap: 2%;
+    grid-template-columns: repeat(auto-fill, minmax(20px, 11vw));
+    grid-template-rows: repeat(auto-fill, 11vw);
+    background-color: rgba(194, 194, 194, 0.11);
+    overflow: scroll;
+    justify-content: center;
+    padding: 5%;
+    width: 100%;
+    top: 0;
+}
+
+.grid-item {
+    padding: 1em;
+    border: 1px solid #0f0;
+    cursor: pointer;
+    aspect-ratio: 1/1;
+    overflow: visible;
+}
+
+.popup-grid-item {
+    display: grid;
+    grid-template-columns: 1fr;
+    aspect-ratio: 1/1;
+    border: 1px solid #0f0;
+    cursor: pointer;
+    transition: scale 0.1s linear;
+
+    &:hover {
+        scale: 110%;
+    }
+}
+
+
+.popup-grid-item img {
+    grid-row-start: 1;
+    grid-column-start: 1;
+}
+.popup-grid-item label {
+    align-self: flex-end;
+    grid-row-start: 1;
+    grid-column-start: 1;
+}
+
+
+.plant-image {
+    height: 50%;
+    width: 20%;
+    position: absolute;
+    z-index: 20;
+    pointer-events: none;
+}
+
+.contained-image {
+    height: 100%;
+    width: 100%;
+    background-color: #c4c4c4c4;
+}
+
+.close-popup {
+    cursor: pointer;
+    color: red;
+    height: 100%;
+    aspect-ratio: 1/1;
+    text-align: center;
+    transition: color 0.2s ease, scale 0.2s ease;
+
+    &:hover {
+        color: darkred;
+        scale: 110%;
+    }
+}
+
+.data-container {
+    display: none;
+}
+
+.popup-title {
+    display: flex;
+    flex-direction: row;
+    justify-content: left;
+    gap: 2px;
+    max-width: 48vw;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+
+    .forest-popup {
+        display: none;
+        position: fixed;
+        top: max(15vh, 140px);
+        height: 60vw;
+        max-height: 65vh;
+        min-height: 45vh;
+        right: 5px;
+        width: 25%;
+        min-width: 200px;
+        max-width: 50vw;
+        background-color: #f1f1f1;
+        border-radius: 10px;
+        animation: popup-enter 0.5s;
+        z-index: 21;
+    }
+
+    .button-popup {
+        display: none;
+        position: fixed;
+        top: max(15vh, 140px);
+        height: 60vw;
+        max-height: 65vh;
+        min-height: 45vh;
+        left: 5px;
+        width: 25%;
+        min-width: 200px;
+        max-width: 50vw;
+        background-color: #f1f1f1;
+        border-radius: 10px;
+        animation: popup-enter 0.5s;
+        z-index: 21;
+    }
+
+    #recycling-popup {
+        display: none;
+        position: fixed;
+        top: 120px;
+        bottom: 100px;
+        left: 10%;
+        width: 80%;
+        background-color: #f1f1f1da;
+        border-radius: 10px;
+        animation: recycling-enter 0.5s;
+        z-index: 21;
+    }
+}
+
+.litter {
+    position: absolute;
+    height: 10%;
+    aspect-ratio: 1/1;
+    transition: scale 0.1s linear;
+
+    &:hover {
+        scale: 110%;
+    }
+}
+
+.recycling-dropzone {
+    height: 90%;
+    width: 25%;
+    bottom: 0px;
+    transition: opacity 0.3s linear, height 0.3s ease;
+    align-self: flex-end;
+}
+
+#recycling-button {
+
+    &:hover {
+        scale: 110%;
+    }
+}
+
+
+@keyframes popup-enter {
+    0% {
+        transform: scale(1, 0);
+    }
+}
+
+@keyframes popup-exit {
+    100% {
+        transform: scale(1, 0);
+    }
+}
+
+@keyframes recycling-enter {
+    0% {
+        transform: scale(0, 0);
+    }
+}
+
+@keyframes recycling-exit {
+    100% {
+        transform: scale(0, 0);
+    }
+}
+
+#recycling-button {
+    cursor: pointer;
+    background-color: #0f0;
+    top: 5%;
+    height: 100%;
+    width: 10%;
+    border-radius: 10%;
+}

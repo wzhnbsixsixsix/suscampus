@@ -15,11 +15,15 @@ import RegularShape from "./node_modules/ol/style/RegularShape.js";
 import Overlay from "./node_modules/ol/Overlay.js";
 import Select from './node_modules/ol/interaction/Select.js';
 import {click} from "./node_modules/ol/events/condition.js";
+import {useGeographic} from "./node_modules/ol/proj.js";
+import {toLonLat} from './node_modules/ol/proj.js';
+
+useGeographic(); // forces geographic coordinates
 
 // the center and zoom will be changed when location tracking is enabled to focus on the user's position
 const view = new View({
     center: [0, 0],
-    zoom: 12,
+    zoom: 17,
 });
 
 const rasterLayer = new TileLayer({
@@ -46,11 +50,15 @@ const markerPopups = new Overlay({
 });
 
 // handles closing the markerPopups
-popCloser.onclick = function () {
-    markerPopups.setPosition(undefined); // removes popup
+popCloser.onclick = closePopup;
+
+function closePopup() {
+    popContainer.style.animation = "popup-exit 0.5s";
+    setTimeout(function () {markerPopups.setPosition(undefined);}, 480);
+     // removes popup
     popCloser.blur();
     return false; // otherwise returns a href?
-};
+}
 
 const map = new Map({
     layers: [
@@ -70,25 +78,6 @@ const geolocation = new Geolocation({
     projection: view.getProjection(),
 });
 
-function el(id) {
-    return document.getElementById(id);
-}
-
-// update the HTML page when the position changes.
-geolocation.on('change', function () {
-    el('accuracy').innerText = geolocation.getAccuracy() + ' [m]';
-    el('altitude').innerText = geolocation.getAltitude() + ' [m]';
-    el('altitudeAccuracy').innerText = geolocation.getAltitudeAccuracy() + ' [m]';
-    el('heading').innerText = geolocation.getHeading() + ' [rad]';
-    el('speed').innerText = geolocation.getSpeed() + ' [m/s]';
-});
-
-// make the circle around the user's marker, showing the possible inaccuracy of their position
-const accuracyFeature = new Feature();
-geolocation.on('change:accuracyGeometry', function () {
-    accuracyFeature.setGeometry(geolocation.getAccuracyGeometry());
-});
-
 // controls how the user's position is visually represented on the map
 const positionFeature = new Feature();
 positionFeature.setStyle(
@@ -106,18 +95,51 @@ positionFeature.setStyle(
     }),
 );
 
+let interactableMarkers; // will hold the position of interactable markers
+
 // changes the position of the position indicator on the map (above) to match when the user's position updates
 // ternary operator used to create a new Point at the coordinates of the geolocator, if defined, null otherwise
 geolocation.on('change:position', function () {
-    const coordinates = geolocation.getPosition();
+    const coordinates = toLonLat(geolocation.getPosition());
     positionFeature.setGeometry(coordinates ? new Point(coordinates) : null);
-    // updates the view's centre to the user's new position:
     const newPos = positionFeature.getGeometry().getCoordinates();
+
+    // resets list of interactable markers
+    interactableMarkers = [];
+    // iterate through all markers, checking if they are now within range to interact with.
+    const markersOnMap = drawMarkers.getSource().getFeatures();
+    console.log("MARKERS: " + markersOnMap);
+    for (const currMarker of markersOnMap) {
+        const markerPos = currMarker.getGeometry().getCoordinates();
+        console.log(markerPos);
+        // if the current marker is within range to interact with
+        if (isMarkerInRange(markerPos, newPos)) {
+            console.log("marker at " + markerPos + " IS interactable.");
+            interactableMarkers.push(markerPos);
+        } else {
+            console.log("marker at " + markerPos + " IS NOT interactable.");
+        }
+    } 
+
+    // updates the view's centre to the user's new position:
     console.log("centering view on: " + newPos);
     mapView.setCenter(newPos);
+    // logs the positions of the interactable markers
+    console.log("positions of markers that can be interacted with: ");
+    console.log(interactableMarkers);
 });
 
-let userFeatures = [accuracyFeature, positionFeature];
+function isMarkerInRange(markerPos, playerPos) {
+    const distance = Math.sqrt((markerPos[0] - playerPos[0])**2 + (markerPos[1] - playerPos[1])**2);
+    console.log("distance: " + distance);
+    if (distance <= 0.010) { // must be changed back to 0.001 (or similar), is set higher for testing purposes
+        return true;
+    } else {
+        return false;
+    }
+}
+
+let userFeatures = [positionFeature];
 
 map.addLayer( new VectorLayer({
                 source: new VectorSource({
@@ -135,27 +157,26 @@ function enableGeolocation() {
     } else {
         alert("Geolocation is not supported by your browser.");
     }
+}
 
-    function error() {
-        alert("Unable to find location.");
+const jsonMarkers = document.getElementById("marker-data").innerHTML;
+console.log(jsonMarkers);
+const markersObject = JSON.parse(jsonMarkers);
+console.log(markersObject);
+
+// these are updated when a marker is collected, so cannot be constant
+let collected = document.getElementById("user-inv").innerHTML;
+console.log("Initial collected data: ", collected);
+
+function prepopulateMap() {
+    // prepopulates the map with markers based on the data in markers.json
+    for (const currMarker of markersObject.markers) {
+        console.log("creating marker of id: " + currMarker.idno);
+        createMarkerFromJSON(currMarker);
     }
 }
 
-function createMarkerFromForm(event) {
-    // first need to get all the user's input from the input fields when the button is pressed:
-    // currently assumes all user input is valid
-    console.log("Getting marker specifications from the form...");
-    let markerInfo = event.formData;
-
-    // for debugging
-    for (const [key, value] of markerInfo) {
-        console.log(`${key}: ${value}`);
-    }
-
-    createMarker(markerInfo);
-}
-
-function createMarker(data) {
+function createMarkerFromJSON(data) {
     console.log("Adding new marker...");
 
 
@@ -164,8 +185,8 @@ function createMarker(data) {
 
     // converts chosen color to hex value
     console.log("Setting color...");
-    console.log("color from form: " + data.get('color'));
-    switch (data.get('color')) {
+    console.log("color from form: " + data.color);
+    switch (data.color) {
         case "red":
             console.log("case: red");
             markerColor = '#FF0000';
@@ -186,8 +207,8 @@ function createMarker(data) {
 
     // creates the object for the marker's shape, using the shape and color specified by the user
     console.log("Setting shape...");
-    console.log("shape from form: " + data.get('shape'));
-    switch (data.get('shape')) {
+    console.log("shape from form: " + data.shape);
+    switch (data.shape) {
         case "circle":
             console.log("case: circle");
             markerShape = new CircleStyle({
@@ -252,16 +273,11 @@ function createMarker(data) {
 
     // places the marker on the map
     console.log("Placing marker on map...");
-    marker.setGeometry(new Point([data.get("xcoord"), data.get("ycoord")]));
+    console.log("Latitude: " + data.latitude);
+    console.log("Longitude: " + data.longitude);
+    const markerPos = [data.latitude, data.longitude];
+    marker.setGeometry(new Point(markerPos));
 }
-
-const markerData = document.getElementById("add-marker-form");
-
-markerData.addEventListener("submit",(event) => {
-    event.preventDefault();
-    new FormData(markerData); // this causes the formdata event for the next eventListener
-});
-markerData.addEventListener("formdata", (event) => createMarkerFromForm(event));
 
 // prompt user to enable geolocation
 enableGeolocation();
@@ -275,10 +291,10 @@ const selectedMarkerStyle = new Style({
     image: new CircleStyle({
         radius: 6,
         fill: new Fill({
-            color: '#FFFFFF',
+            color: '#001000',
         }),
         stroke: new Stroke({
-            color: '#FF00FF',
+            color: '#00FAAA',
             width: 3,
         }),
     })
@@ -300,10 +316,105 @@ clickSelection.on('select', function (e) {
 
     const marker = e.selected[0];
     // avoids a popup appearing when a marker is deselcted by clicking on the map, instead of a marker
-    if (marker !== undefined) {
+    if (marker !== undefined) { 
         const markerPos = marker.getGeometry().getCoordinates();
+        
+        // gets the details of the marker selected
+        let markerDetails;
+        for (const currMarkerDetails of markersObject.markers) {
+            if ((currMarkerDetails.latitude == markerPos[0]) && (currMarkerDetails.longitude == markerPos[1])) {
+                markerDetails = currMarkerDetails;
+            }
+        }
+
+        // checks if the marker selected is interactable
+        let interactable = false;
+        for (const subArr of interactableMarkers) {
+            console.log(subArr + " " + markerPos);
+            if ((subArr[0] == markerPos[0]) && (subArr[1] == markerPos[1])) {
+                interactable = true;
+            }
+        }
+
         console.log("popup position: " + markerPos);
-        popContent.innerHTML = '<p>Selected Marker at: </p><code>' + markerPos + '</code>';
+
+        if (interactable) {
+            console.log("Selected interactable marker.");
+
+            // creates an array of the markers that have already been collected today
+            let userInvList = collected
+
+            popContent.innerHTML = '<h3><code>' + markerDetails.name +'</code></h3> <p>Selected Marker at: </p><code>' + markerPos + '</code>' + '<button id="popup-button">Collect</button>';
+            const popupButton = document.getElementById("popup-button");
+            if (!userInvList.includes(markerDetails.idno)) {
+                popupButton.addEventListener("click", collectFromMarker);
+            } else {
+                // restyle button to show it's already been collected
+                popupButton.setAttribute("disabled", "") // boolean attribute, can be set to empty string to be true
+
+            }
+        } else {
+            console.log("Selected un-interactable marker.");
+            popContent.innerHTML = '<h3><code>' + markerDetails.name +'</code></h3><p>Selected Marker at: </p><code>' + markerPos + '</code>';
+        }
+
+        // called here to ensure the player does not softlock into a situation where all markers are collected and cannot reset
+        // as the update call would otherwise only be called when a marker is collected
+        ajaxCallUpdateInvData()
+
+        function collectFromMarker() {
+            switch (markerDetails.color) {
+                case "green":
+                    console.log("GREEN");
+                    $(document).ready(ajaxCallCollectMarker("claim_green_marker"));
+                    $(document).ready(ajaxCallUpdateInvData);
+                    closePopup();
+                    break;
+                case "red":
+                    console.log("RED");
+                    $(document).ready(ajaxCallCollectMarker("claim_red_marker"));
+                    $(document).ready(ajaxCallUpdateInvData);
+                    closePopup();
+                    break;
+                case "blue":
+                    console.log("BLUE");
+                    $(document).ready(ajaxCallCollectMarker("claim_blue_marker"));
+                    $(document).ready(ajaxCallUpdateInvData);
+                    closePopup();
+                    break;
+            }
+        }
+
+        function ajaxCallCollectMarker(funcUrl) {
+            $.ajax({
+                url: funcUrl,
+                type: 'POST',
+                data: {'marker_id': markerDetails.idno},
+                success: function(response) {
+                    console.log("sent marker id to view successfully");
+                    console.log("Response: ", response);
+                },
+                error: function(error) {
+                    console.log("encountered error when sending marker id: ", error);
+                }
+            })
+            .done(response => {console.log(response)}) // we don't need to do anything with the response
+        }
+
+        function ajaxCallUpdateInvData() {
+            $.ajax({
+                url: "update_inv_on_page",
+                type: 'GET'
+            })
+            .done(response => {
+                const collectedObj = response;
+                collected = collectedObj.collected
+            })
+        }
+
         markerPopups.setPosition(markerPos);
+        popContainer.style.animation = "popup-enter 0.5s";
     }
 });
+
+prepopulateMap();

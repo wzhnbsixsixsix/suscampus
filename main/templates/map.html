@@ -1,47 +1,20 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    {% load static %}
-    <title>Sustainable Campus</title>
-    <link rel="stylesheet" href="/static/css/map.css" />
-    <link href="https://cdn.lineicons.com/5.0/lineicons.css" rel="stylesheet" />
-    <link href="{% static '/custom_bootstrap/bootstrap.css' %}", rel="stylesheet" />
-    <link rel="stylesheet" href="{% static '/js/node_modules/ol/ol.css' %}" />
-    <style>
-      body {
-        display: flex;
-        flex-direction: column;
-        min-height: 100vh;
-      }
-      .map {
-        position: relative;
-        width: 600px;
-        height: 600px;
-      }
-      .ol-popup {
-          position: absolute;
-          background-color: #caffaa;
-          box-shadow: 0 1px 4px rgba(0,0,0,0.2);
-          padding: 15px;
-          border-radius: 10px;
-          border: 1px solid #cccccc;
-          min-width: 200px;
-      }
-      .ol-popup-closer {
-          text-decoration: none;
-          position: absolute;
-          top: 2px;
-          right: 8px;
-      }
-      .ol-popup-closer:after {
-          content: "✖";
-      }
-    </style>
-  </head>
-  <body> 
-    {% include 'navbar.html' %}  
 
-    <script type="importmap">
+<head>
+  {% load static %}
+  <title>Sustainable Campus</title>
+  <link rel="stylesheet" href="/static/css/map.css" />
+  <link href="https://cdn.lineicons.com/5.0/lineicons.css" rel="stylesheet" />
+  <link rel="stylesheet" href="/static/css/map.css" />
+  <link href="{% static '/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet" />
+  <link rel="stylesheet" href="{% static '/js/node_modules/ol/ol.css' %}" />
+</head>
+
+<body>
+  {% include 'navbar.html' %}
+
+  <script type="importmap">
       {
         "imports": {
           "rbush": "/static/js/node_modules/rbush/index.js",
@@ -58,73 +31,25 @@
       }
     </script>
 
-    <div class="container-fluid flex-grow-1 d-flex flex-column mb-2">
-      <!-- Header -->
-      <div class="py-3">
-          <h1>Map</h1>
-      </div>
+  <div class="container-fluid flex-grow-1 d-flex flex-column mb-2">
 
-      <div class="position-relative flex-grow-1 border">
-      <div class="position-relative flex-grow-1 border">
-          <!-- Map content goes here -->
-          <div id="map" class="position-absolute h-100 w-100"></div>
-          <div id="map" class="position-absolute h-100 w-100"></div>
-      </div>
-
-      <div id="marker-popup" class="ol-popup">
-        <a href="#" id="marker-popup-closer" class="ol-popup-closer"></a>
-        <div id="marker-popup-content"></div>
-      </div>
-      <div id="info" style="display: none;"></div>
-      <p>
-        position accuracy : <code id="accuracy"></code>&nbsp;&nbsp;
-        altitude : <code id="altitude"></code>&nbsp;&nbsp;
-        altitude accuracy : <code id="altitudeAccuracy"></code>&nbsp;&nbsp;
-        heading : <code id="heading"></code>&nbsp;&nbsp;
-        speed : <code id="speed"></code>
-      </p>
-    </div>  
-
-    <!-- TODO: Need to add input validation to the below -->
-    <div id="add-marker">
-      <form name="marker-details" id="add-marker-form" action="" method="POST">
-          <label for="xcoord">X Coordinate:</label>
-          <input
-                  type="text"
-                  name="xcoord"
-                  id="xcoord"
-                  placeholder="X coordinate"
-                  required
-                  size="16"
-                  maxlength="16"/>
-          <label for="ycoord">Y Coordinate:</label>
-          <input
-                  type="text"
-                  name="ycoord"
-                  id="ycoord"
-                  placeholder="Y coordinate"
-                  required
-                  size="16"
-                  maxlength="16" />
-          <label for="shape">Shape:</label>
-          <select name="shape" id="shape">
-              <option value="circle">Circle</option>
-              <option value="square">Square</option>
-              <option value="triangle">Triangle</option>
-          </select>
-          <label for="color">Colour:</label>
-          <select name="color" id="color">
-              <option value="red">Red</option>
-              <option value="green">Green</option>
-              <option value="blue">Blue</option>
-              <option value="yellow">Yellow</option>
-          </select>
-          <button type="submit" id="create-marker">Create Marker</button>
-      </form>
+    <div id="map" class="map">
+      <!-- Map content goes here -->
     </div>
-    <!-- Geolocation System -->>
+    <div id="marker-popup" class="ol-popup">
+      <a href="#" id="marker-popup-closer" class="ol-popup-closer"></a>
+      <div id="marker-popup-content"></div>
+    </div>
+
+    <div id="marker-data" class="marker-data" data-marker={{data}}>{{data}}</div>
+    <div id="user-inv" class="user-inv" data-inv="{{inv}}">{{inv}}</div>
+    <!-- jQuery, used to update the database-->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <!-- Geolocation System -->
     <script type="module" src="{% static '/js/geolocSystem.js' %}"></script>
     <!-- Bootstrap JS -->
     <script src="{% static '/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
-  </body>
+  </div>
+</body>
+
 </html>
