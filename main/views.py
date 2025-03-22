@@ -70,10 +70,12 @@ def check_if_plants_should_grow(forest):
             cell_details.append(cell.split(","))
         # iterate through each of the cell's details and adjust the values if any of them should grow
         for cell_data in cell_details:
-            # if a plant HAS been given the consumable it needs to grow
-            if (cell_data[2] == '1'):
-                cell_data[1] = str(int(cell_data[1]) +  1) # increment growth stage
-                cell_data[2] == 0 # resets the value that tracks if the plant has been given the needed consumable
+            # if a plant HAS been given the consumable it needs to grow (0 means it doesn't require anything)
+            if (cell_data[2] == '0'):
+                # only continues growing if it has not reached max growth
+                if (cell_data[1] < 2):
+                    cell_data[1] = str(int(cell_data[1]) +  1) # increment growth stage
+                    cell_data[2] == 1 # resets the value that tracks if the plant has been given the needed consumable
             new_forest_cells += cell_data[0] + "," + cell_data[1] + "," + cell_data[2] + ";" # refroms the forest data as it is stored in the database
 
         new_forest_cells = new_forest_cells[:-1] # removes the last ; from the string
