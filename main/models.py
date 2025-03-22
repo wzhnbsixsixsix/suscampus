@@ -51,6 +51,6 @@ class UserForest(models.Model):
     last_growth_check_date = models.TextField(default=str(datetime.date))
 
 class Plant(models.Model):
-    plant_name = models.TextField(default="plant")
     requirement_type = models.IntegerField()
     rarity = models.IntegerField()
+    plant_name = models.TextField(default="plant")
