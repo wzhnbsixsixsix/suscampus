@@ -52,3 +52,7 @@ class Plant(models.Model):
     requirement_type = models.IntegerField()
     rarity = models.IntegerField()
     plant_name = models.TextField(default="plant")
+
+class UserHighScore(models.Model):
+    user = models.OneToOneField('accounts.CustomUser', on_delete=models.CASCADE, primary_key=True)
+    high_score = models.IntegerField(default=0)
