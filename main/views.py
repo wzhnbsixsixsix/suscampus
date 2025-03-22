@@ -21,7 +21,13 @@ def map(request):
             print("JSON FILE LINE: " + line)
             markers += line
     print("markers data: " + markers)
-    user_inventory = UserInventory.objects.get(user=request.user)
+    user_inventory = ""
+    try:
+        user_inventory = UserInventory.objects.get(user=request.user)
+    except UserInventory.DoesNotExist:
+        # adds a new record to the table if one does not exist for the user
+        user_inventory = UserInventory(user_id = request.user.id)
+        user_inventory.save()
     collected = user_inventory.collected_markers
     print("inv: ", user_inventory)
     print("collected markers: ", collected)
@@ -30,11 +36,23 @@ def map(request):
 @login_required
 def forest(request):
     # gets the state of the user's forest saved to the database
-    user_forest = UserForest.objects.get(user=request.user)
+    user_forest = ""
+    try:
+        user_forest = UserForest.objects.get(user=request.user)
+    except UserForest.DoesNotExist:
+        # adds a new record to the table if one does not exist for the user
+        user_forest = UserForest(user_id = request.user.id)
+        user_forest.save()
     print("before growth check: " + user_forest.last_growth_check_date)
     check_if_plants_should_grow(user_forest)
     print("after growth check: " + user_forest.last_growth_check_date)
-    user_inventory = UserInventory.objects.get(user=request.user)
+    user_inventory = ""
+    try:
+        user_inventory = UserInventory.objects.get(user=request.user)
+    except UserInventory.DoesNotExist:
+        # adds a new record to the table if one does not exist for the user
+        user_inventory = UserInventory(user_id = request.user.id)
+        user_inventory.save()
     # gets all relevant information from the plants table, allowing it to be used within the view/page
     plant_string = ""
     for plant in Plant.objects.all():
