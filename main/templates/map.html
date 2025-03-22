@@ -7,7 +7,7 @@
   <link rel="stylesheet" href="/static/css/map.css" />
   <link href="https://cdn.lineicons.com/5.0/lineicons.css" rel="stylesheet" />
   <link rel="stylesheet" href="/static/css/map.css" />
-  <link href="{% static '/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet" />
+  <link href="{% static '/custom_bootstrap/bootstrap.css' %}" rel="stylesheet" />
   <link rel="stylesheet" href="{% static '/js/node_modules/ol/ol.css' %}" />
 </head>
 
@@ -33,9 +33,11 @@
 
   <div class="container-fluid flex-grow-1 d-flex flex-column mb-2">
 
-    <div id="map" class="map">
+    <div class="position-relative flex-grow-1 border mt-3">
       <!-- Map content goes here -->
+      <div id="map" class="position-absolute h-100 w-100"></div>
     </div>
+
     <div id="marker-popup" class="ol-popup">
       <a href="#" id="marker-popup-closer" class="ol-popup-closer"></a>
       <div id="marker-popup-content"></div>
