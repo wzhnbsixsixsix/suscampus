@@ -150,7 +150,10 @@ function addPlant() {
     //updating inventory
     ajaxCallUpdateInv(selectedPlantId);
     ajaxCallUpdateInvOnPage();
-    //need to update the plant selection grid in the popup
+    //update the plant selection grid in the popup
+    let plantCount = document.getElementById("plant-count-" + selectedPlantId);
+    const userInv = document.getElementById("retrieved-inventory-content").innerHTML.split(",");
+    plantCount.innerHTML = "x" + userInv[8 + Number(selectedPlantId)];
 
     //updating forest
     makeForestChange(selectedForestCell.gridNumber, [selectedPlantId, selectedForestCell.plantGrowthStage, selectedForestCell.plantRequirement])
