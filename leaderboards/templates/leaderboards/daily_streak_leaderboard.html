@@ -69,14 +69,24 @@
     {% include 'navbar.html' %}
     
     <main class="container py-5">
-        <div class="d-flex align-items-center mb-4">
+        <div class="d-flex align-items-center mb-4 gap-2">
             <div class="me-auto">
-                <h1 class="h3 mb-0">Forest Leaderboard</h1>
-                <p class="text-secondary mb-0">Compete with others to grow the most trees</p>
+                <h1 class="h3 mb-0">Quiz Streak Leaderboard</h1>
+                <p class="text-secondary mb-0">Compete with others to have the highest daily quiz streak</p>
             </div>
+            <div class="d-flex align-items-center gap-2">
+                <a
+                href="{% url 'leaderboards:leaderboard' %}"
+                class="btn btn-outline-success p-2 lh-1 d-flex align-items-center"
+                >
+                <i class="lni lni-wallet-1 me-1"></i> Forest Leaderboard
+                </a>
+            </div>
+            {% if user.role == "player" %}
             <div class="badge rounded-pill bg-primary fs-6 py-2 px-3">
                 <span class="text-medium">Your Rank: #{{ user_rank }}</span>
             </div>
+            {% endif %}
         </div>
         
         <div class="card px-3">
@@ -86,7 +96,7 @@
                         <tr>
                             <th scope="col" class="border-0 py-3">Rank</th>
                             <th scope="col" class="border-0 py-3">Player</th>
-                            <th scope="col" class="border-0 py-3 text-end">Trees Grown</th>
+                            <th scope="col" class="border-0 py-3 text-end">Quiz Streak</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -121,8 +131,12 @@
                                 </td>
                                 <td class="py-3 text-end">
                                     <div class="score-badge">
-                                        <i class="bi bi-tree-fill tree-icon"></i>
-                                        {{ player.score }}
+                                        {{ player.current_streak }} 
+                                        {% if player.current_streak == 1 %} 
+                                        Day
+                                        {% else %} 
+                                        Days
+                                        {% endif %}
                                     </div>
                                 </td>
                             </tr>
@@ -167,17 +181,19 @@
             </div>
         </div>
         
+        {% if user.role == "player" %}
         <div class="card mt-4 p-4">
             <div class="row align-items-center">
                 <div class="col-md-8">
                     <h4 class="h5 mb-3">Want to climb higher?</h4>
-                    <p class="text-secondary mb-md-0">Complete more sustainability challenges to earn points and grow trees in your forest.</p>
+                    <p class="text-secondary mb-md-0">Ensure you complete your daily quiz each day!</p>
                 </div>
                 <div class="col-md-4 text-md-end">
-                    <a href="/forest" class="btn btn-primary rounded-pill py-2 px-4">View Forest</a>
+                    <a href="{% url 'dailyQuiz:quiz' %}" class="btn btn-primary rounded-pill py-2 px-4">Start Daily Quiz</a>
                 </div>
             </div>
         </div>
+        {% endif %}
     </main>
 
     <script src="{% static '/bootstrap/js/bootstrap.bundle.min.js' %}"></script>

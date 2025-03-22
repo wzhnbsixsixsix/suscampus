@@ -7,7 +7,7 @@ from dailyQuiz.models import QuizDailyStreak
 @login_required
 def leaderboard(request):
     # Retrieves the top 10 players with the highest number of trees grown
-    all_player_scores = TreeScore.objects.order_by('-score')
+    all_player_scores = TreeScore.objects.filter(user__role='player').order_by('-score')
 
     user_score = None
     user_rank = None
@@ -34,7 +34,7 @@ def leaderboard(request):
 @login_required
 def daily_streak_leaderboard(request):
     # Retrieves all player quiz daily streaks, and orders them by largest to smallest
-    all_player_daily_streaks = QuizDailyStreak.objects.order_by('-current_streak')
+    all_player_daily_streaks = QuizDailyStreak.objects.filter(user__role='player').order_by('-current_streak')
 
     user_daily_streak = None
     user_rank = None
