@@ -18,17 +18,26 @@
       <div class="d-flex justify-content-between align-items-center mb-4">
         <h1 class="h3 mb-0">Sustainable Shop</h1>
         <div class="d-flex align-items-center gap-2">
-          <a
-            href="{% url 'shop:purchased_items'%}"
+          {% if user.role == "player" %}
+            <a
+              href="{% url 'shop:purchased_items'%}"
+              class="btn btn-outline-success p-2 lh-1 d-flex align-items-center"
+            >
+              <i class="lni lni-wallet-1 me-1"></i> Purchased Items
+            </a>
+            <span
+              class="badge bg-primary fs-6 p-2 lh-1 d-flex align-items-center"
+            >
+              Balance: {{ user_balance.currency }} points
+            </span>
+          {% else %}
+            <a
+            href="{% url 'shop:add_shop_item'%}"
             class="btn btn-outline-success p-2 lh-1 d-flex align-items-center"
-          >
-            <i class="lni lni-wallet-1 me-1"></i> Purchased Items
-          </a>
-          <span
-            class="badge bg-primary fs-6 p-2 lh-1 d-flex align-items-center"
-          >
-            Balance: {{ user_balance.currency }} points
-          </span>
+            >
+            <i class="lni lni-wallet-1 me-1"></i> Add New Item
+            </a>
+          {% endif %}
         </div>
       </div>
 
@@ -70,12 +79,21 @@
                 <span class="fs-6 fw-medium text-primary">
                   {{ item.currency_cost }} points
                 </span>
-                <a
-                  href="{% url 'shop:buy_shop_item' item_id=item.item_id %}"
-                  class="btn btn-primary px-3 py-2"
-                >
-                  Buy now
-                </a>
+                {% if user.role == "player" %}
+                  <a
+                    href="{% url 'shop:buy_shop_item' item_id=item.item_id %}"
+                    class="btn btn-primary px-3 py-2"
+                  >
+                    Buy now
+                  </a>
+                {% else %}
+                  <a
+                    href="{% url 'shop:remove_shop_item' item_id=item.item_id %}"
+                    class="btn btn-primary px-3 py-2"
+                  >
+                    Remove Item
+                  </a>
+                {% endif %}
               </div>
             </div>
           </div>
