@@ -70,10 +70,12 @@ def check_if_plants_should_grow(forest):
             cell_details.append(cell.split(","))
         # iterate through each of the cell's details and adjust the values if any of them should grow
         for cell_data in cell_details:
-            # if a plant HAS been given the consumable it needs to grow
-            if (cell_data[2] == '1'):
-                cell_data[1] = str(int(cell_data[1]) +  1) # increment growth stage
-                cell_data[2] == 0 # resets the value that tracks if the plant has been given the needed consumable
+            # if a plant HAS been given the consumable it needs to grow (0 means it doesn't require anything)
+            if (cell_data[2] == '0'):
+                # only continues growing if it has not reached max growth
+                if (cell_data[1] < 2):
+                    cell_data[1] = str(int(cell_data[1]) +  1) # increment growth stage
+                    cell_data[2] == 1 # resets the value that tracks if the plant has been given the needed consumable
             new_forest_cells += cell_data[0] + "," + cell_data[1] + "," + cell_data[2] + ";" # refroms the forest data as it is stored in the database
 
         new_forest_cells = new_forest_cells[:-1] # removes the last ; from the string
@@ -367,14 +369,19 @@ def remove_from_inv(request):
     print("oaks: " + str(user_inventory.oak) + " birch: " + str(user_inventory.birch) + " fir: " + str(user_inventory.fir) + " red campion: " + str(user_inventory.red_campion) + " poppy: " + str(user_inventory.poppy) + " cotoneaster: " + str(user_inventory.cotoneaster))
     if (request.method == 'POST' and 'plant_id' in request.POST):
         plant_id = request.POST['plant_id']
-        matching_plant = ""
-        # finds the name of the plant that was just planted, this will be used to decrement the right column in the inventory record
-        for plant in Plant.objects.all():
-            if (plant.id == int(plant_id)):
-                matching_plant = plant.plant_name.lower()
-        print("plant that was planted: ", matching_plant)
-        # gets the attribute of the model with the matching name and decrements it
-        user_inventory.__dict__[matching_plant] -= 1
+        match str(plant_id):
+            case '1':
+                user_inventory.oak -= 1
+            case '2':
+                user_inventory.birch -= 1
+            case '3':
+                user_inventory.fir -= 1
+            case '4':
+                user_inventory.red_campion -= 1
+            case '5':
+                user_inventory.poppy -= 1
+            case '6':
+                user_inventory.cotoneaster -= 1
         print("after decrementing:")
         print("oaks: " + str(user_inventory.oak) + " birch: " + str(user_inventory.birch) + " fir: " + str(user_inventory.fir) + " red campion: " + str(user_inventory.red_campion) + " poppy: " + str(user_inventory.poppy) + " cotoneaster: " + str(user_inventory.cotoneaster))
         user_inventory.save()
