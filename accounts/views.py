@@ -13,8 +13,6 @@ from .forms import ProfileImageForm, SignUpForm, LoginForm, ChangeUsernameForm
 from .models import Profile, CustomUser
 from dailyQuiz.models import QuizDailyStreak
 
-
-
 def signup_page(request):
     """Allows new users to create accounts. This view handles user registration through 
        the sign up page's form."""

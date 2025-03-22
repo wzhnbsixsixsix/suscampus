@@ -38,6 +38,10 @@ def add_shop_item(request):
         is_digital = 'is_digital' in request.POST 
         image = request.FILES.get('image')
 
+        if not name or not description or not currency_cost or not image:
+            messages.error(request, "All fields must be filled out before submitting.")
+            return render(request, 'shop/add_shop_item.html')
+
         # Create and save the new item
         item = ShopItem(
             name=name,
