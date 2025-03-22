@@ -7,7 +7,7 @@
   <title>Sustainable Campus</title>
   <link rel="stylesheet" href="/static/css/forest.css" />
   <link rel="stylesheet" href="{% static 'css/navbar.css' %}" />
-  <link href="https://cdn.lineicons.com/5.0/lineicons.css" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
   <link rel="stylesheet" href="{% static '/bootstrap/css/bootstrap.min.css' %}" />
   <script src="//code.jquery.com/jquery-1.10.2.js"></script>
   <script src="//code.jquery.com/ui/1.11.2/jquery-ui.js"></script>
@@ -105,7 +105,7 @@
     <div class="forest-popup" id="occupied-popup">
       <div class="popup-title">
         <div id="close-occupied-popup" class="close-popup">
-          <i class="lni lni-xmark"
+          <i class="bi bi-x"
             style="width: 100%; height: 100%; display: inline-block; font-size: max(4vw, 40px);"></i>
         </div>
         <div id="plant-name" style="font-size: max(2.5vw, 25px);">Customise</div>
@@ -137,7 +137,7 @@
     <div class="forest-popup" id="empty-popup">
       <div class="popup-title">
         <div id="close-empty-popup" class="close-popup">
-          <i class="lni lni-xmark"
+          <i class="bi bi-x"
             style="width: 100%; height: 100%; display: inline-block; font-size: max(4vw, 40px);"></i>
         </div>
         <div style="font-size: max(2.5vw, 25px);">Select plant</div>
@@ -166,7 +166,7 @@
     <div class="button-popup" id="customise-popup">
       <div class="popup-title">
         <div id="close-customise-popup" class="close-popup">
-          <i class="lni lni-xmark"
+          <i class="bi bi-x"
             style="width: 100%; height: 100%; display: inline-block; font-size: max(4vw, 40px);"></i>
         </div>
         <div style="font-size: max(2.5vw, 25px);">Customise</div>
@@ -179,21 +179,22 @@
     <div class="button-popup" id="sell-popup">
       <div class="popup-title">
         <div id="close-sell-popup" class="close-popup">
-          <i class="lni lni-xmark"
+          <i class="bi bi-x"
             style="width: 100%; height: 100%; display: inline-block; font-size: max(4vw, 40px);"></i>
         </div>
         <div style="font-size: max(2.5vw, 25px);">Sell Land</div>
       </div>
 
       <div id="sell-body" style="width: 90%; margin-left: auto;">
-        <div>
+        <div style="word-wrap:break-word; font-size:  max(1.5vw, 15px); width: 90%;">
           Sell your land for reward tokens! Increase the value of your forest by increasing the number of plants, and
           the biodiversity of the land. Some plants are worth more than others, but all contribute to biodiversity!
           <br>
-          <div id="sell-value">
-            Current value of your forest: {{forest_value}} tokens.
+          <div id="sell-value" style="font-size: max(2vw, 20px);">
+            Current value of your forest:
+            <span style="color:#48e07b">{{forest_value}} tokens.</span>
           </div>
-          <button type="button" id="sell-forest-button" class="btn btn-primary btn-lg flex-fill">Sell</button>
+          <button type="button" id="sell-forest-button" class="btn btn-primary btn-lg flex-fill" style="position: absolute; bottom: 2%; width: 90%; left: 5%; font-size: max(3vw, 30px);">Sell</button>
         </div>
 
       </div>
@@ -202,7 +203,7 @@
     <div id="recycling-popup">
       <div class="popup-title">
         <div id="close-recycling-popup" class="close-popup">
-          <i class="lni lni-xmark"
+          <i class="bi bi-x"
             style="width: 100%; height: 100%; display: inline-block; font-size: max(4vw, 40px); "></i>
         </div>
         <div style="font-size: max(2.5vw, 25px);">Recycling</div>
