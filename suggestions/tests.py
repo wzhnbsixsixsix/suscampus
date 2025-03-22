@@ -79,7 +79,7 @@ class TestViewSuggestionsTests(SetUpTest):
         response = self.client.get(self.view_suggestions_url)
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, "test player suggestion content")
-        self.assertContains(response, "test game keeper954 suggestion content")
+        self.assertContains(response, "test game keeper suggestion content")
 
 class TestDeleteSuggestionsTests(SetUpTest):
     def test_player_can_delete_own_suggestion(self):

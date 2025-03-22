@@ -18,6 +18,7 @@ class SetUpTest(TestCase):
         self.purchased_items_url = reverse('shop:purchased_items')
 
 
+
         # Creates a test player account
         self.player = CustomUser.objects.create_user(email ='player@gmail.com', 
                                                     username = 'player1', 
@@ -26,6 +27,15 @@ class SetUpTest(TestCase):
                                                     last_name = 'User',
                                                     role = 'player',
                                                     verified = True)
+        
+        self.player2 = CustomUser.objects.create_user(email ='player2@gmail.com', 
+                                                    username = 'player2', 
+                                                    password = 'testpassword12345',
+                                                    first_name = 'Player',
+                                                    last_name = 'User',
+                                                    role = 'player',
+                                                    verified = True)
+        
         # Creates initial balance for test player
         self.player_balance = UserBalance.objects.create(user_id = self.player, currency = 20)
 
@@ -67,6 +77,8 @@ class SetUpTest(TestCase):
         
         # Creates initial balance for test gamekeeper to stop crash
         self.game_keeper_balance = UserBalance.objects.create(user_id = self.game_keeper)
+
+    
 
 class ShopTest(SetUpTest):
 
@@ -376,4 +388,46 @@ class RefundPurchasedItemTest(SetUpTest):
         self.assertTrue(ItemPurchase.objects.filter(purchase_id=self.non_digital_purchase.purchase_id).exists())  # Purchase should still exist
         self.assertEqual(self.player_balance.currency, 20) # Verifiy balance remains unchanged
 
+class TransactionsHistoryTest(SetUpTest):
+    def test_player_can_view_personal_transactions(self):
+        """Verifies player can view own transactions"""
 
+        # Creates two test transactions
+        self.test_transaction1 = CurrencyTransaction.objects.create(user=self.player, currency_difference=10, description='test transaction 1')
+        self.test_transaction2 = CurrencyTransaction.objects.create(user=self.player, currency_difference=-20, description='test transaction 2')
+
+        self.client.login(username='player1', password='testpassword12345')
+        response = self.client.get(reverse('shop:transaction_history', args=[self.player.id]))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'shop/transaction_history.html')
+        self.assertContains(response, 'test transaction 1')
+        self.assertContains(response, 'test transaction 2')
+
+    def test_gamekeeper_can_view_player_transactions(self):
+        """Verifies game keeper can view player transactions"""
+        
+        # Creates two test transactions
+        self.test_transaction1 = CurrencyTransaction.objects.create(user=self.player, currency_difference=10, description='test transaction 1')
+        self.test_transaction2 = CurrencyTransaction.objects.create(user=self.player, currency_difference=-20, description='test transaction 2')
+
+        self.client.login(username='gamekeeper1', password='testpassword54321')
+        response = self.client.get(reverse('shop:transaction_history', args=[self.player.id]))
+        
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'shop/transaction_history.html')
+        self.assertContains(response, 'test transaction 1')
+        self.assertContains(response, 'test transaction 2')
+
+    def test_player_cant_view_other_player_transactions(self):
+        """Verifies player can not view other player transactions"""
+        self.client.login(username='player2', password='testpassword12345')
+        response = self.client.get(reverse('shop:transaction_history', args=[self.player.id]))
+
+        self.assertEqual(response.status_code, 302)
+
+    def test_accessing_nonexistent_user_transaction_history(self):
+        """Verifies gamekeeper can not view non-existence player transactions"""
+        self.client.login(username='gamekeeper1', password='testpassword54321')
+        response = self.client.get(reverse('shop:transaction_history', args=[9999]))
+        self.assertEqual(response.status_code, 302)  # Redirect due to user not existing

@@ -13,4 +13,5 @@ urlpatterns = [
     path('remove_item/<int:item_id>/', views.remove_shop_item, name='remove_shop_item'),
     path('add_item/', views.add_shop_item, name='add_shop_item'),
     path('refund_item/<int:purchase_id>/', views.refund_item, name='refund_item'),
+    path('transactions/<int:user_id>/', views.transaction_history, name='transaction_history'),
 ]

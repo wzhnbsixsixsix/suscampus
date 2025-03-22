@@ -101,7 +101,7 @@
             <li><a class="dropdown-item py-2 px-3 {% if '/settings/' in request.path %}active{% endif %}" href="#">Settings</a></li>
             <li><a class="dropdown-item py-2 px-3 {% if '/achievements/' in request.path %}active{% endif %}" href="#">Achievements</a></li>
             <li><hr class="dropdown-divider my-1 mx-3"></li>
-            <li><a class="dropdown-item py-2 px-3" href="/accounts/login/">Sign out</a></li>
+            <li><a class="dropdown-item py-2 px-3" href="{% url 'accounts:logout' %}">Sign out</a></li>
           </ul>
         </div>
       </div>
