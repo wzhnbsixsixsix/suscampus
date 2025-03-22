@@ -167,7 +167,7 @@ function giveResource(){
         //marks plant as given resource
         currentCell.plantRequirement = 0;
 
-        //TODO remove resourceType
+        ajaxCallUseConsumeable(resourceType);
         ajaxCallUpdateInvOnPage();
 
         makeForestChange(currentCell.gridNumber, [currentCell.plantId, currentCell.plantGrowthStage, currentCell.plantRequirement])
@@ -489,6 +489,23 @@ function ajaxCallUpdateInvOnPage() {
             document.getElementById("retrieved-inventory-content").innerHTML = response.user_inventory;
             console.log("loaded this: " + response.user_inventory);
         });
+}
+
+function ajaxCallUseConsumeable(consumeable_id) {
+    $.ajax({
+        url: "use_consumeable",
+        type: 'POST',
+        cache: false,
+        async: false,
+        data: {'consumeable_id': consumeable_id},
+        success: function (response) {
+            console.log("Response: ", response);
+        },
+        error: function (error) {
+            console.log("encountered error when updating inventory after using consumeable: ", error);
+        }
+    })
+        .done(response => { console.log(response) })
 }
 
 function getPlants() {
