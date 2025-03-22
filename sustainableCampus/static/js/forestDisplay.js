@@ -127,7 +127,7 @@ function onPlantCellClick(cell) {
             resourceName = "Fertiliser";
             break;
     }
-    document.getElementById("selected-plant-resource").innerHTML = resourceName;
+    document.getElementById("selected-seed-resource").innerHTML = "Plant Resource: " + resourceName;
 }
 
 function addPlant() {
@@ -142,6 +142,7 @@ function addPlant() {
     selectedForestCell.plantRequirement = 1; //0 if no requirement, 1 for fertiliser, etc
     selectedForestCell.plantImagePath = media_url + "forest_assets/id0.png";
     document.getElementById("forest-image-" + selectedForestCell.gridNumber).src = selectedForestCell.plantImagePath;   //sets image to seedling
+
 
     closePopup(emptyPopup);
 
@@ -158,7 +159,11 @@ function addPlant() {
 function giveResource(){
     const currentCell = document.getElementById("empty-popup").selectedCell;
     const resourceType = plantArray[currentCell.plantId][1];
-    if (currentCell.plantRequirement == 1) {    //if plant needs resource
+    ajaxCallUpdateInvOnPage();
+    const userInv = document.getElementById("retrieved-inventory-content").innerHTML.split(",");
+    let userResources = [userInv[7], userInv[6], userInv[8]];   //water, treeguard, fertilizer
+
+    if (currentCell.plantRequirement == 1 && userResources[resourceType] > 0) {    //if plant needs resource
         //marks plant as given resource
         currentCell.plantRequirement = 0;
 
