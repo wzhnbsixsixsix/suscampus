@@ -5,9 +5,10 @@ function onForestCellClick(cell) {
     let occupiedPopup = document.getElementById("occupied-popup");
     let emptyPopup = document.getElementById("empty-popup");
 
+    emptyPopup.selectedCell = cell;
     if (cell.plantId == "0") { //if cell is empty
         if (occupiedPopup.style.display == "block") { closePopup(occupiedPopup); }  //closes other popup
-        emptyPopup.selectedCell = cell;
+        
         //opens popup to plant tree
         openPopup(emptyPopup);
     }
@@ -20,9 +21,7 @@ function onForestCellClick(cell) {
         //update popup details
         document.getElementById("plant-name").innerText = plantName;
         document.getElementById("selected-plant-image").src = cell.plantImagePath;
-        
         document.getElementById("selected-plant-description").innerHTML = "Growth stage: " + cell.plantGrowthStage
-        
         let resource = "";
         switch (plantRequirementType){
             case "0":
@@ -35,13 +34,16 @@ function onForestCellClick(cell) {
                 resource = "Fertiliser";
                 break;
         }
+
         document.getElementById("selected-plant-resource").innerHTML = "Plant Requires: " + resource;
-        document.getElementById("selected-plant-requirement-button").textContent = "Give plant " + resource;
+        const resourceButton = document.getElementById("selected-plant-requirement-button");
         if (cell.plantRequirement == 1) {
-            document.getElementById("selected-plant-resource").innerHTML = "Give " + resource;
+            resourceButton.innerHTML = "Give " + resource;
+            resourceButton.disabled = false;
         }
         else {
-            document.getElementById("selected-plant-resource").innerHTML = "Plant seems happy!";
+            resourceButton.innerHTML = "Plant seems happy!";
+            resourceButton.disabled = true;
         }
     }
 }
@@ -151,6 +153,28 @@ function addPlant() {
 
     //updating forest
     makeForestChange(selectedForestCell.gridNumber, [selectedPlantId, selectedForestCell.plantGrowthStage, selectedForestCell.plantRequirement])
+}
+
+function giveResource(){
+    const currentCell = document.getElementById("empty-popup").selectedCell;
+    const resourceType = plantArray[currentCell.plantId][1];
+    if (currentCell.plantRequirement == 1) {    //if plant needs resource
+        //marks plant as given resource
+        currentCell.plantRequirement = 0;
+
+        //TODO remove resourceType
+        ajaxCallUpdateInvOnPage();
+
+        makeForestChange(currentCell.gridNumber, [currentCell.plantId, currentCell.plantGrowthStage, currentCell.plantRequirement])
+    
+        //update on page
+        const resourceButton = document.getElementById("selected-plant-requirement-button");
+        resourceButton.innerHTML = "Plant seems happy!";
+        resourceButton.disabled = true;
+
+        
+    }
+
 }
 
 function openPopup(popup) {
@@ -335,7 +359,7 @@ function generateForestGrid(rows, cols) {
 
         addedCell.plantId = currentPlant[0]; // id of plant in cell, 0 if none
         addedCell.plantGrowthStage = currentPlant[1]; //0, 1, or 2
-        addedCell.plantRequirement = currentPlant[2]; //0 if no requirement, 1 for fertiliser, etc
+        addedCell.plantRequirement = currentPlant[2]; //0 if plant is fed, 1 if needs resource
         //getting plant details from the plant table
         //if cell contains plant
         if (currentPlant[0] != 0) {
@@ -522,6 +546,7 @@ document.getElementById("customise-button").addEventListener("click", onCustomis
 document.getElementById("sell-button").addEventListener("click", onSellClick);
 document.getElementById("recycling-button").addEventListener("click", onRecyclingClick);
 document.getElementById("plant-selected-button").addEventListener("click", addPlant);
+document.getElementById("selected-plant-requirement-button").addEventListener("click", giveResource);
 document.getElementById("close-recycling-popup").addEventListener("click", function () { closePopup(document.getElementById("recycling-popup")) });
 document.getElementById("close-occupied-popup").addEventListener("click", function () { closePopup(document.getElementById("occupied-popup")) });
 document.getElementById("close-empty-popup").addEventListener("click", function () { closePopup(document.getElementById("empty-popup")) });
