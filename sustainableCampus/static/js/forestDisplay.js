@@ -462,6 +462,23 @@ function ajaxCallUpdateInvOnPage() {
         });
 }
 
+function ajaxCallUseConsumeable(consumeable_id) {
+    $.ajax({
+        url: "use_consumeable",
+        type: 'POST',
+        cache: false,
+        async: false,
+        data: {'consumeable_id': consumeable_id},
+        success: function (response) {
+            console.log("Response: ", response);
+        },
+        error: function (error) {
+            console.log("encountered error when updating inventory after using consumeable: ", error);
+        }
+    })
+        .done(response => { console.log(response) })
+}
+
 function getPlants() {
     let plantList = document.getElementById("retrieved-plant-content").innerHTML.split(";");
     var plantArray = new Array(plantList.length);

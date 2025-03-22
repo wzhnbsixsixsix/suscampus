@@ -388,3 +388,25 @@ def remove_from_inv(request):
     else:
         return JsonResponse({"result" : "error when removing seedling from user's inventory"})
     return JsonResponse({"result" : "removed seedling from user's inventory successfully"})
+
+@login_required
+@csrf_exempt
+def use_consumeable(request):
+    user_inventory = UserInventory.objects.get(user=request.user)
+    print("before decrementing:")
+    print("tree guards: " + str(user_inventory.tree_guard) + " rain catchers: " + str(user_inventory.rain_catcher) + " fertilizer: " + str(user_inventory.fertilizer))
+    if (request.method == 'POST' and 'consumeable_id' in request.POST):
+        consumeable_id = request.POST['consumeable_id']
+        match str(consumeable_id):
+            case '0':
+                user_inventory.tree_guard -= 1
+            case '1':
+                user_inventory.rain_catcher -= 1
+            case '2':
+                user_inventory.fertilizer -= 1
+        print("after decrementing:")
+        print("tree guards: " + str(user_inventory.tree_guard) + " rain catchers: " + str(user_inventory.rain_catcher) + " fertilizer: " + str(user_inventory.fertilizer))
+        user_inventory.save()
+    else:
+        return JsonResponse({"result" : "error when removing consumeable from user's inventory"})
+    return JsonResponse({"result" : "removed consumeable from user's inventory successfully"})
