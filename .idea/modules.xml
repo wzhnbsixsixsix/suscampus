@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/ExeterGroupProject.iml" filepath="$PROJECT_DIR$/.idea/ExeterGroupProject.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/suscam.iml" filepath="$PROJECT_DIR$/.idea/suscam.iml" />
     </modules>
   </component>
 </project>
