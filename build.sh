@@ -1,9 +1,24 @@
 #!/usr/bin/env bash
 
-
-
 # Exit on error
 set -o errexit
+
+
+# Install the Node.js environment
+echo "Installing Node.js...."
+curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash -
+sudo apt-get install -y nodejs
+
+echo "Node.js version: $(node -v)"
+echo "npm version: $(npm -v)"
+
+cd sustainableCampus/static/js || { echo "Directory switching failure！"; exit 1; }
+
+npm install --legacy-peer-deps
+
+
+
+cd ../../../..
 
 # Modify this line as needed for your package manager (pip, poetry, etc.)
 pip install -r requirements.txt
