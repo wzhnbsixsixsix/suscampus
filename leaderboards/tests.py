@@ -1,7 +1,7 @@
 from django.test import TestCase
 from main.models import UserHighScore
 from dailyQuiz.models import QuizDailyStreak
-from .tasks import reward_top_forest_players
+from .tasks import reward_top_forest_players, reward_top_daily_quiz_players
 from shop.models import UserBalance, CurrencyTransaction
 from accounts.models import CustomUser
 from django.urls import reverse
@@ -50,8 +50,8 @@ class LeaderboardTest(SetUpTest):
         self.assertEqual(user_rank, 13)
         self.assertEqual(user_score.high_score, 7)
 
-class RewardTopPlayersTest(SetUpTest):
-    def test_top_10_players_are_rewarded(self):
+class ForestRewardTopPlayersTest(SetUpTest):
+    def test_top_10_forest_players_are_rewarded(self):
         """Verify the top 10 players recieve the correct reward"""
         reward_top_forest_players.apply()
 
@@ -65,15 +65,47 @@ class RewardTopPlayersTest(SetUpTest):
 
             transaction = CurrencyTransaction.objects.filter(user=player.user).first()
             self.assertEqual(transaction.currency_difference, reward_amounts[count])
-            self.assertEqual(transaction.description, "Weekly reward for being a top player in the leaderboard")
+            self.assertEqual(transaction.description, "Weekly reward for being a top player in the forest leaderboard")
 
             count = count + 1
 
-    def test_no_extra_rewards(self):
+    def test_below_top_10_forest_players_are_not_rewarded(self):
         """Verify that players not in the top 10 don't recieve the rewards.."""
         reward_top_forest_players.apply()
 
         bottom_10_players = UserHighScore.objects.order_by('-high_score')[10:]
+        for player in bottom_10_players:
+            user_balance = UserBalance.objects.get(user_id=player.user)
+            self.assertEqual(user_balance.currency, 0)  # No reward given
+
+            # Ensure no transaction exists for them
+            transaction = CurrencyTransaction.objects.filter(user=player.user).first()
+            self.assertIsNone(transaction)
+
+class DailyQuizRewardTopPlayersTest(SetUpTest):
+    def test_top_10_daily_quiz_players_are_rewarded(self):
+        """Verify the top 10 players recieve the correct reward"""
+        reward_top_daily_quiz_players.apply()
+
+        top_10_players = QuizDailyStreak.objects.order_by('-current_streak')[:10]
+        reward_amounts = [100, 75, 50, 25, 25, 25, 25, 25, 25, 25]
+        count = 0
+
+        for player in top_10_players:
+            user_balance = UserBalance.objects.get(user_id=player.user)
+            self.assertEqual(user_balance.currency, reward_amounts[count])
+
+            transaction = CurrencyTransaction.objects.filter(user=player.user).first()
+            self.assertEqual(transaction.currency_difference, reward_amounts[count])
+            self.assertEqual(transaction.description, "Weekly reward for being a top player in the daily quiz leaderboard")
+
+            count = count + 1
+
+    def test_below_top_10_daily_quiz_players_are_not_rewarded(self):
+        """Verify that players not in the top 10 don't recieve the rewards.."""
+        reward_top_daily_quiz_players.apply()
+
+        bottom_10_players = QuizDailyStreak.objects.order_by('-current_streak')[10:]
         for player in bottom_10_players:
             user_balance = UserBalance.objects.get(user_id=player.user)
             self.assertEqual(user_balance.currency, 0)  # No reward given

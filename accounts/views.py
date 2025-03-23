@@ -8,10 +8,10 @@ from django.db import transaction
 from django.shortcuts import render, redirect
 from django.urls import reverse
 from shop.models import UserBalance
-from leaderboards.models import TreeScore
 from .forms import ProfileImageForm, SignUpForm, LoginForm, ChangeUsernameForm
 from .models import Profile, CustomUser
 from dailyQuiz.models import QuizDailyStreak
+from main.models import UserHighScore
 
 def signup_page(request):
     """Allows new users to create accounts. This view handles user registration through 
@@ -65,10 +65,6 @@ def email_verification(request, token: str):
 
         # Creates a user balance for player
         UserBalance.objects.create(user_id=user)
-
-        # Creates a score counter for the tree game for player
-        TreeScore.objects.create(user=user)
-
 
         QuizDailyStreak.objects.create(user=user)
   
@@ -268,7 +264,7 @@ def delete_account(request):
 
                 # 清理其他关联数据
                 UserBalance.objects.filter(user_id=user).delete()
-                TreeScore.objects.filter(user=user).delete()
+                UserHighScore.objects.filter(user=user).delete()
 
                 # 执行登出
                 logout(request)
