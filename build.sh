@@ -48,6 +48,22 @@ python manage.py collectstatic --no-input
 python manage.py migrate
 
 
-if [ "$RENDER" = "true" ]; then
-  echo "from django.contrib.auth import get_user_model; User = get_user_model(); User.objects.create_superuser('admin', 'admin@example.com', 'abc')" | python manage.py shell
+if [ "$RENDER_SERVICE_TYPE" = "web" ]; then
+  echo "
+import os
+from django.contrib.auth import get_user_model
+User = get_user_model()
+
+ADMIN_EXISTS = User.objects.filter(username=os.getenv('ADMIN_NAME')).exists()
+
+if not ADMIN_EXISTS:
+    User.objects.create_superuser(
+        os.getenv('ADMIN_NAME'),
+        os.getenv('ADMIN_EMAIL'),
+        os.getenv('ADMIN_PASSWORD')
+    )
+    print('Superuser created')
+else:
+    print('Superuser already exists')
+" | python manage.py shell
 fi
