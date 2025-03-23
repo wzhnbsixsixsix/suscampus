@@ -9,7 +9,7 @@ app = Celery('sustainableCampus')
 
 @shared_task
 def reward_top_forest_players():
-    """Ensures the top 10 players are rewarded every Saturday."""
+    """Ensures the top 10 forest players are rewarded every Saturday."""
 
     top_10_players = UserHighScore.objects.order_by('-high_score')[:10]
     reward_amount = [100, 75, 50, 25, 25, 25, 25, 25, 25, 25]
@@ -37,7 +37,7 @@ def reward_top_forest_players():
 
 @shared_task
 def reward_top_daily_quiz_players():
-    """Ensures the top 10 players are rewarded every Saturday."""
+    """Ensures the top 10 daily quiz players are rewarded every Saturday."""
 
     top_10_players = QuizDailyStreak.objects.order_by('-current_streak')[:10]
     reward_amount = [100, 75, 50, 25, 25, 25, 25, 25, 25, 25]
