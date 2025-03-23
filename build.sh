@@ -37,7 +37,7 @@ if [ -f "package.json" ] && [ -f "package-lock.json" ]; then
 fi
 
 # Return to project root
-cd ../../../..
+cd ../../..
 # Modify this line as needed for your package manager (pip, poetry, etc.)
 pip install -r requirements.txt
 
