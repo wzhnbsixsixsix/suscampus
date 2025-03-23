@@ -60,15 +60,3 @@ def reward_top_daily_quiz_players():
         )
 
         count += 1
-
-# Schedule the task every Saturday at midnight (00:00 UTC)
-app.conf.beat_schedule = {
-    'reward_top_forest_players_every_saturday': {
-        'task': 'leaderboards.tasks.reward_top_forest_players',
-        'schedule': crontab(minute=0, hour=0, day_of_week='saturday'),  # Runs every Saturday at midnight
-    },
-    'reward_top_daily_quiz_players_every_saturday': {
-        'task': 'leaderboards.tasks.reward_top_daily_quiz_players',
-        'schedule': crontab(minute=0, hour=0, day_of_week='saturday'),  # Runs every Saturday at midnight
-    },
-}
