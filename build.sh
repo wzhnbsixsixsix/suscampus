@@ -4,22 +4,40 @@
 set -o errexit
 
 
-# Install the Node.js environment
-echo "Installing Node.js...."
-curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash -
-sudo apt-get install -y nodejs
+# ----------------------------
+# 1. Install Node.js (no sudo)
+# ----------------------------
+echo "Installing Node.js..."
+export NODE_VERSION=18.20.2  # Specify Node.js version
 
+# Create local installation directory
+mkdir -p $HOME/.nodejs
+curl -o node.tar.gz https://nodejs.org/dist/v${NODE_VERSION}/node-v${NODE_VERSION}-linux-x64.tar.gz
+tar -xzf node.tar.gz -C $HOME/.nodejs --strip-components=1
+rm node.tar.gz
+
+# Set environment variables
+export PATH="$HOME/.nodejs/bin:$PATH"
 echo "Node.js version: $(node -v)"
 echo "npm version: $(npm -v)"
 
-cd sustainableCampus/static/js || { echo "Directory switching failure！"; exit 1; }
+# ----------------------------
+# 2. Install frontend dependencies
+# ----------------------------
+echo "Entering frontend directory..."
+cd sustainableCampus/static/js || { echo "Directory change failed! Check if the path is correct"; exit 1; }
 
-npm install --legacy-peer-deps
+echo "Installing npm dependencies..."
+npm install --no-audit --legacy-peer-deps  # Disable audit logs
 
+# Optional build step
+if [ -f "package.json" ] && [ -f "package-lock.json" ]; then
+  echo "Executing production build..."
+  npm run build --if-present
+fi
 
-
+# Return to project root
 cd ../../../..
-
 # Modify this line as needed for your package manager (pip, poetry, etc.)
 pip install -r requirements.txt
 
