@@ -1,5 +1,4 @@
 from celery.schedules import crontab
-
 CELERY_BEAT_SCHEDULE = {
     # Reset the daily streaks of every player at midnight every day if they miss a quiz
     'reset_daily_streak_midnight': {
