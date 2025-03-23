@@ -117,8 +117,8 @@
                                     <div class="d-flex align-items-center">
                                         <div class="avatar">
                                             <img src="
-                                                {% if user.is_authenticated and user.profile.image %}
-                                                    {{ user.profile.image.url }}" 
+                                                {% if player.user.profile.image %}
+                                                    {{ player.user.profile.image.url }}" 
                                                 {% else %}
                                                     {% static 'images/default.png' %}
                                                 {% endif %}"
