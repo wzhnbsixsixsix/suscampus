@@ -184,3 +184,9 @@ LOGOUT_REDIRECT_URL = '/'
 LOGIN_REDIRECT_URL = '/'
 
 
+ALLOWED_HOSTS = [
+    'mysite-veg7.onrender.com',  # domain name
+    'localhost',
+    '127.0.0.1',
+    '[::1]'
+]
