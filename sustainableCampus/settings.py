@@ -10,20 +10,15 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 import os
-<<<<<<< HEAD
 import dj_database_url
-=======
->>>>>>> 1a24c0602ee0771446a343bfb81b9d601bc45795
+
 from pathlib import Path
 from sustainableCampus.celery_settings import CELERY_BEAT_SCHEDULE
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-<<<<<<< HEAD
-=======
 
->>>>>>> 1a24c0602ee0771446a343bfb81b9d601bc45795
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
@@ -35,10 +30,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
-<<<<<<< HEAD
-=======
 
->>>>>>> 1a24c0602ee0771446a343bfb81b9d601bc45795
 # Application definition
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -47,11 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-<<<<<<< HEAD
-    'django_celery_beat',  # Needed for scheduling weekly leaderboard rewards
-=======
     'django_celery_beat', # Needed for scheduling weekly leaderboard rewards
->>>>>>> 1a24c0602ee0771446a343bfb81b9d601bc45795
     'sustainableCampus',
     'accounts',
     'announcements',
@@ -79,10 +67,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-<<<<<<< HEAD
     'whitenoise.middleware.WhiteNoiseMiddleware',
-=======
->>>>>>> 1a24c0602ee0771446a343bfb81b9d601bc45795
+
 ]
 SESSION_COOKIE_AGE = 1209600
 SESSION_SAVE_EVERY_REQUEST = True
@@ -108,15 +94,11 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'sustainableCampus.wsgi.application'
 
-<<<<<<< HEAD
-=======
 
->>>>>>> 1a24c0602ee0771446a343bfb81b9d601bc45795
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
 DATABASES = {
-<<<<<<< HEAD
     'default': dj_database_url.config(
         # Replace this value with your local database's connection string.
         default='postgresql://postgres:postgres@localhost:5432/mysite',
@@ -124,15 +106,8 @@ DATABASES = {
     )
 }
 
-=======
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
-}
 
 
->>>>>>> 1a24c0602ee0771446a343bfb81b9d601bc45795
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
 
@@ -151,10 +126,7 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-<<<<<<< HEAD
-=======
 
->>>>>>> 1a24c0602ee0771446a343bfb81b9d601bc45795
 # Internationalization
 # https://docs.djangoproject.com/en/5.1/topics/i18n/
 
@@ -166,10 +138,7 @@ USE_I18N = True
 
 USE_TZ = True
 
-<<<<<<< HEAD
-=======
 
->>>>>>> 1a24c0602ee0771446a343bfb81b9d601bc45795
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
@@ -178,7 +147,6 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 STATIC_URL = '/static/'
 STATIC_FILES_DIRS = os.path.join(BASE_DIR, 'static')
 
-<<<<<<< HEAD
 
 # This production code might break development mode, so we check whether we're in DEBUG mode
 if not DEBUG:
@@ -188,8 +156,7 @@ if not DEBUG:
     # and renames the files with unique names for each version to support long-term caching
     STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
-=======
->>>>>>> 1a24c0602ee0771446a343bfb81b9d601bc45795
+
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
@@ -198,11 +165,8 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_FROM = 'sustainablecampusteam@gmail.com'
 EMAIL_HOST_USER = 'sustainablecampusteam@gmail.com'
-<<<<<<< HEAD
 EMAIL_HOST_PASSWORD = 'tcayrclskdythofv'  # App password
-=======
-EMAIL_HOST_PASSWORD = 'tcayrclskdythofv' # App password
->>>>>>> 1a24c0602ee0771446a343bfb81b9d601bc45795
+
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 
@@ -212,8 +176,7 @@ EMAIL_USE_TLS = True
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 LOGIN_URL = '/accounts/login/'
 LOGOUT_REDIRECT_URL = '/'
-<<<<<<< HEAD
+
 LOGIN_REDIRECT_URL = '/'
-=======
-LOGIN_REDIRECT_URL = '/'
+
 
