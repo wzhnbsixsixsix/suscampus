@@ -1,0 +1,128 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Sustainable Campus</title>
+    <link rel="stylesheet" href="{% static "shop/css/shop.css" %}">
+    <link href="{% static '/custom_bootstrap/bootstrap.css' %}", rel="stylesheet" /> 
+    <style>
+      .item-image {
+        width: 50px;
+        height: 50px;
+        border-radius: 8px;
+        object-fit: cover;
+      } 
+    </style>
+  </head>
+  <body>
+    {% include 'navbar.html' %}
+
+    <div class="container my-5">
+      <div class="">
+        <h2 class="">Your Purchased Items</h2>
+
+        <div class="">
+          {% if purchases %}
+          <div class="card border-0 rounded-3 table-responsive">
+            <table class="table mb-0">
+              <thead>
+                <tr>
+                  <th scope="col">Item</th>
+                  <th scope="col">Purchase Date</th>
+                  <th scope="col">Status</th>
+                  <th scope="col">Refund</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for purchase in purchases %}
+                <tr>
+                  <td class="py-3">
+                    <div class="d-flex align-items-center">
+                      <img src="{{ purchase.item.image.url }}" alt="" class="item-image me-3">
+                      <div>
+                        <h5 class="h6 mb-1">{{ purchase.item.name }}</h5>
+                        <p class="text-secondary small mb-0">
+                          {{ purchase.item.description|truncatechars:50 }}
+                        </p>
+                      </div>
+                    </div>
+                  </td>
+                  <td class="py-3 text-secondary align-middle">{{ purchase.purchase_date_time }}</td>
+                  <td class="align-middle">
+                    {% if purchase.is_digital %}
+                    <span
+                      class="badge bg-secondary rounded-pill px-3 py-1 fs-6 d-inline-block text-truncate"
+                      style="width: 160px"
+                    >
+                      Not Redeemable
+                    </span>
+                    {% elif purchase.is_redeemed %}
+                    <span
+                      class="badge bg-success rounded-pill px-3 py-1 fs-6 d-inline-block text-truncate"
+                      style="width: 160px"
+                    >
+                      Already Redeemed
+                    </span>
+                    {% else %}
+                    <a
+                      href="{% url 'shop:display_redeem_code' redeem_code=purchase.redeem_code %}"
+                      class="text-decoration-none"
+                    >
+                      <span
+                        class="badge bg-success rounded-pill px-3 py-1 fs-6 d-inline-block text-truncate"
+                        style="width: 160px"
+                      >
+                        Redeem Now
+                      </span>
+                    </a>
+                    {% endif %}
+                  </td>
+                  <td class="align-middle"> 
+                    {% if purchase.is_digital %}
+                    <span
+                      class="badge bg-secondary rounded-pill px-3 py-1 fs-6 d-inline-block text-truncate"
+                      style="width: 160px"
+                    >
+                      Not Refundable
+                    </span>
+                    {% elif purchase.is_redeemed %}
+                    <span
+                      class="badge bg-secondary rounded-pill px-3 py-1 fs-6 d-inline-block text-truncate"
+                      style="width: 160px"
+                    >
+                      Not Refundable
+                    </span>
+                    {% else %}
+                    <a
+                      href="{% url 'shop:refund_item' purchase.purchase_id %}"
+                      class="text-decoration-none"
+                    >
+                      <span
+                        class="badge bg-success rounded-pill px-3 py-1 fs-6 d-inline-block text-truncate"
+                        style="width: 160px"
+                      >
+                        Refund Item
+                      </span>
+                    </a>
+                    {% endif %}
+                  </td> 
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+          {% else %}
+          <div class="alert alert-info mb-0 d-flex align-items-center">
+            <i class="lni lni-bell-1"></i>
+            You have no purchased items.
+          </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="{% static '/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+  </body>
+</html>

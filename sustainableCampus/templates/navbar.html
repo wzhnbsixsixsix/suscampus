@@ -1,0 +1,246 @@
+{% load static %}
+<nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom py-3">
+  <div class="container">
+    <!-- Logo on the left -->
+    <a href="/" class="navbar-brand">
+      <img 
+        src="{% static 'images/exeter-logo.png' %}" 
+        alt="University of Exeter" 
+        height="28" 
+        class="d-inline-block"
+      />
+    </a>
+
+    <!-- Hamburger menu button -->
+    <button 
+      class="navbar-toggler border-0" 
+      type="button" 
+      data-bs-toggle="offcanvas" 
+      data-bs-target="#sidebar" 
+      aria-controls="navbarNav" 
+      aria-expanded="false" 
+      aria-label="Toggle navigation"
+    >
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <!-- Main navigation -->
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <!-- Nav links -->
+      <ul class="navbar-nav mx-auto fw-semibold">
+        <li class="nav-item {% if request.path == '/map/' or request.path == '/' %}active{% endif %}">
+          <a href="/map/" class="nav-link px-3 rounded-pill">Home</a>
+        </li>
+        <li class="nav-item {% if '/forest/' in request.path %}active{% endif %}">
+          <a href="/forest/" class="nav-link px-3 rounded-pill">My Forest</a>
+        </li>
+        <li class="nav-item {% if '/daily-quiz/' in request.path %}active{% endif %}">
+          <a href="/daily-quiz/" class="nav-link px-3 rounded-pill">Daily Quiz</a>
+        </li>
+        <li class="nav-item {% if '/shop/' in request.path %}active{% endif %}">
+          <a href="/shop/" class="nav-link px-3 rounded-pill">Shop</a>
+        </li>
+        <li class="nav-item {% if '/leaderboards/forest' in request.path %}active{% endif %}">
+          <a href="/leaderboards/forest" class="nav-link px-3 rounded-pill">Leaderboard</a>
+        </li>
+        <li class="nav-item {% if '/announcements/' in request.path %}active{% endif %}">
+          <a href="/announcements/" class="nav-link px-3 rounded-pill">Announcements</a>
+        </li>
+        {% if user.role == 'gameKeeper' or user.role == 'developer' %}
+        <li class="nav-item dropdown {% if '/suggestions/' in request.path %}active{% endif %}">
+          <a class="nav-link px-3 rounded-pill dropdown-toggle" href="#" id="suggestionsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Suggestions
+          </a>
+          <ul class="dropdown-menu rounded-3 border-0 shadow-sm py-2" aria-labelledby="suggestionsDropdown">
+            <li><a class="dropdown-item py-2 px-3 {% if request.path == '/suggestions/' %}active{% endif %}" href="/suggestions/">Submit Suggestion</a></li>
+            <li><a class="dropdown-item py-2 px-3 {% if 'view_suggestions' in request.path %}active{% endif %}" href="{% url 'view_suggestions' %}">View Suggestions</a></li>
+          </ul>
+        </li>
+        {% else %}
+        <li class="nav-item {% if request.path == '/suggestions/' %}active{% endif %}">
+          <a href="/suggestions/" class="nav-link px-3 rounded-pill">Submit Suggestion</a>
+        </li>
+        {% endif %}
+      </ul>
+
+      <!-- User section -->
+      <div class="d-flex align-items-center gap-3">
+        <!-- User profile dropdown -->
+        <div class="dropdown">
+          <a 
+            href="#" 
+            class="d-flex align-items-center text-decoration-none dropdown-toggle" 
+            id="dropdownUser" 
+            data-bs-toggle="dropdown" 
+            aria-expanded="false"
+          >
+            <div class="avatar avatar-sm">
+                <img src="
+                {% if user.is_authenticated and user.profile.image %}
+                    {{ user.profile.image.url }}" 
+                {% else %}
+                    {% static 'images/default.png' %}
+                {% endif %}"
+                alt="Profile" 
+                class="rounded-circle w-100 h-100 object-fit-cover"
+            > 
+            </div>
+          </a>
+          <ul 
+            class="dropdown-menu dropdown-menu-end rounded-3 border-0 shadow-sm py-2 mt-2" 
+            aria-labelledby="dropdownUser"
+          >
+            <li><a class="dropdown-item py-2 px-3 {% if '/accounts/profile/' in request.path %}active{% endif %}" href="/accounts/profile/">Profile</a></li>
+            <li><a class="dropdown-item py-2 px-3 {% if '/settings/' in request.path %}active{% endif %}" href="#">Settings</a></li>
+            <li><a class="dropdown-item py-2 px-3 {% if '/achievements/' in request.path %}active{% endif %}" href="#">Achievements</a></li>
+            <li><hr class="dropdown-divider my-1 mx-3"></li>
+            <li><a class="dropdown-item py-2 px-3" href="{% url 'accounts:logout' %}">Sign out</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<!-- Sidebar for mobile -->
+<div class="offcanvas offcanvas-end rounded-start-4 overflow-hidden" id="sidebar">
+  <div class="offcanvas-header border-0 py-3">
+    <h5 class="offcanvas-title">Sustainable Campus</h5>
+    <button 
+      type="button" 
+      class="btn-close" 
+      data-bs-dismiss="offcanvas" 
+      aria-label="Close"
+    ></button>
+  </div>
+  
+  <div class="offcanvas-body p-0">
+    <!-- User profile section -->
+    <div class="p-4 text-center">
+      <div class="avatar avatar-lg mx-auto mb-3">
+        <img src="
+            {% if user.is_authenticated and user.profile.image %}
+                {{ user.profile.image.url }}" 
+            {% else %}
+                {% static 'images/default.png' %}
+            {% endif %}"
+            alt="Profile" 
+            class="rounded-circle w-100 h-100 object-fit-cover"
+        > 
+      </div> 
+    </div>
+    
+    <!-- Navigation links -->
+    <div class="p-3">
+      <ul class="list-unstyled mb-0">
+        <li class="mb-2 {% if request.path == '/map/' or request.path == '/' %}active{% endif %}">
+          <a href="/map/" class="nav-link rounded-pill py-2 px-3 d-block">
+            Home
+          </a>
+        </li>
+        <li class="mb-2 {% if '/forest/' in request.path %}active{% endif %}">
+          <a href="/forest/" class="nav-link rounded-pill py-2 px-3 d-block">
+            My Forest
+          </a>
+        </li>
+        <li class="mb-2 {% if '/daily-quiz/' in request.path %}active{% endif %}">
+          <a href="/daily-quiz/" class="nav-link rounded-pill py-2 px-3 d-block">
+            Daily Quiz 
+          </a>
+        </li>
+        <li class="mb-2 {% if '/shop/' in request.path %}active{% endif %}">
+          <a href="/shop/" class="nav-link rounded-pill py-2 px-3 d-block">
+            Shop
+          </a>
+        </li>
+        <li class="mb-2 {% if '/leaderboards/' in request.path %}active{% endif %}">
+          <a href="/leaderboards/" class="nav-link rounded-pill py-2 px-3 d-block">
+            Leaderboard
+          </a>
+        </li>
+        <li class="mb-2 {% if '/announcements/' in request.path %}active{% endif %}">
+          <a href="/announcements/" class="nav-link rounded-pill py-2 px-3 d-block">
+            Announcements
+          </a>
+        </li>
+        <li class="mb-2 {% if request.path == '/suggestions/' %}active{% endif %}">
+          <a href="/suggestions/" class="nav-link rounded-pill py-2 px-3 d-block">
+            Submit Suggestion
+          </a>
+        </li>
+        {% if user.role == 'gameKeeper' or user.role == 'developer' %}
+        <li class="mb-2 {% if 'view_suggestions' in request.path %}active{% endif %}">
+          <a href="{% url 'view_suggestions' %}" class="nav-link rounded-pill py-2 px-3 d-block">
+            View Suggestions
+          </a>
+        </li>
+        {% endif %}
+        <li class="mb-2 px-3"><hr></li>
+        <li class="mb-2 {% if '/accounts/profile/' in request.path %}active{% endif %}">
+          <a href="/accounts/profile/" class="nav-link rounded-pill py-2 px-3 d-block">
+            Profile
+          </a>
+        </li>
+        <li class="mb-2 {% if '/settings/' in request.path %}active{% endif %}">
+          <a href="#" class="nav-link rounded-pill py-2 px-3 d-block">
+            Settings
+          </a>
+        </li>
+        <li>
+          <a href="/accounts/login/" class="nav-link rounded-pill py-2 px-3 d-block">
+            Sign out
+          </a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<style>
+  .navbar .nav-link {
+    transition: background-color 0.2s ease, color 0.2s ease;
+    margin: 0 0.1rem;
+    padding-top: 3px;
+    padding-bottom: 3px;
+  }
+  
+  .navbar .nav-link:hover,
+  .navbar .nav-link:focus {
+    background-color: rgba(147, 187, 171, 0.1);
+    color: #44897a;
+  }
+  
+  .navbar .nav-item.active .nav-link,
+  .dropdown-item.active {
+    background-color: var(--bs-primary);
+    color: var(--bs-white);
+    font-weight: 600;
+  }
+  
+  #sidebar .nav-link {
+    transition: background-color 0.2s ease, color 0.2s ease;
+  }
+  
+  #sidebar .nav-link:hover,
+  #sidebar .nav-link:focus {
+    background-color: rgba(147, 187, 171, 0.1);
+    color: #44897a;
+  }
+  
+  #sidebar li.active .nav-link {
+    background-color: rgba(147, 187, 171, 0.15);
+    color: #44897a;
+    font-weight: 600;
+  }
+  
+  .dropdown-item {
+    transition: background-color 0.2s ease, color 0.2s ease;
+    border-radius: 0.5rem;
+  }
+  
+  .dropdown-item:hover,
+  .dropdown-item:focus {
+    background-color: rgba(147, 187, 171, 0.1);
+    color: #44897a;
+  }
+</style>

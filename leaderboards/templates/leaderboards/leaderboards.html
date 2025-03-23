@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+    {% load static %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leaderboard | Exeter Sustainable Game</title>
+    <link href="{% static '/custom_bootstrap/bootstrap.css' %}" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
+    <style>  
+        .rank-badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            font-weight: 600;
+            font-size: 1rem;
+        }
+        
+        .rank-1 {
+            background-color: rgba(233, 202, 26, 0.15);
+            color: #e9ca1a;
+        }
+        
+        .rank-2 {
+            background-color: rgba(177, 177, 177, 0.15);
+            color: #b1b1b1;
+        }
+        
+        .rank-3 {
+            background-color: rgba(173, 103, 77, 0.15);
+            color: #ad674d;
+        } 
+        
+        .score-badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.35em 0.75em;
+            border-radius: 100rem;
+            font-weight: 500;
+            font-size: 1rem;
+            background-color: var(--bs-bg-primary);
+            color: #44897a;
+        }
+        
+        .tree-icon {
+            color: #19a757;
+            margin-right: 0.5rem;
+        } 
+        
+        .avatar {
+            width: 2rem;
+            height: 2rem;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 500;
+            margin-right: 0.75rem;
+            background-color: #93bbab;
+            color: white;
+        }
+    </style>
+</head>
+<body class="bg-light">
+    {% include 'navbar.html' %}
+    
+    <main class="container py-5">
+        <div class="d-flex align-items-center mb-4 gap-2">
+            <div class="me-auto">
+                <h1 class="h3 mb-0">Forest Leaderboard</h1>
+                <p class="text-secondary mb-0">Compete with others to grow the most trees, and have the highest land sell!</p>
+            </div>
+            <div class="d-flex align-items-center gap-2">
+                <a
+                href="{% url 'leaderboards:daily_streak_leaderboard'%}"
+                class="btn btn-outline-success p-2 lh-1 d-flex align-items-center"
+                >
+                <i class="lni lni-wallet-1 me-1"></i> Quiz Streak Leaderboard
+                </a>
+            </div>
+            {% if user.role == "player" %}
+            <div class="badge rounded-pill bg-primary fs-6 py-2 px-3">
+                <span class="text-medium">Your Rank: #{{ user_rank }}</span>
+            </div>
+            {% endif %}
+        </div>
+        
+        <div class="card px-3">
+            <div class="table-responsive">
+                <table class="table mb-0">
+                    <thead class="">
+                        <tr>
+                            <th scope="col" class="border-0 py-3">Rank</th>
+                            <th scope="col" class="border-0 py-3">Player</th>
+                            <th scope="col" class="border-0 py-3 text-end">Highest Land Sell</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for player in top_players %}
+                            <tr>
+                                <td class="py-3 align-middle">
+                                    {% if forloop.counter == 1 %}
+                                        <div class="rank-badge rank-1">1</div>
+                                    {% elif forloop.counter == 2 %}
+                                        <div class="rank-badge rank-2">2</div>
+                                    {% elif forloop.counter == 3 %}
+                                        <div class="rank-badge rank-3">3</div>
+                                    {% else %}
+                                        <div class="text-secondary ms-3">{{ forloop.counter }}</div>
+                                    {% endif %}
+                                </td>
+                                <td class="py-3 ">
+                                    <div class="d-flex align-items-center">
+                                        <div class="avatar">
+                                            <img src="
+                                                {% if player.user.profile.image %}
+                                                    {{ player.user.profile.image.url }}" 
+                                                {% else %}
+                                                    {% static 'images/default.png' %}
+                                                {% endif %}"
+                                                alt="Profile" 
+                                                class="rounded-circle w-100 h-100 object-fit-cover"
+                                            > 
+                                        </div>
+                                        <span>{{ player.user.username }}</span>
+                                    </div>
+                                </td>
+                                <td class="py-3 text-end">
+                                    <div class="score-badge">
+                                        <i class="bi bi-tree-fill tree-icon"></i>
+                                        {{ player.high_score }}
+                                    </div>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        
+                        {% if user_score.score < top_players.9.score %}
+                            <tr>
+                                <td colspan="3" class="text-center p-3">
+                                    <i class="bi bi-three-dots"></i>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="py-3 align-middle">
+                                    <div class="text-secondary ms-3">{{ user_rank }}</div>
+                                </td>
+                                <td class="py-3">
+                                    <div class="d-flex align-items-center">
+                                        <div class="avatar">
+                                            <img src="
+                                                {% if user_score.user.profile.image %}
+                                                    {{ user_score.user.profile.image.url }}" 
+                                                {% else %}
+                                                    {% static 'images/default.png' %}
+                                                {% endif %}"
+                                                alt="Profile" 
+                                                class="rounded-circle w-100 h-100 object-fit-cover"
+                                            > 
+                                        </div>
+                                        <span>{{ user_score.user.username }}</span>
+                                    </div>
+                                </td>
+                                <td class="py-3 text-end">
+                                    <div class="score-badge">
+                                        <i class="bi bi-tree-fill tree-icon"></i>
+                                        {{ user_score.score }}
+                                    </div>
+                                </td>
+                            </tr>
+                        {% endif %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        
+        {% if user.role == "player" %}
+        <div class="card mt-4 p-4">
+            <div class="row align-items-center">
+                <div class="col-md-8">
+                    <h4 class="h5 mb-3">Want to climb higher?</h4>
+                    <p class="text-secondary mb-md-0">Complete more sustainability challenges to earn points and grow trees in your forest.</p>
+                </div>
+                <div class="col-md-4 text-md-end">
+                    <a href="/forest" class="btn btn-primary rounded-pill py-2 px-4">View Forest</a>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    </main>
+
+    <script src="{% static '/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+</body>
+</html>
+
+

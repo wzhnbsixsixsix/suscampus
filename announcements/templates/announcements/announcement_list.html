@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  {% load static %}
+  <title>Sustainable Campus</title>
+  <link href="{% static '/custom_bootstrap/bootstrap.css' %}" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
+  <style>
+    .modal-img {
+      max-height: 400px; 
+      object-fit: contain; 
+      width: 100%;
+    } 
+    
+    .card-img-wrapper {
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .card-tag {
+      position: absolute;
+      top: 16px;
+      left: 16px;
+      z-index: 1;
+      padding: 6px 12px;
+      font-size: 0.75rem;
+      font-weight: 500;
+      border-radius: 100px;
+    }
+    
+    .avatar-img {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+    
+    .author-meta {
+      display: flex;
+      align-items: center;
+    }
+    
+    .full-content {
+      display: none;
+    }
+
+    .event-link {
+      display: none;
+    }
+  </style>
+</head>
+
+<body>
+  {% include 'navbar.html' %}
+
+  <div class="container py-5">
+    <!-- Header Section -->
+    <div class="row mb-4">
+      <div class="col-12">
+        <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center">
+          <h1 class="h3 mb-3 mb-md-0">Announcements</h1>
+          <div class="d-flex gap-2">
+            <!-- Filter Toggle Button -->
+            <button class="btn btn-outline-primary py-2 px-3 d-flex align-items-center" type="button" data-bs-toggle="collapse" data-bs-target="#filterCollapse" aria-expanded="false" aria-controls="filterCollapse">
+              <i class="bi bi-funnel me-2"></i> Filter
+            </button>
+            <a href="{% url 'announcements:create_announcement' %}" class="btn btn-outline-success py-2 px-3 d-flex align-items-center">
+              <i class="bi bi-plus-lg me-2"></i> Post an Announcement
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Filter Form (Collapsible) -->
+    <div class="collapse mb-4" id="filterCollapse">
+         <form method="get" action="{% url 'announcements:announcement_list' %}" class="mb-4 p-4 bg-light border rounded">
+            <div class="row g-3 align-items-end">
+                <!-- Filter by Author -->
+                <div class="col-md-3">
+                    <label for="author" class="form-label">Filter by Author:</label>
+                    <input type="text" name="author" id="author" class="form-control" value="{{ request.GET.author }}"
+                           placeholder="Enter author name">
+                </div>
+
+                <!-- Filter by Role -->
+                <div class="col-md-2">
+                    <label for="role" class="form-label">Filter by Role:</label>
+                    <select name="role" id="role" class="form-select">
+                        <option value="">All Roles</option>
+                        <option value="GameKeeper" {% if request.GET.role == "Gamekeeper" %}selected{% endif %}>Gamekeeper</option>
+                        <option value="Developer" {% if request.GET.role == "Developer" %}selected{% endif %}>Developer</option>
+                    </select>
+                </div>
+
+                <!-- Filter by Date -->
+                <div class="col-md-2">
+                    <label for="date" class="form-label">Filter by Date:</label>
+                    <input type="date" name="date" id="date" class="form-control" value="{{ request.GET.date }}">
+                </div>
+
+                <!-- Sort by Oldest/Newest -->
+                <div class="col-md-2">
+                    <label for="sort" class="form-label">Sort by:</label>
+                    <select name="sort" id="sort" class="form-select">
+                        <option value="">Default</option>
+                        <option value="newest" {% if request.GET.sort == "newest" %}selected{% endif %}>Newest First</option>
+                        <option value="oldest" {% if request.GET.sort == "oldest" %}selected{% endif %}>Oldest First</option>
+                    </select>
+                </div>
+
+                <!-- Filter and Clear Buttons -->
+                <div class="col-md-3 d-flex align-items-end">
+                    <button type="submit" class="btn btn-primary me-2">Filter</button>
+                    <a href="{% url 'announcements:announcement_list' %}" class="btn btn-secondary">Clear Filters</a>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <!-- Announcements Grid -->
+    <div class="row g-4">
+      {% for announcement in announcements %}
+      <div class="col-12 col-md-6 col-lg-4">
+        <article class="card card-hover h-100 overflow-hidden">
+          <!-- Card Image Container -->
+          <figure class="card-img-wrapper">
+            {% if announcement.image %}
+            <img src="{{ announcement.image.url }}" class="card-img-top" 
+              alt="{{ announcement.title }}" style="height: 250px; object-fit: cover;">
+            {% else %}
+            <img src="" class="card-img-top" 
+              style="height: 250px; object-fit: contain;">
+            {% endif %}
+            
+            <!-- Author Role -->
+            <span class="card-tag bg-light text-capitalize text-primary">{{ announcement.author.role }}</span>
+          </figure>
+
+          <div class="card-body d-flex flex-column p-4">
+            <!-- Card Title -->
+            <h3 class="card-title h5 fw-bold mb-3">{{ announcement.title }}</h3>
+            
+            <!-- Card Summary -->
+            <p class="card-text text-secondary mb-4">
+              {{ announcement.summary }}
+            </p>
+            
+            <!-- Author Info -->
+            <div class="author-meta mt-auto">
+              <div class="me-3">
+                <!-- author avatar -->
+                <div class="avatar-img bg-secondary d-flex align-items-center justify-content-center text-white">
+                  <img src="
+                    {% if announcement.author.profile.image %}
+                      {{ announcement.author.profile.image.url }}" 
+                    {% else %}
+                      {% static 'images/default.png' %}
+                    {% endif %}"
+                    alt="Profile" 
+                    class="rounded-circle w-100 h-100 object-fit-cover"
+                  > 
+                </div>
+              </div>
+              <div class="author-info">
+                <div class="fw-medium">{{ announcement.author }}</div>
+                <div class="text-secondary small">{{ announcement.created_at|date:"d.m.y" }}</div>
+              </div>
+              
+              <!-- Engagement Controls -->
+              <div class="ms-auto d-flex align-items-center gap-2">
+                <!-- Like Button -->
+                <form action="{% url 'announcements:like_announcement' announcement.id %}" method="post" class="d-inline">
+                  {% csrf_token %}
+                  <button type="submit" class="btn btn-sm {% if request.user in announcement.likes.all %}btn-primary{% else %}btn-outline-primary{% endif %} rounded-pill">
+                    <i class="bi {% if request.user in announcement.likes.all %}bi-hand-thumbs-up-fill{% else %}bi-hand-thumbs-up{% endif %}"></i>
+                    <span class="ms-1">{{ announcement.total_likes }}</span>
+                  </button>
+                </form>
+
+                <!-- Dislike Button -->
+                <form action="{% url 'announcements:dislike_announcement' announcement.id %}" method="post" class="d-inline">
+                  {% csrf_token %}
+                  <button type="submit" class="btn btn-sm {% if request.user in announcement.dislikes.all %}btn-danger{% else %}btn-outline-danger{% endif %} rounded-pill">
+                    <i class="bi {% if request.user in announcement.dislikes.all %}bi-hand-thumbs-down-fill{% else %}bi-hand-thumbs-down{% endif %}"></i>
+                  </button>
+                </form>
+              </div>
+            </div>
+            
+            <!-- QR Code Button (For Specific Roles) -->
+            {% if announcement.is_event and user_role == 'gameKeeper' or user_role == 'developer' %}
+            <div class="mt-3">
+              <a href="{% url 'announcements:display_event_qr_code' announcement.event.event_code %}" 
+                class="btn btn-primary btn-sm rounded-pill">
+                <i class="bi bi-qr-code me-1"></i> View QR Code
+              </a>
+            </div>
+            {% endif %}
+            
+            <!-- Hidden Full Content (For Modal) -->
+            <div class="full-content d-none">
+              {{ announcement.content }}
+            </div>
+            
+            <!-- Hidden Meta Data (For Modal) -->
+            <div class="meta-data d-none">
+              {{ announcement.author }} · {{ announcement.author.role }} · {{ announcement.created_at|date:"SHORT_DATE_FORMAT" }}
+            </div>
+          </div>
+        </article>
+      </div>
+      {% endfor %}
+    </div>
+
+    <!-- Announcement Modal -->
+    <div class="modal fade" id="announcementModal" tabindex="-1">
+      <div class="modal-dialog model-dialog-scrollable modal-lg">
+        <div class="modal-content rounded-4 shadow-lg">
+          <!-- Modal Header -->
+          <div class="modal-header border-0 pb-1">
+            <h5 class="modal-title fw-bold" id="modalTitle"></h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+          </div>
+
+          <!-- Modal Body -->
+          <div class="modal-body p-4 pt-2">
+            <img src="" class="modal-img img-fluid mb-4 rounded-3" id="modalImage" />
+            <p id="modalContent" class="text-secondary"></p>
+          </div>
+
+          <!-- Modal Footer -->
+          <div class="modal-footer border-0 d-flex justify-content-between align-items-center">
+            <small class="text-muted" id="modalMetaData"></small>
+            <button type="button" class="btn btn-outline-secondary px-4 rounded-pill" data-bs-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="{% static '/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+    <script>
+     document.addEventListener("DOMContentLoaded", () => {
+  const cards = document.querySelectorAll(".card");
+  const modal = new bootstrap.Modal(document.getElementById("announcementModal"));
+
+  cards.forEach((card) => {
+    card.addEventListener("click", (event) => {
+      if (event.target.closest("button, form")) return; // Prevent clicks on buttons/forms
+
+      // Extract data from card elements
+      const title = card.querySelector(".card-title").textContent;
+      const content = card.querySelector(".full-content").textContent;
+      const metaData = card.querySelector(".meta-data").textContent;
+      const image = card.querySelector("img").src;
+
+      // Debugging: Log extracted data
+      console.log({ title, content, metaData, image });
+
+      // Update modal content
+      document.getElementById("modalTitle").textContent = title;
+      document.getElementById("modalContent").textContent = content;
+      document.getElementById("modalImage").src = image;
+      document.getElementById("modalMetaData").textContent = metaData;
+
+      // Show the modal
+      modal.show();
+    });
+  });
+
+  // Auto-dismiss toasts after 5 seconds
+  const toasts = document.querySelectorAll('.toast');
+  toasts.forEach(toast => {
+    setTimeout(() => {
+      const bsToast = bootstrap.Toast.getInstance(toast);
+      if (bsToast) bsToast.hide();
+    }, 5000);
+  });
+});
+    </script>
+  </div>
+
+    <!-- Toast Notifications -->
+    {% if messages %}
+    <div class="toast-container position-fixed top-0 end-0 p-3">
+      {% for message in messages %}
+        {% if 'success' in message.tags %}
+          <div class="toast show align-items-center text-white bg-success border-0 rounded-3" role="alert">
+        {% elif 'error' in message.tags %}
+          <div class="toast show align-items-center text-white bg-danger border-0 rounded-3" role="alert">
+        {% endif %}
+          <div class="d-flex">
+            <div class="toast-body">
+              {{ message }}
+            </div>
+            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+    {% endif %}
+</body>
+
+</html>

@@ -1,0 +1,18 @@
+table {
+    width: 100%;
+    gap: 20px;
+    border-collapse: separate;
+    border-spacing: 0px 1px; /* Adds spacing between rows */
+}
+
+tr {
+    background: lightskyblue; /* Light background */
+    height: 50px;
+    text-align: center;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.user_score {
+    background: teal;
+}

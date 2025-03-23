@@ -1,0 +1,71 @@
+{% extends 'dailyQuiz/base.html' %}
+
+{% block content %}
+
+<div class="container py-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        
+        <h1 class="h3 mb-0">All Daily Quiz Questions</h1>
+    </div>
+    <p> Correct answers for quiz are highlighted</p>
+</div>
+<style>
+
+    .delete_button {
+    background-color: #ef9797; /* Red background color */
+    color: white; 
+    border: none;
+    padding: 10px 20px; 
+    cursor: pointer; /* Change cursor to pointer on hover */
+    border-radius: 5px; /* Add rounded corners */
+    transition: background-color 0.3s ease; /* Smooth transition effect */
+    border-radius: 50px; 
+
+    
+    }   
+
+    .delete_button:hover {
+    background-color: #a57272; /* Darker red on hover */
+    }
+</style>
+
+
+<div class="question-list container mt-5">
+    {% if questions %}
+        {% for question in questions %}
+            <div class="question card mb-4 shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">{{ question.question }}</h5>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item {% if question.correct_option == 'option_a' %}bg-primary text-white{% endif %}">
+                            {{ question.option_a }}
+                        </li>
+                        <li class="list-group-item {% if question.correct_option == 'option_b' %}bg-primary text-white{% endif %}">
+                            {{ question.option_b }}
+                        </li>
+                        <li class="list-group-item {% if question.correct_option == 'option_c' %}bg-primary text-white{% endif %}">
+                            {{ question.option_c }}
+                        </li>
+                        <li class="list-group-item {% if question.correct_option == 'option_d' %}bg-primary text-white{% endif %}">
+                            {{ question.option_d }}
+                        </li>
+                    </ul>
+                </div>
+                <div class="card-footer bg-transparent">
+                    <form method="POST" action="{% url 'dailyQuiz:delete_question' question.id %}" class="d-inline">
+                        {% csrf_token %}
+                        <button type="submit" class="delete_button" onclick="return confirm('Are you sure you want to delete this question?')">
+                            <i class="fas fa-trash-alt"></i> Delete
+                        </button>
+                    </form>
+                </div>
+            </div>
+        {% endfor %}
+    {% else %}
+        <div class="alert alert-info" role="alert">
+            No daily quiz questions have been created yet.
+        </div>
+    {% endif %}
+</div>
+
+{% endblock %}

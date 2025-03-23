@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  {% load static %}
+  <title>Sustainable Campus</title>
+  <link rel="stylesheet" href="/static/css/map.css" />
+  <link href="https://cdn.lineicons.com/5.0/lineicons.css" rel="stylesheet" />
+  <link rel="stylesheet" href="/static/css/map.css" />
+  <link href="{% static '/custom_bootstrap/bootstrap.css' %}" rel="stylesheet" />
+  <link rel="stylesheet" href="{% static '/js/node_modules/ol/ol.css' %}" />
+</head>
+
+<body>
+  {% include 'navbar.html' %}
+
+  <script type="importmap">
+      {
+        "imports": {
+          "rbush": "/static/js/node_modules/rbush/index.js",
+          "quickselect": "/static/js/node_modules/quickselect/index.js",
+          "color-rgba": "/static/js/node_modules/color-rgba/index.js",
+          "color-space/lchuv.js": "/static/js/node_modules/color-space/lchuv.js",
+          "color-space/rgb.js": "/static/js/node_modules/color-space/rgb.js",
+          "color-space/rgba.js": "/static/js/node_modules/color-space/rgba.js",
+          "color-space/xyz.js": "/static/js/node_modules/color-space/xyz.js",
+          "color-parse": "/static/js/node_modules/color-parse/index.js",
+          "color-space/hsl.js": "/static/js/node_modules/color-space/hsl.js",
+          "color-name": "/static/js/node_modules/color-name/index.js"
+          }
+      }
+    </script>
+
+  <div class="container-fluid flex-grow-1 d-flex flex-column mb-2">
+
+    <div class="position-relative flex-grow-1 border mt-3">
+      <!-- Map content goes here -->
+      <div id="map" class="position-absolute h-100 w-100"></div>
+    </div>
+
+    <div id="marker-popup" class="ol-popup">
+      <a href="#" id="marker-popup-closer" class="ol-popup-closer"></a>
+      <div id="marker-popup-content"></div>
+    </div>
+
+    <div id="marker-data" class="marker-data" data-marker={{data}}>{{data}}</div>
+    <div id="user-inv" class="user-inv" data-inv="{{inv}}">{{inv}}</div>
+    <!-- jQuery, used to update the database-->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <!-- Geolocation System -->
+    <script type="module" src="{% static '/js/geolocSystem.js' %}"></script>
+    <!-- Bootstrap JS -->
+    <script src="{% static '/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+  </div>
+</body>
+
+</html>

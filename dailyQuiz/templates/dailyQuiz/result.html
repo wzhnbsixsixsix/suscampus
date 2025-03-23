@@ -1,0 +1,100 @@
+{% extends 'dailyQuiz/base.html' %}
+
+{% block content %}
+
+<style>
+    /* Custom CSS for additional styling */
+    .result-card {
+        background-color: #ffffff;
+        border: 1px solid #e0e0e0;
+        border-radius: 10px;
+        padding: 1.5rem;
+        margin-bottom: 1rem;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+    .result-card.correct {
+        border-left: 5px solid #93bbab; /* Green border for correct answers */
+    }
+    .result-card.incorrect {
+        border-left: 5px solid #750000; /* Red border for incorrect answers */
+    }
+    .final-score {
+        font-size: 1.5rem;
+        font-weight: bold;
+        color: #93bbab; /* Green color for the final score */
+    }
+    .streak-info {
+        font-size: 1.2rem;
+        color: #6c757d; /* Gray color for streak info */
+    }
+    .streak-reset {
+        color: #7c0000; /* Red color for streak reset message */
+    }
+    .btn-return-home {
+        background-color: #93bbab;
+        color: white;
+        padding: 0.75rem 1.5rem;
+        border-radius: 5px;
+        text-decoration: none;
+        display: inline-block;
+        margin-top: 1.5rem;
+    }
+    .btn-return-home:hover {
+        background-color: #759689;
+        text-decoration: none;
+    }
+</style>
+
+<div class="container py-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="h3 mb-0">Daily Quiz Result</h1>
+    </div>
+
+    <!-- Display Results for Each Question -->
+    {% for result in results %}
+        <div class="result-card {% if result.correct %}correct{% else %}incorrect{% endif %}">
+            <p class="mb-1"><strong>Question:</strong> {{ result.question.question }}</p>
+            <p class="mb-0">
+                {% if result.correct %}
+                    <span class="text-success"style="font-size: 24px">✅ Correct</span>
+                {% else %}
+                    <span class="text-danger"style="font-size: 24px">❌ Incorrect</span>
+                {% endif %}
+            </p>
+        </div>
+    {% endfor %}
+
+    <!-- Final Score -->
+    <div class="final-score mt-4">
+        Final Score: {{ score }} / 10
+    </div>
+
+    <!-- Streak Information -->
+    <div class="streak-info mt-3">
+        {% if streak == 0 %}
+            <p class="streak-reset">
+                Unfortunately, your daily streak has been reset as you scored less than 8 on today's quiz. Keep trying,
+                and we believe you will get there soon!
+            </p>
+        {% else %}
+            <p>Current streak: {{ streak }} days 🔥</p>
+        {% endif %}
+    </div>
+
+    <!-- Quiz Reward -->
+    <div class="streak-info mt-3">
+        {% if quiz_reward > 0 %}
+            <p class="streak-reset">You earned {{ quiz_reward }} currency as a reward!</p>
+        {% else %}
+            <p>❌ No reward earned today. Answer 8 or more questions correctly next time to earn currency!</p>
+        {% endif %}
+    </div>
+
+    <!-- Return to Home Button -->
+    <a href="{% url 'main:map' %}" class="btn-return-home">
+        Return to Home
+    </a>
+    
+</div>
+
+{% endblock %}

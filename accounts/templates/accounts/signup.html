@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+    {% load static %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up | Exeter Sustainable Game</title>
+    <link href="{% static '/custom_bootstrap/bootstrap.css' %}", rel="stylesheet" />
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+</head>
+<body>
+<div class="left-panel">
+    <h2>Sign Up</h2>
+    <!-- Show the error message returned by the backend -->
+    <div class="mt-0">
+        <form id="signupForm" method="POST" action="{% url 'accounts:signup' %}">
+            {% csrf_token %}
+            <div class="mb-3">
+                <label for="id_username">Username:</label>
+                <input type="text" class="form-control" name="username" id="id_username" placeholder="Username" required>
+                {% if form.username.errors %}
+                    <div class="text-danger">
+                        {% for error in form.username.errors %}
+                            <small>{{ error }}</small>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+            <div class="mb-3">
+                <label for="id_email">Email:</label>
+                <input type="email" class="form-control" name="email" id="id_email" placeholder="Email" required>
+                {% if form.email.errors %}
+                    <div class="text-danger">
+                        {% for error in form.email.errors %}
+                            <small>{{ error }}</small>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+            <div class="mb-3">
+                <label for="id_first_name">First Name:</label>
+                <input type="text" class="form-control" name="first_name" id="id_first_name" placeholder="First Name" required>
+            </div>
+            <div class="mb-3">
+                <label for="id_last_name">Last Name:</label>
+                <input type="text" class="form-control" name="last_name" id="id_last_name" placeholder="Last Name" required>
+            </div>
+            <div class="mb-3">
+                <label for="id_password1">Password:</label>
+                <input type="password" class="form-control" name="password1" id="id_password1" placeholder="Password" required>
+                {% if form.password2.errors %}
+                    <div class="text-danger">
+                        {% for error in form.password2.errors %}
+                            <small>{{ error }}</small>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+            <div class="mb-3">
+                <label for="id_password2">Confirm Password:</label>
+                <input type="password" class="form-control" name="password2" id="id_password2" placeholder="Confirm Password" required>
+            </div>
+            <div class="d-grid">
+                <button type="submit" class="btn btn-outline-success">Sign Up</button>
+            </div>
+        </form>
+        <p>Already have an account? <a href="{% url 'accounts:login' %}">Log in</a></p>
+    </div>
+</div>
+</body>
+</html>

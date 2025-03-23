@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  {% load static %}
+  <script>const media_url = "{% get_media_prefix %}";</script>
+  <title>Sustainable Campus</title>
+  <link rel="stylesheet" href="/static/css/forest.css" />
+  <!-- <link rel="stylesheet" href="{% static 'css/navbar.css' %}" /> -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
+  <link rel="stylesheet" href="{% static '/custom_bootstrap/bootstrap.css' %}" />
+  <script src="//code.jquery.com/jquery-1.10.2.js"></script>
+  <script src="//code.jquery.com/ui/1.11.2/jquery-ui.js"></script>
+  <script>
+
+    function litterDrop(event) {
+      //gets id of dropped litter
+      const litterId = event.dataTransfer.getData('text');
+      const litter = document.getElementById(litterId);
+
+      //gets dropzone
+      const recyclingDropzone = event.target;
+      console.log("dropped " + litterId + " into " + recyclingDropzone.id);
+
+      if (litter.litterType == 0 && recyclingDropzone.id == "plastic-recycling") {
+        //successful plastic recycle
+        litter.remove();
+        const recyclingDataJSON = { "type": "paper" }
+        ajaxCallRecycleItem(recyclingDataJSON);
+      }
+      else if (litter.litterType == 1 && recyclingDropzone.id == "paper-recycling") {
+        //successful paper recycle
+        litter.remove();
+        const recyclingDataJSON = { "type": "plastic" }
+        ajaxCallRecycleItem(recyclingDataJSON);
+      }
+      else if (litter.litterType == 2 && recyclingDropzone.id == "compost-recycling") {
+        //successful comnpost recycle
+        litter.remove();
+        const recyclingDataJSON = { "type": "compost" }
+        ajaxCallRecycleItem(recyclingDataJSON);
+      }
+      else {
+        //incorrect bin
+        let previousColor = litter.style.backgroundColor;
+        litter.style.backgroundColor = "pink";
+        setTimeout(function () { litter.style.backgroundColor = previousColor }, 500)
+
+      }
+    }
+
+    function litterDragOver(event) {
+      event.preventDefault();
+    }
+
+    function ajaxCallRecycleItem(recyclingData) {
+      $.ajax({
+        url: "handle_recycling",
+        type: 'POST',
+        data: recyclingData,
+        success: function (response) {
+          console.log("sent the data on the recycling event successfully");
+          console.log("Response: ", response);
+        },
+        error: function (error) {
+          console.log("encountered error when sending recycling event data: ", error);
+        }
+      })
+    }
+
+  </script>
+  <style>
+    body {
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+  </style>
+</head>
+
+<body>
+  {% include 'navbar.html' %}
+
+  <div id="forest-view" style="position: relative; background: #48c2e0">
+    <div id="forest-background">
+
+      <div id="forest-background-left"></div>
+      <div id="forest-background-right"></div>
+
+      <div class="forest-container">
+        <div id="forest-floor-texture"></div>
+      </div>
+      <div class="forest-container">
+        <div class="forest-floor" id="forest-images"></div>
+      </div>
+      <div class="forest-container">
+        <div id="forest-grid"></div>
+      </div>
+
+
+    </div>
+
+
+    <!-- cell selected popups -->
+    <div class="forest-popup" id="occupied-popup">
+      <div class="popup-title">
+        <div id="close-occupied-popup" class="close-popup">
+          <i class="bi bi-x"
+            style="width: 100%; height: 100%; display: inline-block; font-size: max(4vw, 40px);"></i>
+        </div>
+        <div id="plant-name" style="font-size: max(2.5vw, 25px);">Customise</div>
+      </div>
+
+      <div style="width: 90%; margin: auto;">
+        <img id="selected-plant-image" src="" alt="" style="height: 100%; width: 100%;">
+      </div>
+
+      <div id="plant-details"
+        style="position: absolute; bottom: 0; height: calc(75px + max(50px, 5vw)); width: 100%; border-radius: 10px; background-color: rgba(216, 216, 216, 0.582);">
+        <div style="margin-left: auto; width: 90%; height: 100%;">
+          <label id="selected-plant-description"
+            style="position: absolute; bottom: calc(50px + max(35px, 3.5vw)); left: 5%; font-size: max(2vw, 20px);">plant
+            description</label>
+          <label id="selected-plant-resource"
+            style="position: absolute; bottom: calc(30px + max(25px, 2.5vw)); left: 5%; font-size: max(1.5vw, 15px);">Plant
+            Resource: </label>
+          <button type="button"
+            style="position: absolute; bottom: 5px; left: 5%; font-size:max(2vw, 20px); width: 90%; vertical-align: middle;"
+            id="selected-plant-requirement-button" class="btn btn-primary d-flex text-center">Give</button>
+        </div>
+      </div>
+
+
+    </div>
+
+
+    <div class="forest-popup" id="empty-popup">
+      <div class="popup-title">
+        <div id="close-empty-popup" class="close-popup">
+          <i class="bi bi-x"
+            style="width: 100%; height: 100%; display: inline-block; font-size: max(4vw, 40px);"></i>
+        </div>
+        <div style="font-size: max(2.5vw, 25px);">Select plant</div>
+      </div>
+
+      <div style="position: absolute; top: max(4vw, 40px);  bottom: 0px; width: 100%; display: unset;">
+        <div class="popup-grid-container" id="plant-selection-grid" style="bottom: calc(30px + max(70px, 7vw));">
+        </div>
+
+        <div id="plant-details"
+          style="position: absolute; bottom: 0; height: calc(100px + max(50px, 5vw)); width: 90%; left: 5%;">
+          <label id="selected-plant-name"
+            style="position: absolute; bottom: calc(40px + max(35px, 3.5vw)); left: 5%; font-size: max(2vw, 20px);">Select
+            a plant</label>
+          <label id="selected-seed-resource"
+            style="position: absolute; bottom: calc(30px + max(25px, 2.5vw)); left: 5%; font-size: max(1.5vw, 15px);">Plant
+            Resource: </label>
+          <button disabled type="button"
+            style="position: absolute; bottom: 5px; left: 5%; font-size:max(2vw, 20px); width: 90%; vertical-align: middle;"
+            id="plant-selected-button" class="btn btn-primary d-flex text-center">Select Plant</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- popups from buttons -->
+    <div class="button-popup" id="customise-popup">
+      <div class="popup-title">
+        <div id="close-customise-popup" class="close-popup">
+          <i class="bi bi-x"
+            style="width: 100%; height: 100%; display: inline-block; font-size: max(4vw, 40px);"></i>
+        </div>
+        <div style="font-size: max(2.5vw, 25px);">Customise</div>
+      </div>
+
+      <div class="grid-container" id="customise-grid" style="width: 90%;">
+      </div>
+    </div>
+
+    <div class="button-popup" id="sell-popup">
+      <div class="popup-title">
+        <div id="close-sell-popup" class="close-popup">
+          <i class="bi bi-x"
+            style="width: 100%; height: 100%; display: inline-block; font-size: max(4vw, 40px);"></i>
+        </div>
+        <div style="font-size: max(2.5vw, 25px);">Sell Land</div>
+      </div>
+
+      <div id="sell-body" style="width: 90%; margin-left: auto;">
+        <div style="word-wrap:break-word; font-size:  max(1.5vw, 15px); width: 90%;">
+          Sell your land for reward tokens! Increase the value of your forest by increasing the number of plants, and
+          the biodiversity of the land. Some plants are worth more than others, but all contribute to biodiversity!
+          <br>
+          <div id="sell-value" style="font-size: max(2vw, 20px);">
+            Current value of your forest:
+            <span style="color:#48e07b">{{forest_value}} tokens.</span>
+          </div>
+          <button type="button" id="sell-forest-button" class="btn btn-primary btn-lg flex-fill" style="position: absolute; bottom: 2%; width: 90%; left: 5%; font-size: max(3vw, 30px);">Sell</button>
+        </div>
+
+      </div>
+    </div>
+
+    <div id="recycling-popup">
+      <div class="popup-title">
+        <div id="close-recycling-popup" class="close-popup">
+          <i class="bi bi-x"
+            style="width: 100%; height: 100%; display: inline-block; font-size: max(4vw, 40px); "></i>
+        </div>
+        <div style="font-size: max(2.5vw, 25px);">Recycling</div>
+      </div>
+      <div id="recycling-container" style="position: absolute; top: 4vw;  bottom: 0px; width: 100%; display: unset;">
+        <div id="litter-container" style="height: 70%; width: 100%;">
+
+        </div>
+        <div id="bin-container"
+          style="display:flex; flex-direction: row; justify-content: space-around; height: 30%; width: 100%;">
+          <div class="recycling-dropzone" id="plastic-recycling" ondragover="litterDragOver(event);"
+            ondrop="litterDrop(event);" style="background-color: red;"></div>
+          <div class="recycling-dropzone" id="paper-recycling" ondragover="litterDragOver(event);"
+            ondrop="litterDrop(event);" style="background-color: blue;"></div>
+          <div class="recycling-dropzone" id="compost-recycling" ondragover="litterDragOver(event);"
+            ondrop="litterDrop(event);" style="background-color: green;"></div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- Buttons -->
+
+    <div id="button-container" class="w-100 d-flex gap-2">
+      <button type="button" id="customise-button" class="btn btn-primary btn-lg flex-fill">Customise</button>
+      <button type="button" id="sell-button" class="btn btn-primary btn-lg flex-fill">Sell land</button>
+      <div id="recycling-button">
+
+      </div>
+    </div>
+    <div id="retrieved-forest-content" class="data-container">{{user_forest}}</div>
+    <div id="retrieved-inventory-content" class="data-container">{{user_inventory}}</div>
+    <div id="retrieved-plant-content" class="data-container">{{plant_list}}</div>
+    <div id="retrieved-value" class="data-container">{{forest_value}}</div>
+  </div>
+
+
+
+  <!-- Bootstrap JS -->
+  <script src=" {% static '/bootstrap/js/bootstrap.bundle.min.js' %}">
+  </script>
+  <!-- forest js files -->
+  <script type="module" src="{% static '/js/forestDisplay.js' %}"></script>
+</body>
+
+</html>
