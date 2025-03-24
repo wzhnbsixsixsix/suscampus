@@ -103,7 +103,7 @@ WSGI_APPLICATION = 'sustainableCampus.wsgi.application'
 DATABASES = {
     'default': dj_database_url.config(
         # Replace this value with your local database's connection string.
-        default='postgresql://postgres:postgres@localhost:5432/mysite',
+        default='postgresql://mysite:4NO0GoGCuHqjjqWOGHzQ9izgjn0iqdcn@dpg-cvg73cbv2p9s73dijbdg-a.oregon-postgres.render.com/mysite_ss2a',
         conn_max_age=600
     )
 }
